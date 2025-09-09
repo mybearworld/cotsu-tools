@@ -47,7 +47,7 @@ const isSceneChange = (records) =>
  * @param {number} a
  * @param {number} b
  */
-const percent = (a, b) => `${Math.floor((a / b) * 100)}%`;
+const percent = (a, b) => `${Math.round((a / b) * 100)}%`;
 /**
  * @param {{ url: string, data?: string, headers?: Record<string, string>, method?: string }} options
  * @returns {Promise<string>}
