@@ -3,7 +3,7 @@
 // @namespace   mybearworld
 // @match       *://cotsu.de/*
 // @grant       GM.xmlHttpRequest
-// @version     1.6.1
+// @version     1.6.2
 // @license     MIT
 // @author      mybearworld
 // @description Userscript für https://cotsu.de.
