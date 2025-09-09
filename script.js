@@ -408,10 +408,10 @@ const handleExerciseWords = async (records) => {
         wrongKanji.add(`${kanji}/${reading}`);
       });
       readingExercise.questions.forEach(({ writing: kanji, reading }) => {
+        const isIncorrect = wrongKanji.has(`${kanji}/${reading}`);
         const row = document.createElement("div");
-        row.append(
-          kanji,
-          " → ",
+        const solution = document.createElement("span");
+        solution.append(
           pitchAccentElement(kanji, reading),
           " ",
           readingExercise.questions.find(
@@ -419,10 +419,27 @@ const handleExerciseWords = async (records) => {
               question.writing === kanji && question.reading === reading,
           )?.german ?? meaningElement(kanji, reading),
         );
-        (wrongKanji.has(`${kanji}/${reading}`)
-          ? incorrectKanji
-          : correctKanji
-        ).append(row);
+        /** @type {HTMLElement} */
+        let shownSolution;
+        if (isIncorrect) {
+          const spoilerElement = document.createElement("button");
+          spoilerElement.classList.add("spoiler");
+          spoilerElement.ariaLabel = "Lösung anzeigen";
+          const accessibilityWrapper = document.createElement("span");
+          accessibilityWrapper.ariaHidden = "true";
+          accessibilityWrapper.append(solution);
+          spoilerElement.append(accessibilityWrapper);
+          spoilerElement.addEventListener("click", () => {
+            spoilerElement.classList.add("shown");
+            spoilerElement.ariaLabel = null;
+            accessibilityWrapper.ariaHidden = "false";
+          });
+          shownSolution = spoilerElement;
+        } else {
+          shownSolution = solution;
+        }
+        row.append(kanji, " → ", shownSolution);
+        (isIncorrect ? incorrectKanji : correctKanji).append(row);
       });
       if (originalSummaryElement) {
         element(document.querySelector("h3")).textContent =
@@ -721,6 +738,26 @@ style.innerHTML = css`
   }
   .word-summary div {
     margin-bottom: 4px;
+  }
+  .spoiler {
+    border-radius: 5px;
+    border: 0;
+    background-color: currentcolor;
+    padding: 0;
+    color: #444;
+    padding: 1px 5px;
+  }
+  .spoiler:not(.shown):hover {
+    cursor: pointer;
+    color: #555;
+  }
+  .spoiler.shown {
+    background-color: #eee;
+    transition:
+      background-color 0.5s,
+      color 0.5s;
+    user-select: text;
+    color: inherit;
   }
 
   /* Stats */
