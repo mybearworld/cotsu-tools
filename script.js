@@ -206,12 +206,18 @@ const getWadokuInformation = async (kanji, reading) => {
  */
 const pitchAccentElement = (kanji, reading) => {
   const pitchAccentElement = document.createElement("span");
-  pitchAccentElement.classList.add("pitch-accent", "loading");
+  pitchAccentElement.classList.add(
+    "cotsu-tools-pitch-accent",
+    "cotsu-tools-pitch-accent-loading",
+  );
   pitchAccentElement.textContent = reading;
   getWadokuInformation(kanji, reading).then((information) => {
-    pitchAccentElement.classList.remove("loading");
+    pitchAccentElement.classList.remove("cotsu-tools-pitch-accent-loading");
     if (information?.pitchAccent) {
-      pitchAccentElement.innerHTML = information.pitchAccent;
+      pitchAccentElement.innerHTML = information.pitchAccent.replace(
+        /class/g,
+        "data-cotsu-tools-pitch-accent-segment",
+      );
     } else {
       pitchAccentElement.append(" (kein Pitch-Accent verfügbar)");
     }
@@ -224,7 +230,7 @@ const pitchAccentElement = (kanji, reading) => {
  */
 const meaningElement = (kanji, reading) => {
   const meaningElement = document.createElement("span");
-  meaningElement.classList.add("meaning");
+  meaningElement.classList.add("cotsu-tools-meaning");
   meaningElement.textContent = "lädt...";
   getWadokuInformation(kanji, reading).then((information) => {
     if (information?.meaning) {
@@ -240,9 +246,9 @@ const meaningElement = (kanji, reading) => {
 const SETTINGS = [
   {
     name: "Katakana statt Hiragana bei Übungen nutzen",
-    id: "katakana-mode",
+    id: "cotsu-tools-katakana-mode",
     effect: (newSetting) => {
-      document.body.classList.toggle("katakana-mode", newSetting);
+      document.body.classList.toggle("cotsu-tools-katakana-mode", newSetting);
     },
   },
 ];
@@ -342,7 +348,7 @@ const handleExerciseWords = async (records) => {
       if (!cardWord) continue;
       cardWord.nextSibling?.remove();
       const cardWordClone = element(cardWord.cloneNode(true));
-      cardWordClone.classList.add("card-word-clone");
+      cardWordClone.classList.add("cotsu-tools-card-word-clone");
       const hiraganaElement = text(
         [...cardWordClone.childNodes].find(
           (_node, i) => cardWordClone.childNodes[i - 1]?.textContent === " → ",
@@ -423,14 +429,14 @@ const handleExerciseWords = async (records) => {
         let shownSolution;
         if (isIncorrect) {
           const spoilerElement = document.createElement("button");
-          spoilerElement.classList.add("spoiler");
+          spoilerElement.classList.add("cotsu-tools-spoiler");
           spoilerElement.ariaLabel = "Lösung anzeigen";
           const accessibilityWrapper = document.createElement("span");
           accessibilityWrapper.ariaHidden = "true";
           accessibilityWrapper.append(solution);
           spoilerElement.append(accessibilityWrapper);
           spoilerElement.addEventListener("click", () => {
-            spoilerElement.classList.add("shown");
+            spoilerElement.classList.add("cotsu-tools-spoiler-shown");
             spoilerElement.ariaLabel = null;
             accessibilityWrapper.ariaHidden = "false";
           });
@@ -502,7 +508,7 @@ const showMoreStats = async (records) => {
         progressContainer.cloneNode(true),
       );
       const matureProgress = element(matureProgressContainer.firstChild);
-      matureProgress.classList.add("detail-green");
+      matureProgress.classList.add("cotsu-tools-detail-green");
       matureProgress.textContent = `${percent(
         levelStats.mature,
         levelStats.total,
@@ -675,46 +681,46 @@ style.innerHTML = css`
   }
 
   /* Pitch accent */
-  .pitch-accent {
+  .cotsu-tools-pitch-accent {
     display: inline-table;
     border-collapse: collapse;
   }
-  .pitch-accent,
-  .pitch-accent span {
+  .cotsu-tools-pitch-accent,
+  .cotsu-tools-pitch-accent span {
     font-weight: 400;
   }
-  .pitch-accent span {
+  .cotsu-tools-pitch-accent span {
     border: 0px solid currentcolor;
     --border-width: 1px;
     display: table-cell;
     padding: 0 3px;
   }
-  .pitch-accent.loading {
+  .cotsu-tools-pitch-accent.cotsu-tools-pitch-accent-loading {
     letter-spacing: 3px;
     opacity: 0.5;
     margin-top: var(--border-width);
   }
-  .card-header .pitch-accent,
-  .card-header .pitch-accent span {
+  .card-header .cotsu-tools-pitch-accent,
+  .card-header .cotsu-tools-pitch-accent span {
     --border-width: 2px;
     font-weight: 700;
   }
-  .pitch-accent span:empty {
+  .cotsu-tools-pitch-accent span:empty {
     display: none;
   }
-  .pitch-accent .divider {
+  .cotsu-tools-pitch-accent [data-cotsu-tools-pitch-accent-segment~="divider"] {
     display: none;
   }
-  .pitch-accent .b {
+  .cotsu-tools-pitch-accent [data-cotsu-tools-pitch-accent-segment~="b"] {
     border-bottom-width: var(--border-width);
   }
-  .pitch-accent .t {
+  .cotsu-tools-pitch-accent [data-cotsu-tools-pitch-accent-segment~="t"] {
     border-top-width: var(--border-width);
   }
-  .pitch-accent .l {
+  .cotsu-tools-pitch-accent [data-cotsu-tools-pitch-accent-segment~="l"] {
     border-left-width: var(--border-width);
   }
-  .pitch-accent .r {
+  .cotsu-tools-pitch-accent [data-cotsu-tools-pitch-accent-segment~="r"] {
     border-right-width: var(--border-width);
   }
   div.card-word {
@@ -722,12 +728,12 @@ style.innerHTML = css`
     min-height: 29px;
     display: none;
   }
-  div.card-word.card-word-clone {
+  div.card-word.cotsu-tools-card-word-clone {
     display: block;
   }
 
   /* Meaning */
-  .meaning {
+  .cotsu-tools-meaning {
     font-family: inherit;
   }
 
@@ -739,7 +745,7 @@ style.innerHTML = css`
   .word-summary div {
     margin-bottom: 4px;
   }
-  .spoiler {
+  .cotsu-tools-spoiler {
     border-radius: 5px;
     border: 0;
     background-color: currentcolor;
@@ -747,11 +753,11 @@ style.innerHTML = css`
     color: #444;
     padding: 1px 5px;
   }
-  .spoiler:not(.shown):hover {
+  .cotsu-tools-spoiler:not(.cotsu-tools-spoiler-shown):hover {
     cursor: pointer;
     color: #555;
   }
-  .spoiler.shown {
+  .cotsu-tools-spoiler.cotsu-tools-spoiler-shown {
     background-color: #eee;
     transition:
       background-color 0.5s,
@@ -782,7 +788,7 @@ style.innerHTML = css`
     min-width: 0px !important;
     white-space: nowrap;
   }
-  .detail-green {
+  .cotsu-tools-detail-green {
     color: #40d5ac;
     font-weight: bold;
   }
@@ -792,11 +798,12 @@ style.innerHTML = css`
     font-family: "Noto Sans JP All Katakana";
     src: url("https://mybearworld.github.io/noto-sans-jp-all-katakana/NotoSansJPAllKatakana.ttf");
   }
-  .katakana-mode [class^="ReadingQuestionCard-module--input-field--"],
-  .katakana-mode .pitch-accent,
-  .katakana-mode .pitch-accent span,
-  .katakana-mode .commonReading,
-  .katakana-mode .commonReading b {
+  .cotsu-tools-katakana-mode
+    [class^="ReadingQuestionCard-module--input-field--"],
+  .cotsu-tools-katakana-mode .cotsu-tools-pitch-accent,
+  .cotsu-tools-katakana-mode .cotsu-tools-pitch-accent span,
+  .cotsu-tools-katakana-mode .commonReading,
+  .cotsu-tools-katakana-mode .commonReading b {
     font-family:
       "Noto Sans JP All Katakana",
       Noto Sans Japanese,
