@@ -49,18 +49,16 @@ const isSceneChange = (records) =>
  */
 const percent = (a, b) => `${Math.floor((a / b) * 100)}%`;
 /**
- * @param {string} url
+ * @param {{ url: string, data?: string, headers?: Record<string, string>, method?: string }} options
  * @returns {Promise<string>}
  */
-const gmfetch = (url) => {
+const gmfetch = (options) => {
   return new Promise((resolve, reject) => {
     // @ts-expect-error - Global provided by userscript managers
     GM.xmlHttpRequest({
-      url,
+      ...options,
       /** @param {{ response: string }} response */
-      onload: (response) => {
-        resolve(response.response);
-      },
+      onload: (response) => resolve(response.response),
       onerror: () => reject(),
     });
   });
@@ -146,7 +144,12 @@ const getWadokuInformation = async (kanji, reading) => {
   /** @type {WadokuInformation | null} */
   let accentlessResult = null;
   try {
-    const searchResponse = await gmfetch(`https://wadoku.de/search/${kanji}`);
+    const searchResponse = await gmfetch({
+      url: `https://wadoku.de/search/${kanji}`,
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      data: "searchType=JAPANESE&matchType=EXACT",
+    });
     const searchResponseDocument = parser.parseFromString(
       searchResponse,
       "text/html",
