@@ -59,7 +59,6 @@ const gmfetch = (url) => {
       url,
       /** @param {{ response: string }} response */
       onload: (response) => {
-        console.log(response.response.length);
         resolve(response.response);
       },
       onerror: () => reject(),
