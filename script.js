@@ -264,6 +264,14 @@ const createDialog = () => {
   }
   const dialog = document.createElement("dialog");
   dialog.classList.add("cotsu-tools-dialog");
+  const dialogWrapper = document.createElement("div");
+  dialogWrapper.classList.add("cotsu-tools-dialog-wrapper");
+  dialog.addEventListener("mousedown", (e) => {
+    if (!element(e.target).closest(".cotsu-tools-dialog-wrapper")) {
+      dialog.close();
+    }
+  });
+  dialog.append(dialogWrapper);
   const verisonHeader = document.createElement("header");
   const leftHeader = document.createElement("div");
   const h2 = document.createElement("h2");
@@ -282,10 +290,10 @@ const createDialog = () => {
   link.target = "_blank";
   rightHeader.append(link);
   verisonHeader.append(rightHeader);
-  dialog.append(verisonHeader);
+  dialogWrapper.append(verisonHeader);
   const settingsHeader = document.createElement("h3");
   settingsHeader.textContent = "Einstellungen";
-  dialog.append(settingsHeader);
+  dialogWrapper.append(settingsHeader);
   SETTINGS.forEach((setting) => {
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
@@ -301,14 +309,14 @@ const createDialog = () => {
     const name = document.createElement("span");
     name.textContent = setting.name;
     label.append(name);
-    dialog.append(label);
+    dialogWrapper.append(label);
   });
   const closeButton = document.createElement("button");
   closeButton.textContent = "Schließen";
   closeButton.addEventListener("click", () => {
     dialog.close();
   });
-  dialog.append(closeButton);
+  dialogWrapper.append(closeButton);
   document.body.append(dialog);
   return dialog;
 };
@@ -642,16 +650,20 @@ style.innerHTML = css`
   body:has(.cotsu-tools-dialog:open) {
     overflow: hidden;
   }
-  .cotsu-tools-dialog:open {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  .cotsu-tools-dialog {
     border: 1px solid #f6f6f6;
     border-radius: 20px;
     width: min(calc(100% - 2rem), 30rem);
     max-width: none;
     max-height: none;
     box-sizing: border-box;
+    padding: 0;
+  }
+  .cotsu-tools-dialog-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
   }
   .cotsu-tools-dialog header {
     display: flex;
