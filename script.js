@@ -631,6 +631,7 @@ style.innerHTML = css`
     color: #fff;
     padding: 0;
     margin-right: 20px;
+    height: 60px;
   }
   .cotsu-tools-button:hover {
     cursor: pointer;
