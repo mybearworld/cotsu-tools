@@ -253,7 +253,7 @@ const SETTINGS = [
   },
 ];
 const STORAGE_KEY = "cotsu-tools";
-const createSettingsDialog = () => {
+const createDialog = () => {
   const loadedSettingsString = localStorage.getItem(STORAGE_KEY);
   let settings;
   if (loadedSettingsString) {
@@ -263,8 +263,8 @@ const createSettingsDialog = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   }
   const dialog = document.createElement("dialog");
-  dialog.classList.add("cotsu-tools-settings");
-  const settingsHeader = document.createElement("header");
+  dialog.classList.add("cotsu-tools-dialog");
+  const verisonHeader = document.createElement("header");
   const leftHeader = document.createElement("div");
   const h2 = document.createElement("h2");
   h2.textContent = "Cotsu-Tools";
@@ -273,15 +273,18 @@ const createSettingsDialog = () => {
   // @ts-expect-error - Global provided by userscript managers
   version.textContent = `v${GM.info.script.version}`;
   leftHeader.append(version);
-  settingsHeader.append(leftHeader);
+  verisonHeader.append(leftHeader);
   const rightHeader = document.createElement("div");
   const link = document.createElement("a");
-  link.classList.add("cotsu-tools-settings-link");
+  link.classList.add("cotsu-tools-dialog-link");
   link.textContent = "↗";
   link.href = "https://openuserjs.org/scripts/mybearworld/Cotsu-Tools";
   link.target = "_blank";
   rightHeader.append(link);
-  settingsHeader.append(rightHeader);
+  verisonHeader.append(rightHeader);
+  dialog.append(verisonHeader);
+  const settingsHeader = document.createElement("h3");
+  settingsHeader.textContent = "Einstellungen";
   dialog.append(settingsHeader);
   SETTINGS.forEach((setting) => {
     const label = document.createElement("label");
@@ -317,8 +320,7 @@ const handleSettings = async (records) => {
     "[class^=MainLayout-module--header--] .MuiGrid-root",
   );
   if (!header) return;
-  let dialog =
-    document.querySelector(".cotsu-tools-settings") || createSettingsDialog();
+  let dialog = document.querySelector(".cotsu-tools-dialog") || createDialog();
   if (!(dialog instanceof HTMLDialogElement))
     throw new Error("Settings aren't a dialog");
   const settingsButton = document.createElement("button");
@@ -614,7 +616,7 @@ style.innerHTML = css`
     font-weight: 400 !important;
   }
 
-  /* Settings */
+  /* Dialog */
   [class^="MainLayout-module--header--"] .MuiGrid-container .MuiGrid-item {
     flex-basis: initial;
     max-width: initial;
@@ -637,13 +639,13 @@ style.innerHTML = css`
     cursor: pointer;
     color: #ffdc79;
   }
-  body:has(.cotsu-tools-settings:open) {
+  body:has(.cotsu-tools-dialog:open) {
     overflow: hidden;
   }
-  .cotsu-tools-settings:open {
+  .cotsu-tools-dialog:open {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
     border: 1px solid #f6f6f6;
     border-radius: 20px;
     width: min(calc(100% - 2rem), 30rem);
@@ -651,33 +653,42 @@ style.innerHTML = css`
     max-height: none;
     box-sizing: border-box;
   }
-  .cotsu-tools-settings header {
+  .cotsu-tools-dialog header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .cotsu-tools-settings header > div {
+  .cotsu-tools-dialog header > div {
     display: flex;
     align-items: end;
     gap: 0.5rem;
   }
-  .cotsu-tools-settings h2 {
+  .cotsu-tools-dialog h2 {
     margin: 0;
     font-family: inherit;
   }
-  .cotsu-tools-settings header span {
+  .cotsu-tools-dialog h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    margin-top: 0.5rem;
+  }
+  .cotsu-tools-dialog header span {
     font-size: 1rem;
     font-weight: 700;
   }
-  .cotsu-tools-settings-link {
+  .cotsu-tools-dialog-link {
     font-size: 1.5rem;
     font-weight: 700;
   }
-  .cotsu-tools-settings label {
+  .cotsu-tools-dialog label {
     display: flex;
-    gap: 0.2rem;
+    gap: 0.5rem;
   }
-  .cotsu-tools-settings button {
+  .cotsu-tools-dialog input {
+    margin: 0;
+  }
+  .cotsu-tools-dialog button {
     align-self: end;
   }
 
