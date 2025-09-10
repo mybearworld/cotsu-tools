@@ -54,12 +54,28 @@ const percent = (a, b) => `${Math.round((a / b) * 100)}%`;
  */
 const gmfetch = (options) => {
   return new Promise((resolve, reject) => {
+    console.log("COTSU-TOOLS: Fetching", options.url, "with", options);
     // @ts-expect-error - Global provided by userscript managers
     GM.xmlHttpRequest({
       ...options,
-      /** @param {{ response: string }} response */
-      onload: (response) => resolve(response.response),
-      onerror: () => reject(),
+      /** @param {{ response: string, status: string }} response */
+      onload: (response) => {
+        console.log(
+          `COTSU-TOOLS: Succeeded fetching`,
+          response.status,
+          response.response,
+        );
+        resolve(response.response);
+      },
+      /** @param {{ response: string, status: string }} response */
+      onerror: (response) => {
+        console.log(
+          `COTSU-TOOLS: Error while fetching`,
+          response.status,
+          response.response,
+        );
+        reject();
+      },
     });
   });
 };
