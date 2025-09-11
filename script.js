@@ -508,6 +508,18 @@ const showMoreStats = async (records) => {
       document.querySelector(`.MuiLinearProgress-root[label=${level}]`)
         ?.parentElement,
     );
+    element(
+      progressBarElement.querySelector(
+        ".MuiLinearProgress-bar.MuiLinearProgress-barColorPrimary",
+      ),
+    ).style.transform =
+      `translateX(${(levelStats.mature / levelStats.total - 1) * 100}%`;
+    element(
+      progressBarElement.querySelector(
+        ".MuiLinearProgress-bar.MuiLinearProgress-colorPrimary",
+      ),
+    ).style.transform =
+      `translateX(${(levelStats.learning / levelStats.total - 1) * 100}%`;
     const levelNameElement = element(
       progressBarElement.previousSibling?.firstChild,
     );
