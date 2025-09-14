@@ -1,14 +1,8 @@
-const LOWERCASE_LEVELS = {
-  N5: "n5",
-  N4: "n4",
-  N3: "n3",
-  N2: "n2",
-  N1: "n1",
-} as const;
+import { LowercaseLevel } from "./levels";
 
 export let stats: {
   progress: Record<
-    (typeof LOWERCASE_LEVELS)[keyof typeof LOWERCASE_LEVELS],
+    LowercaseLevel,
     { learning: number; mature: number; total: number }
   >;
   readyForEarlyReview: string;

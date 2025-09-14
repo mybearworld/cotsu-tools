@@ -2,6 +2,7 @@ import "./actions/addCSS";
 import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
+import { showMoreStats } from "./actions/showMoreStats";
 
 startInterceptingFetch();
 new MutationObserver(async (records) => {
