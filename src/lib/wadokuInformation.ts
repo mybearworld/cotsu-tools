@@ -56,8 +56,7 @@ export const getWadokuInformation = async (
     done(information);
     return information;
   };
-  /** @type {WadokuInformation | null} */
-  let accentlessResult = null;
+  let accentlessResult: WadokuInformation | null = null;
   try {
     const searchResponse = await gmfetch({
       url: `https://wadoku.de/search/${kanji}`,
