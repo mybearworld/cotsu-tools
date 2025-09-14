@@ -4,7 +4,7 @@ import { context } from "esbuild";
   await context({
     entryPoints: ["src/index.ts"],
     bundle: true,
-    outfile: "out.js",
+    outfile: "script.user.js",
     banner: {
       js: `// ==UserScript==
 // @name        Cotsu-Tools
