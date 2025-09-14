@@ -1,11 +1,11 @@
-import { insertCSS } from "./actions/addCSS";
 import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
-import { startInterceptingFetch } from "./lib/interceptedFetch";
 import { showMoreStats } from "./actions/showMoreStats";
 import { showExercisesLeftInKanjiLearningTab } from "./actions/showExercisesLeftInKanjiLearningTab";
 import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
 import { addWadokuInformationInKanjiTab } from "./actions/addWadokuInformationInKanjiTab";
+import { insertCSS } from "./lib/insertCSS";
+import { startInterceptingFetch } from "./lib/interceptedFetch";
 
 insertCSS();
 startInterceptingFetch();
