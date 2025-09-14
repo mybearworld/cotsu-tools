@@ -4,6 +4,9 @@ import { context } from "esbuild";
   await context({
     entryPoints: ["src/index.ts"],
     bundle: true,
+    loader: {
+      ".css": "text",
+    },
     outfile: "script.user.js",
     banner: {
       js: `// ==UserScript==

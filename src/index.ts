@@ -4,8 +4,8 @@ import { showMoreStats } from "./actions/showMoreStats";
 import { showExercisesLeftInKanjiLearningTab } from "./actions/showExercisesLeftInKanjiLearningTab";
 import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
 import { addWadokuInformationInKanjiTab } from "./actions/addWadokuInformationInKanjiTab";
-import { insertCSS } from "./lib/insertCSS";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
+import { insertCSS } from "./lib/style";
 
 insertCSS();
 startInterceptingFetch();
