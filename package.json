@@ -5,6 +5,7 @@
     "watch": "node watch.js"
   },
   "dependencies": {
+    "@types/greasemonkey": "^4.0.7",
     "esbuild": "^0.25.9"
   }
 }
