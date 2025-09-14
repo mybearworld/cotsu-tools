@@ -59,9 +59,9 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
   )
     return;
   const cardWord =
-    record.type === "childList"
-      ? element(firstAddedNode).querySelector(".card-word")
-      : record.target.parentElement;
+    record.type === "childList" ?
+      element(firstAddedNode).querySelector(".card-word")
+    : record.target.parentElement;
   if (!cardWord) return;
   cardWord.nextSibling?.remove();
   const cardWordClone = element(cardWord.cloneNode(true));

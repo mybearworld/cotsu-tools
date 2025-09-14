@@ -82,9 +82,8 @@ export const getWadokuInformation = async (
       }
       const information: WadokuInformation = {
         meaning: "",
-        pitchAccent: readingRow.classList.contains("accent")
-          ? readingRow.innerHTML
-          : null,
+        pitchAccent:
+          readingRow.classList.contains("accent") ? readingRow.innerHTML : null,
       };
       let sense = element(resultLine.querySelector(".sense:not(.master)"));
       sense = sense.querySelector(".prior1") ?? sense;

@@ -24,9 +24,9 @@ export const addWadokuInformationInKanjiTab = async (
     const [, kanji, kana, german] = match;
     const reading = [...kana]
       .map((kana) =>
-        kana in KATAKANA_TO_HIRAGANA
-          ? KATAKANA_TO_HIRAGANA[kana as keyof typeof KATAKANA_TO_HIRAGANA]
-          : kana,
+        kana in KATAKANA_TO_HIRAGANA ?
+          KATAKANA_TO_HIRAGANA[kana as keyof typeof KATAKANA_TO_HIRAGANA]
+        : kana,
       )
       .join("");
     text.innerHTML = "";
