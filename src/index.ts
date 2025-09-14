@@ -1,4 +1,4 @@
-import "./actions/addCSS";
+import { insertCSS } from "./actions/addCSS";
 import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
@@ -7,6 +7,7 @@ import { showExercisesLeftInKanjiLearningTab } from "./actions/showExercisesLeft
 import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
 import { addWadokuInformationInKanjiTab } from "./actions/addWadokuInformationInKanjiTab";
 
+insertCSS();
 startInterceptingFetch();
 new MutationObserver(async (records) => {
   handleSettings(records);
