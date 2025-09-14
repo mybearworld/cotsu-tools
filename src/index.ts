@@ -3,6 +3,7 @@ import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
 import { showMoreStats } from "./actions/showMoreStats";
+import { showExercisesLeftInKanjiLearningTab } from "./actions/showExercisesLeftInKanjiLearningTab";
 
 startInterceptingFetch();
 new MutationObserver(async (records) => {
