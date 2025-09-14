@@ -345,11 +345,39 @@ const handleSettings = async (records) => {
   element(header.lastChild).insertAdjacentElement("afterbegin", settingsButton);
 };
 
+/** @type {typeof readingExercise | null} */
+let previousReadingExercise = null;
+let id = 0;
 /** @param {MutationRecord[]} records */
 const handleExerciseWords = async (records) => {
   for (const record of records) {
     const firstAddedNode = record.addedNodes[0];
     if (
+      (record.type === "childList" &&
+        firstAddedNode instanceof HTMLElement &&
+        (firstAddedNode.className.startsWith(
+          "StudyProgress-module--study-progress--",
+        ) ||
+          firstAddedNode.className.startsWith("JapaneseText-module--red--"))) ||
+      (record.type === "childList" &&
+        record.target instanceof HTMLElement &&
+        record.target.className.startsWith("JapaneseText-module--red--") &&
+        firstAddedNode instanceof Text) ||
+      (record.type === "characterData" &&
+        record.target.parentElement?.className.startsWith(
+          "JapaneseText-module--red--",
+        ))
+    ) {
+      if (previousReadingExercise !== readingExercise) {
+        previousReadingExercise = readingExercise;
+        id = 0;
+      }
+      void getWadokuInformation(
+        readingExercise.questions[id].writing,
+        readingExercise.questions[id].reading,
+      );
+      id++;
+    } else if (
       (record.type === "childList" &&
         firstAddedNode instanceof HTMLElement &&
         firstAddedNode.className?.startsWith("StudyContainer")) ||
