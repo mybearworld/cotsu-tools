@@ -2,7 +2,7 @@ import { context } from "esbuild";
 
 (
   await context({
-    entryPoints: ["src/a.ts"],
+    entryPoints: ["src/index.ts"],
     bundle: true,
     outfile: "out.js",
     banner: {
