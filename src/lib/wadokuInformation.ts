@@ -126,6 +126,7 @@ export const getWadokuInformation = async (
           ) {
             elementToFill.lastChild.remove();
           }
+          return;
         }
         let nextElementToFill = elementToFill;
         if (nextElementToFillClass) {
