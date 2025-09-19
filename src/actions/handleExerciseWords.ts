@@ -4,6 +4,7 @@ import {
   getWadokuInformation,
   pitchAccentElement,
   meaningElement,
+  definitionElement,
 } from "../lib/wadokuInformation";
 
 let previousReadingExercise: typeof readingExercise | null = null;
@@ -75,10 +76,7 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
   if (!match) throw new Error("No XYZ → ABC in card");
   const [, kanji, reading] = match;
   hiraganaElement.textContent = "";
-  const cardGerman = element(cardWordClone.querySelector(".card-german"));
-  if (cardGerman.textContent === "") {
-    cardGerman.append(meaningElement(kanji, reading));
-  }
+  cardWordClone.append(definitionElement(kanji, reading));
   hiraganaElement.after(pitchAccentElement(kanji, reading));
   cardWord.insertAdjacentElement("afterend", cardWordClone);
 };

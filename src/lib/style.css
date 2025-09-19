@@ -137,7 +137,47 @@ div.card-word.cotsu-tools-card-word-clone {
 
 /* Meaning */
 .cotsu-tools-meaning {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  font-size: inherit;
+}
+.cotsu-tools-meaning,
+.cotsu-tools-meaning-summary,
+.cotsu-tools-meaning-definition {
   font-family: inherit;
+}
+.cotsu-tools-meaning-definition {
+  display: none;
+}
+.cotsu-tools-meaning.cotsu-tools-meaning-shown-definition
+  .cotsu-tools-meaning-summary {
+  display: none;
+}
+.cotsu-tools-meaning.cotsu-tools-meaning-shown-definition
+  .cotsu-tools-meaning-definition {
+  display: inline-block;
+}
+
+/* Definition */
+.cotsu-tools-definition {
+  font-weight: 300;
+}
+.cotsu-tools-definition-header {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: -0.5rem;
+  margin-top: 0.5rem;
+}
+.cotsu-tools-definition-index-number {
+  margin-left: 0.3rem;
+}
+.cotsu-tools-definition-paren {
+  color: #555;
+}
+.cotsu-tools-definition-context {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.02rem;
 }
 
 /* Word summary */
