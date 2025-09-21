@@ -14,6 +14,7 @@ export let readingExercise: {
     german: string;
     qid: string;
   }[];
+  questionCount: number;
 };
 
 export const DUMMY_QUESTION_ID = "cotsu-tools-dummy-question";
@@ -45,6 +46,7 @@ export const startInterceptingFetch = () => {
       ) {
         const parsedBody = JSON.parse(body);
         if (parsedBody.questions.length !== 0) {
+          parsedBody.questionCount = parsedBody.questions.length;
           parsedBody.questions.push({
             writing: "",
             reading: "",

@@ -47,18 +47,13 @@ const handleUpdatedWord = (record: MutationRecord) => {
     Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
-    const exerciseAmount = studyProgressTextElement.childNodes.item(3);
-    exerciseAmount.textContent = (
-      Number(exerciseAmount.textContent) - 1
-    ).toString();
   }
-  const questionAmountWithoutDummy = readingExercise.questions.length - 1;
   element(
     document.querySelector(
       "[class^=StudyProgress-module--study-progress--] .MuiLinearProgress-bar",
     ),
   ).style.transform =
-    `translateX(${-100 * (1 - (id + 1) / questionAmountWithoutDummy)}%)`;
+    `translateX(${-100 * (1 - (id + 1) / readingExercise.questionCount)}%)`;
   if (readingExercise.questions[id].qid === DUMMY_QUESTION_ID) {
     element(
       document.querySelector(
