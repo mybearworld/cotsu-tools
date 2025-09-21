@@ -8,7 +8,6 @@ import {
 } from "../lib/wadokuInformation";
 
 let previousReadingExercise: typeof readingExercise | null = null;
-let id = 0;
 
 export const handleExerciseWords = async (records: MutationRecord[]) => {
   for (const record of records) {
@@ -41,14 +40,13 @@ const handleUpdatedWord = (record: MutationRecord) => {
       ))
   )
     return;
+  const studyProgressTextElement = element(
+    document.querySelector("[class^=StudyProgress-module--study-progress--] p"),
+  );
+  const id =
+    Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
-    id = 0;
-    const studyProgressTextElement = element(
-      document.querySelector(
-        "[class^=StudyProgress-module--study-progress--] p",
-      ),
-    );
     const exerciseAmount = studyProgressTextElement.childNodes.item(3);
     exerciseAmount.textContent = (
       Number(exerciseAmount.textContent) - 1
@@ -78,7 +76,6 @@ const handleUpdatedWord = (record: MutationRecord) => {
       readingExercise.questions[id].reading,
     );
   }
-  id++;
 };
 
 const handleUpdatedCardWord = (record: MutationRecord) => {
