@@ -1,5 +1,5 @@
 import { element, text } from "../lib/element";
-import { readingExercise } from "../lib/interceptedFetch";
+import { DUMMY_QUESTION_ID, readingExercise } from "../lib/interceptedFetch";
 import {
   getWadokuInformation,
   pitchAccentElement,
@@ -41,11 +41,40 @@ const handleUpdatedWord = (record: MutationRecord) => {
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
     id = 0;
+    const studyProgressTextElement = element(
+      document.querySelector(
+        "[class^=StudyProgress-module--study-progress--] p",
+      ),
+    );
+    const exerciseAmount = studyProgressTextElement.childNodes.item(3);
+    exerciseAmount.textContent = (
+      Number(exerciseAmount.textContent) - 1
+    ).toString();
   }
-  void getWadokuInformation(
-    readingExercise.questions[id].writing,
-    readingExercise.questions[id].reading,
-  );
+  const questionAmountWithoutDummy = readingExercise.questions.length - 1;
+  element(
+    document.querySelector(
+      "[class^=StudyProgress-module--study-progress--] .MuiLinearProgress-bar",
+    ),
+  ).style.transform =
+    `translateX(${-100 * (1 - (id + 1) / questionAmountWithoutDummy)}%)`;
+  if (readingExercise.questions[id].qid === DUMMY_QUESTION_ID) {
+    element(
+      document.querySelector(
+        "[class^=QuestionContainer-module--question-container--]",
+      ),
+    ).classList.add("cotsu-tools-dummy-question");
+    element(
+      document.querySelector(
+        "[class*=ReadingQuestionCard-module--action-check--]",
+      ),
+    ).textContent = "Zum Ende";
+  } else {
+    void getWadokuInformation(
+      readingExercise.questions[id].writing,
+      readingExercise.questions[id].reading,
+    );
+  }
   id++;
 };
 
@@ -108,6 +137,15 @@ const handleSummary = (record: MutationRecord) => {
   )
     return;
   if (readingExercise.questions.length === 0) return;
+  const summaryCorrectText = element(
+    document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
+  );
+  const summaryCorrectTextMatch = summaryCorrectText.textContent.match(
+    /^(\d+) von (\d+) richtig$/,
+  );
+  if (!summaryCorrectTextMatch) throw new Error("No X von Y richtig");
+  const [, correctExercises, totalExercises] = summaryCorrectTextMatch;
+  summaryCorrectText.textContent = `${Number(correctExercises) - 1} von ${Number(totalExercises) - 1} richtig`;
   const wordSummary = document.createElement("div");
   const incorrectKanjiHeading = document.createElement("h4");
   incorrectKanjiHeading.textContent = "Falsch waren:";
@@ -131,7 +169,8 @@ const handleSummary = (record: MutationRecord) => {
     const [, kanji, reading] = match;
     wrongKanji.add(`${kanji}/${reading}`);
   });
-  readingExercise.questions.forEach(({ writing: kanji, reading }) => {
+  readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
+    if (qid === DUMMY_QUESTION_ID) return;
     const isIncorrect = wrongKanji.has(`${kanji}/${reading}`);
     const row = document.createElement("div");
     const solution = document.createElement("span");

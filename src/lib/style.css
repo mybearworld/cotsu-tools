@@ -180,6 +180,24 @@ div.card-word.cotsu-tools-card-word-clone {
   letter-spacing: 0.02rem;
 }
 
+/* Dummy question */
+.cotsu-tools-dummy-question
+  [class^="ReadingQuestionCard-module--section-action--"] {
+  height: auto;
+}
+.cotsu-tools-dummy-question
+  [class*="ReadingQuestionCard-module--action-check--"] {
+  margin: 0;
+  transition: margin 0s;
+}
+.cotsu-tools-dummy-question
+  [class^="ReadingQuestionCard-module--input-field--"],
+.cotsu-tools-dummy-question
+  [class^="ReadingQuestionCard-module--newWordHint--"],
+.cotsu-tools-dummy-question [class^="StudyProgress-module--study-progress--"] {
+  display: none;
+}
+
 /* Word summary */
 .word-summary div,
 .word-summary span {
