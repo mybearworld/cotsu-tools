@@ -94,7 +94,7 @@ export const getWadokuInformation = async (
           throw new Error("currentElement is not an element");
         if (
           currentNode.classList.contains("genus") ||
-          currentNode.classList.contains("transcr") ||
+          currentNode.matches(".transcr:has(+ .jap)") ||
           (currentNode.classList.contains("klammer") &&
             currentNode.classList.contains("global"))
         ) {
