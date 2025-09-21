@@ -35,6 +35,9 @@ const handleUpdatedWord = (record: MutationRecord) => {
     (record.type !== "characterData" ||
       !record.target.parentElement?.className.startsWith(
         "JapaneseText-module--red--",
+      ) ||
+      !record.target.parentElement?.parentElement?.className.startsWith(
+        "ReadingQuestionCard-module--cardExampleSentence--",
       ))
   )
     return;
