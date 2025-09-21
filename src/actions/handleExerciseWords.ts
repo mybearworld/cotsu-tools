@@ -137,6 +137,11 @@ const handleSummary = (record: MutationRecord) => {
   )
     return;
   if (readingExercise.questions.length === 0) return;
+  element(
+    document.querySelector(
+      "[class^=QuestionContainer-module--question-container--]",
+    ),
+  ).classList.remove("cotsu-tools-dummy-question");
   const summaryCorrectText = element(
     document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
   );
