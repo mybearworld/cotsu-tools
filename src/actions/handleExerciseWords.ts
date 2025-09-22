@@ -18,6 +18,13 @@ export const handleExerciseWords = async (records: MutationRecord[]) => {
   }
 };
 
+const currentQuestionId = () => {
+  const studyProgressTextElement = element(
+    document.querySelector("[class^=StudyProgress-module--study-progress--] p"),
+  );
+  return Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
+};
+
 const handleUpdatedWord = (record: MutationRecord) => {
   const firstAddedNode = record.addedNodes[0];
   if (
@@ -40,11 +47,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
       ))
   )
     return;
-  const studyProgressTextElement = element(
-    document.querySelector("[class^=StudyProgress-module--study-progress--] p"),
-  );
-  const id =
-    Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
+  const id = currentQuestionId();
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
   }
