@@ -18,6 +18,13 @@ export const handleExerciseWords = async (records: MutationRecord[]) => {
   }
 };
 
+const currentQuestionId = () => {
+  const studyProgressTextElement = element(
+    document.querySelector("[class^=StudyProgress-module--study-progress--] p"),
+  );
+  return Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
+};
+
 const handleUpdatedWord = (record: MutationRecord) => {
   const firstAddedNode = record.addedNodes[0];
   if (
@@ -40,11 +47,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
       ))
   )
     return;
-  const studyProgressTextElement = element(
-    document.querySelector("[class^=StudyProgress-module--study-progress--] p"),
-  );
-  const id =
-    Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
+  const id = currentQuestionId();
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
   }
@@ -105,6 +108,7 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
   cardWord.insertAdjacentElement("afterend", cardWordClone);
 };
 
+const wrongAnswers = new Set<string>();
 const handleWrongAnswer = (record: MutationRecord) => {
   const firstAddedNode = record.addedNodes[0];
   if (
@@ -122,6 +126,7 @@ const handleWrongAnswer = (record: MutationRecord) => {
   ).textContent;
   firstAddedNode.innerHTML = "";
   firstAddedNode.append("Die Antwort ist ", pitchAccentElement(kanji, reading));
+  wrongAnswers.add(readingExercise.questions[currentQuestionId()].qid);
 };
 
 const handleSummary = (record: MutationRecord) => {
@@ -160,18 +165,11 @@ const handleSummary = (record: MutationRecord) => {
     correctKanji,
   );
   wordSummary.classList.add("word-summary");
-  const wrongKanji = new Set();
   const originalSummaryElement =
     firstAddedNode.querySelector("div:not([class])");
-  originalSummaryElement?.childNodes?.forEach((word) => {
-    const match = word.textContent?.match(/([^ ]+) → ([^ ]+)/);
-    if (!match) throw new Error("No XYZ → ABC in summary element");
-    const [, kanji, reading] = match;
-    wrongKanji.add(`${kanji}/${reading}`);
-  });
   readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
     if (qid === DUMMY_QUESTION_ID) return;
-    const isIncorrect = wrongKanji.has(`${kanji}/${reading}`);
+    const isIncorrect = wrongAnswers.has(qid);
     const row = document.createElement("div");
     const solution = document.createElement("span");
     solution.append(
