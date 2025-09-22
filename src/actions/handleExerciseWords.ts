@@ -99,12 +99,10 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
       (_node, i) => cardWordClone.childNodes[i - 1]?.textContent === " → ",
     ),
   );
-  const match = cardWord.textContent.match(/([^ ]+) → ([^ ]+)/);
-  if (!match) throw new Error("No XYZ → ABC in card");
-  const [, kanji, reading] = match;
+  const exercise = readingExercise.questions[currentQuestionId() - 1];
   hiraganaElement.textContent = "";
-  cardWordClone.append(definitionElement(kanji, reading));
-  hiraganaElement.after(pitchAccentElement(kanji, reading));
+  cardWordClone.append(definitionElement(exercise.writing, exercise.reading));
+  hiraganaElement.after(pitchAccentElement(exercise.writing, exercise.reading));
   cardWord.insertAdjacentElement("afterend", cardWordClone);
 };
 
