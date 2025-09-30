@@ -269,3 +269,12 @@ div[class^="index-module--action-card-text--"] {
     Noto Sans Japanese,
     sans-serif;
 }
+
+/* Writing override */
+.cotsu-tools-writing-override-switch-button {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.cotsu-tools-writing-override-switch-button:hover {
+  cursor: pointer;
+}

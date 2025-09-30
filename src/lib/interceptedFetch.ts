@@ -1,6 +1,7 @@
 import { LowercaseLevel } from "./levels";
 
 export let stats: {
+  userid: string;
   progress: Record<
     LowercaseLevel,
     { learning: number; mature: number; total: number }
