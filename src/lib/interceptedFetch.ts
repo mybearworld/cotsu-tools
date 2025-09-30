@@ -7,6 +7,7 @@ export let stats: {
     { learning: number; mature: number; total: number }
   >;
   readyForEarlyReview: string;
+  totalLearned: number;
 };
 export let readingExercise: {
   questions: {
