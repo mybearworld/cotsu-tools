@@ -16,7 +16,11 @@ export const showMoreStats = async (records: MutationRecord[]) => {
   const practiceCard = document.querySelector(
     "div[class*=index-module--kanji-read-actions--] .MuiGrid-item:first-of-type  [class*=index-module--action-card-normal--]",
   );
-  if (practiceCard && stats.readyForEarlyReview !== "0") {
+  if (
+    practiceCard &&
+    stats.readyForEarlyReview !== "0" &&
+    stats.totalLearned !== 0
+  ) {
     text(
       practiceCard.querySelector("[class^=index-module--action-card-text--]")
         ?.lastChild,
