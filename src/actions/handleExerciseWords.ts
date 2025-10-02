@@ -1,6 +1,6 @@
 import { element, text } from "../lib/element";
 import { DUMMY_QUESTION_ID, readingExercise } from "../lib/interceptedFetch";
-import { requestCanvasForKanji } from "../lib/kanjiCanvas";
+import { requestCanvas } from "../lib/kanjiCanvas";
 import {
   getWadokuInformation,
   pitchAccentElement,
@@ -103,13 +103,12 @@ const handleUpdatedWord = (record: MutationRecord) => {
       finishedCharacter.textContent = currentQuestion.writing[currentCharacter];
       currentCanvas.replaceWith(finishedCharacter);
       currentCharacter++;
-      currentCanvas = requestCanvasForKanji(
-        currentQuestion.writing[currentCharacter],
-        { onFinish: canvasFinishListener },
-      );
+      currentCanvas = requestCanvas(currentQuestion.writing[currentCharacter], {
+        onFinish: canvasFinishListener,
+      });
       finishedCharacter.insertAdjacentElement("afterend", currentCanvas);
     };
-    let currentCanvas = requestCanvasForKanji(currentQuestion.writing[0], {
+    let currentCanvas = requestCanvas(currentQuestion.writing[0], {
       onFinish: canvasFinishListener,
     });
     element(

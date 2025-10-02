@@ -1,5 +1,5 @@
 import { stats } from "../lib/interceptedFetch";
-import { requestCanvasForKanji } from "../lib/kanjiCanvas";
+import { requestCanvas } from "../lib/kanjiCanvas";
 import { toggleWritingOverride, writingOverride } from "../lib/writingOverride";
 
 const actionName = (writingOverride: boolean) =>

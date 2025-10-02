@@ -63,11 +63,8 @@ const checkStroke = (userStroke: Path, correctStroke: Path) => {
 };
 
 const domParser = new DOMParser();
-export const requestCanvasForKanji = (
-  kanji: string,
-  options?: CanvasOptions,
-) => {
-  const codePoint = kanji.codePointAt(0);
+export const requestCanvas = (character: string, options?: CanvasOptions) => {
+  const codePoint = character.codePointAt(0);
   if (!codePoint) throw new Error("Invalid Kanji");
   const container = document.createElement("div");
   container.classList.add("cotsu-tools-writing-override-canvas-wrapper");
