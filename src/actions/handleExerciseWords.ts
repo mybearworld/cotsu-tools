@@ -1,11 +1,13 @@
 import { element, text } from "../lib/element";
 import { DUMMY_QUESTION_ID, readingExercise } from "../lib/interceptedFetch";
+import { requestCanvasForKanji } from "../lib/kanjiCanvas";
 import {
   getWadokuInformation,
   pitchAccentElement,
   meaningElement,
   definitionElement,
 } from "../lib/wadokuInformation";
+import { writingOverride } from "../lib/writingOverride";
 
 let previousReadingExercise: typeof readingExercise | null = null;
 
@@ -51,13 +53,14 @@ const handleUpdatedWord = (record: MutationRecord) => {
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
   }
+  const currentQuestion = readingExercise.questions[id];
   element(
     document.querySelector(
       "[class^=StudyProgress-module--study-progress--] .MuiLinearProgress-bar",
     ),
   ).style.transform =
     `translateX(${-100 * (1 - (id + 1) / readingExercise.questionCount)}%)`;
-  if (readingExercise.questions[id].qid === DUMMY_QUESTION_ID) {
+  if (currentQuestion.qid === DUMMY_QUESTION_ID) {
     element(
       document.querySelector(
         "[class^=QuestionContainer-module--question-container--]",
@@ -68,11 +71,38 @@ const handleUpdatedWord = (record: MutationRecord) => {
         "[class*=ReadingQuestionCard-module--action-check--]",
       ),
     ).textContent = "Zum Ende";
-  } else {
-    void getWadokuInformation(
-      readingExercise.questions[id].writing,
-      readingExercise.questions[id].reading,
+  } else if (writingOverride()) {
+    element(
+      document.querySelector(
+        "[class^=QuestionContainer-module--question-container--]",
+      ),
+    ).classList.add("cotsu-tools-writing-override");
+    element(
+      document.querySelector(
+        "[class^=ReadingQuestionCard-module--input-field--]",
+      ),
+    ).insertAdjacentElement(
+      "afterend",
+      requestCanvasForKanji(currentQuestion.writing),
     );
+    const exampleSentence = element(
+      document.querySelector(
+        "[class^=ReadingQuestionCard-module--cardExampleSentence--]",
+      ),
+    );
+    exampleSentence.innerHTML = "";
+    exampleSentence.append(
+      pitchAccentElement(currentQuestion.writing, currentQuestion.reading),
+    );
+    if (currentQuestion.german) {
+      exampleSentence.append(" → ", currentQuestion.german);
+    }
+    exampleSentence.insertAdjacentElement(
+      "afterend",
+      definitionElement(currentQuestion.writing, currentQuestion.reading),
+    );
+  } else {
+    void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
   }
 };
 
@@ -115,6 +145,7 @@ const handleWrongAnswer = (record: MutationRecord) => {
     )
   )
     return;
+  if (writingOverride()) return;
   const reading = firstAddedNode.textContent.replace("Die Antwort ist ", "");
   const kanji = element(
     document.querySelector(
