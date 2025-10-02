@@ -47,7 +47,7 @@ export const addWritingOverrideSwitch = (records: MutationRecord[]) => {
       updateLabels();
     });
     updateLabels();
-    readingH3.append(switchButton);
+    readingH3.append(" ", switchButton);
     document.body.append(requestCanvasForKanji("電"));
   }
 };
