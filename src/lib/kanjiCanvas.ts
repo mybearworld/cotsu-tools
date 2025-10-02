@@ -125,6 +125,7 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
   };
   let currentStrokeNumber = 0;
   let incorrectStrokesInARow = 0;
+  let canDraw = true;
 
   const strokePaths = kanji.querySelectorAll("path");
   const currentStroke = () => {
@@ -164,7 +165,19 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
       incorrectStrokesInARow = 0;
       currentStrokeNumber++;
       if (currentStrokeNumber >= strokePaths.length) {
-        options?.onFinish?.();
+        canDraw = false;
+        let blur = 0;
+        const callback = () => {
+          blur += 0.1;
+          context.filter = `blur(${blur > 2 ? 2 - (blur - 2) : blur}px`;
+          if (blur >= 4) {
+            context.filter = "blur(0px)";
+            options?.onFinish?.();
+          } else {
+            requestAnimationFrame(callback);
+          }
+        };
+        requestAnimationFrame(callback);
       }
     } else if (result === false) {
       const line = {
@@ -188,6 +201,7 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
   };
 
   const mouseDownListener = (e: MouseEvent | TouchEvent) => {
+    if (!canDraw) return;
     const pos = positionOnCanvas(e);
     canvasState.currentStroke = `M ${pos.x} ${pos.y}`;
   };
