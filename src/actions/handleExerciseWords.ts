@@ -73,7 +73,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
     ).textContent = "Zum Ende";
   } else if (writingOverride()) {
     const input = element(document.querySelector("input")) as HTMLInputElement;
-    const checkButton = element(
+    let checkButton = element(
       document.querySelector("[class^=Button-module--button-primary--]"),
     );
     element(
@@ -104,13 +104,31 @@ const handleUpdatedWord = (record: MutationRecord) => {
       ),
     ).insertAdjacentElement("afterend", finishedCharacters);
     let currentCharacter = 0;
-    const canvasFinishListener = () => {
+    let madeMistake = false;
+    const canvasFinishListener = (madeMistakeForThisCharacter: boolean) => {
+      madeMistake ||= madeMistakeForThisCharacter;
       if (currentCharacter === currentQuestion.writing.length - 1) {
         currentCanvas.remove();
         wordInformation.remove();
         finishedCharacters.innerHTML = "";
-        input.value = currentQuestion.reading;
-        checkButton.click();
+        if (madeMistake) {
+          input.value = "";
+          checkButton.click();
+          input[
+            Object.keys(input).find((key) =>
+              key.startsWith("__reactEventHandlers$"),
+            ) as keyof typeof input
+            // @ts-expect-error
+          ]?.onChange();
+          input.value = currentQuestion.reading;
+          checkButton = element(
+            document.querySelector("[class^=Button-module--button-primary--]"),
+          );
+          checkButton.click();
+        } else {
+          input.value = currentQuestion.reading;
+          checkButton.click();
+        }
         return;
       }
       const finishedCharacter = document.createElement("span");

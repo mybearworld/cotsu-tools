@@ -89,7 +89,7 @@ export const requestCanvas = (character: string, options?: CanvasOptions) => {
 };
 
 export type CanvasOptions = {
-  onFinish: () => void;
+  onFinish: (madeMistake: boolean) => void;
 };
 export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
   const canvas = document.createElement("canvas");
@@ -128,6 +128,7 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
   let currentStrokeNumber = 0;
   let incorrectStrokesInARow = 0;
   let canDraw = true;
+  let madeMistake = false;
 
   const strokePaths = kanji.querySelectorAll("path");
   const currentStroke = () => {
@@ -174,7 +175,7 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
           context.filter = `blur(${blur > 2 ? 2 - (blur - 2) : blur}px`;
           if (blur >= 4) {
             context.filter = "blur(0px)";
-            options?.onFinish?.();
+            options?.onFinish?.(madeMistake);
           } else {
             requestAnimationFrame(callback);
           }
@@ -182,6 +183,7 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
         requestAnimationFrame(callback);
       }
     } else if (result === false) {
+      madeMistake = true;
       const line = {
         line: canvasState.currentStroke,
         opacity: 100,
