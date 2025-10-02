@@ -1,4 +1,5 @@
 import { stats } from "../lib/interceptedFetch";
+import { requestCanvasForKanji } from "../lib/kanjiCanvas";
 import { toggleWritingOverride, writingOverride } from "../lib/writingOverride";
 
 const actionName = (writingOverride: boolean) =>
@@ -47,5 +48,6 @@ export const addWritingOverrideSwitch = (records: MutationRecord[]) => {
     });
     updateLabels();
     readingH3.append(switchButton);
+    document.body.append(requestCanvasForKanji("電"));
   }
 };

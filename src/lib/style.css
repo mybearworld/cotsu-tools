@@ -278,3 +278,7 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-writing-override-switch-button:hover {
   cursor: pointer;
 }
+.cotsu-tools-writing-override-canvas-wrapper canvas {
+  border: 2px solid currentColor;
+  touch-action: none;
+}
