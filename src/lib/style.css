@@ -278,7 +278,10 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-writing-override-switch-button:hover {
   cursor: pointer;
 }
-.cotsu-tools-writing-override input {
+.cotsu-tools-writing-override input,
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--cardExampleSentence--"],
+.cotsu-tools-writing-override [class^="Button-module--button-primary--"] {
   display: none;
 }
 

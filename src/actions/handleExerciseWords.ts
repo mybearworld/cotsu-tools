@@ -72,6 +72,10 @@ const handleUpdatedWord = (record: MutationRecord) => {
       ),
     ).textContent = "Zum Ende";
   } else if (writingOverride()) {
+    const input = element(document.querySelector("input")) as HTMLInputElement;
+    const checkButton = element(
+      document.querySelector("[class^=Button-module--button-primary--]"),
+    );
     element(
       document.querySelector(
         "[class^=QuestionContainer-module--question-container--]",
@@ -82,27 +86,41 @@ const handleUpdatedWord = (record: MutationRecord) => {
         "[class^=ReadingQuestionCard-module--cardExampleSentence--]",
       ),
     );
-    exampleSentence.innerHTML = "";
-    exampleSentence.append(
+    const wordInformation = document.createElement("div");
+    wordInformation.append(
       pitchAccentElement(currentQuestion.writing, currentQuestion.reading),
     );
     if (currentQuestion.german) {
-      exampleSentence.append(" → ", currentQuestion.german);
+      wordInformation.append(" → ", currentQuestion.german);
     }
-    exampleSentence.insertAdjacentElement(
-      "afterend",
+    wordInformation.append(
       definitionElement(currentQuestion.writing, currentQuestion.reading),
     );
+    exampleSentence.insertAdjacentElement("afterend", wordInformation);
+    const finishedCharacters = document.createElement("div");
+    element(
+      document.querySelector(
+        "[class^=ReadingQuestionCard-module--input-field--]",
+      ),
+    ).insertAdjacentElement("afterend", finishedCharacters);
     let currentCharacter = 0;
     const canvasFinishListener = () => {
-      if (currentCharacter === currentQuestion.writing.length - 1) return;
+      if (currentCharacter === currentQuestion.writing.length - 1) {
+        currentCanvas.remove();
+        wordInformation.remove();
+        finishedCharacters.innerHTML = "";
+        input.value = currentQuestion.reading;
+        checkButton.click();
+        return;
+      }
       const finishedCharacter = document.createElement("span");
       finishedCharacter.classList.add(
         "cotsu-tools-writing-override-finished-character",
       );
       finishedCharacter.textContent = currentQuestion.writing[currentCharacter];
-      currentCanvas.replaceWith(finishedCharacter);
+      finishedCharacters.append(finishedCharacter);
       currentCharacter++;
+      currentCanvas.remove();
       currentCanvas = requestCanvas(currentQuestion.writing[currentCharacter], {
         onFinish: canvasFinishListener,
       });
@@ -111,11 +129,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
     let currentCanvas = requestCanvas(currentQuestion.writing[0], {
       onFinish: canvasFinishListener,
     });
-    element(
-      document.querySelector(
-        "[class^=ReadingQuestionCard-module--input-field--]",
-      ),
-    ).insertAdjacentElement("afterend", currentCanvas);
+    finishedCharacters.insertAdjacentElement("afterend", currentCanvas);
   } else {
     void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
   }
