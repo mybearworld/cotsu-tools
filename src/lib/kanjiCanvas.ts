@@ -69,6 +69,8 @@ export const requestCanvas = (character: string, options?: CanvasOptions) => {
   const container = document.createElement("div");
   container.classList.add("cotsu-tools-writing-override-canvas-wrapper");
   container.textContent = "lädt...";
+  container.style.width = `${CANVAS_SIZE}px`;
+  container.style.height = `${CANVAS_SIZE}px`;
   gmfetch({
     url:
       "https://raw.githubusercontent.com/KanjiVG/kanjivg/refs/heads/master/kanji/" +
