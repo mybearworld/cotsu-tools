@@ -77,14 +77,6 @@ const handleUpdatedWord = (record: MutationRecord) => {
         "[class^=QuestionContainer-module--question-container--]",
       ),
     ).classList.add("cotsu-tools-writing-override");
-    element(
-      document.querySelector(
-        "[class^=ReadingQuestionCard-module--input-field--]",
-      ),
-    ).insertAdjacentElement(
-      "afterend",
-      requestCanvasForKanji(currentQuestion.writing),
-    );
     const exampleSentence = element(
       document.querySelector(
         "[class^=ReadingQuestionCard-module--cardExampleSentence--]",
@@ -101,6 +93,30 @@ const handleUpdatedWord = (record: MutationRecord) => {
       "afterend",
       definitionElement(currentQuestion.writing, currentQuestion.reading),
     );
+    let currentCharacter = 0;
+    const canvasFinishListener = () => {
+      if (currentCharacter === currentQuestion.writing.length - 1) return;
+      const finishedCharacter = document.createElement("span");
+      finishedCharacter.classList.add(
+        "cotsu-tools-writing-override-finished-character",
+      );
+      finishedCharacter.textContent = currentQuestion.writing[currentCharacter];
+      currentCanvas.replaceWith(finishedCharacter);
+      currentCharacter++;
+      currentCanvas = requestCanvasForKanji(
+        currentQuestion.writing[currentCharacter],
+        { onFinish: canvasFinishListener },
+      );
+      finishedCharacter.insertAdjacentElement("afterend", currentCanvas);
+    };
+    let currentCanvas = requestCanvasForKanji(currentQuestion.writing[0], {
+      onFinish: canvasFinishListener,
+    });
+    element(
+      document.querySelector(
+        "[class^=ReadingQuestionCard-module--input-field--]",
+      ),
+    ).insertAdjacentElement("afterend", currentCanvas);
   } else {
     void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
   }

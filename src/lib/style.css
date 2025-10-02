@@ -282,7 +282,17 @@ div[class^="index-module--action-card-text--"] {
   display: none;
 }
 
+.cotsu-tools-writing-override-canvas-wrapper {
+  vertical-align: middle;
+  display: inline-block;
+}
 .cotsu-tools-writing-override-canvas-wrapper canvas {
   border: 2px solid currentColor;
   touch-action: none;
+}
+
+.cotsu-tools-writing-override-finished-character {
+  font-size: 3rem;
+  margin-right: 0.5rem;
+  font-weight: 400;
 }

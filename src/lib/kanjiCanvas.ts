@@ -63,7 +63,10 @@ const checkStroke = (userStroke: Path, correctStroke: Path) => {
 };
 
 const domParser = new DOMParser();
-export const requestCanvasForKanji = (kanji: string) => {
+export const requestCanvasForKanji = (
+  kanji: string,
+  options?: CanvasOptions,
+) => {
   const codePoint = kanji.codePointAt(0);
   if (!codePoint) throw new Error("Invalid Kanji");
   const container = document.createElement("div");
@@ -81,12 +84,15 @@ export const requestCanvasForKanji = (kanji: string) => {
     const svg = parsedDocument.querySelector("svg");
     if (!svg) throw new Error("No SVG");
     container.innerHTML = "";
-    container.append(createCanvas(svg));
+    container.append(createCanvas(svg, options));
   });
   return container;
 };
 
-export const createCanvas = (kanji: SVGElement) => {
+export type CanvasOptions = {
+  onFinish: () => void;
+};
+export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
   const canvas = document.createElement("canvas");
   canvas.width = CANVAS_SIZE;
   canvas.height = CANVAS_SIZE;
@@ -160,6 +166,9 @@ export const createCanvas = (kanji: SVGElement) => {
       canvasState.correctStrokes.push(correctStroke!);
       incorrectStrokesInARow = 0;
       currentStrokeNumber++;
+      if (currentStrokeNumber >= strokePaths.length) {
+        options?.onFinish?.();
+      }
     } else if (result === false) {
       const line = {
         line: canvasState.currentStroke,
