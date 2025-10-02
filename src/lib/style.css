@@ -284,13 +284,16 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-writing-override [class^="Button-module--button-primary--"] {
   display: none;
 }
+[class^="ReadingQuestionCard-module--section-action--"] {
+  display: none;
+}
 
 .cotsu-tools-writing-override-canvas-wrapper {
   vertical-align: middle;
   display: inline-block;
+  border: 2px solid currentcolor;
 }
 .cotsu-tools-writing-override-canvas-wrapper canvas {
-  border: 2px solid currentColor;
   touch-action: none;
 }
 
