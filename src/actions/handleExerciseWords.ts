@@ -172,7 +172,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
           );
           checkButton.click();
         } else {
-          input.value = currentQuestion.reading;
+          input.value = currentQuestion.reading.split("・")[0];
           checkButton.click();
         }
         return;
