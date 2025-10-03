@@ -298,6 +298,13 @@ div[class^="index-module--action-card-text--"] {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.cotsu-tools-writing-override-hint-buttons button {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .cotsu-tools-writing-override
   [class^="ReadingQuestionCard-module--section-action--IDsDG"] {
@@ -319,6 +326,13 @@ div[class^="index-module--action-card-text--"] {
 
 .cotsu-tools-writing-override-character-wrapper {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.cotsu-tools-writing-override-character-wrapper > div {
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -326,4 +340,5 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-writing-override-finished-character {
   font-size: 3rem;
   font-weight: 400;
+  line-height: 1;
 }
