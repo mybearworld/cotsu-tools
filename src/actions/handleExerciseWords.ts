@@ -96,7 +96,9 @@ const handleUpdatedWord = (record: MutationRecord) => {
       wordInformation.append(" → ", currentQuestion.german);
     }
     wordInformation.append(
-      definitionElement(currentQuestion.writing, currentQuestion.reading),
+      definitionElement(currentQuestion.writing, currentQuestion.reading, {
+        collapsed: true,
+      }),
     );
     exampleSentence.insertAdjacentElement("afterend", wordInformation);
     const finishedCharacters = document.createElement("div");

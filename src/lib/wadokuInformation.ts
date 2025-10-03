@@ -218,7 +218,14 @@ export const meaningElement = (kanji: string, reading: string) => {
   return meaningElement;
 };
 
-export const definitionElement = (kanji: string, reading: string) => {
+export type DefinitionElementOptions = {
+  collapsed?: boolean;
+};
+export const definitionElement = (
+  kanji: string,
+  reading: string,
+  options?: DefinitionElementOptions,
+) => {
   const wrapperElement = document.createElement("div");
   wrapperElement.classList.add("cotsu-tools-definition");
   const headerElement = document.createElement("div");
@@ -226,12 +233,41 @@ export const definitionElement = (kanji: string, reading: string) => {
   headerElement.textContent = "Definition von Wadoku";
   wrapperElement.append(headerElement);
   const definitionElement = document.createElement("div");
+  if (options?.collapsed) {
+    definitionElement.classList.add("cotsu-tools-definition-collapsed");
+  }
   definitionElement.textContent = "lädt...";
   wrapperElement.append(definitionElement);
   getWadokuInformation(kanji, reading).then((information) => {
     definitionElement.replaceChildren(
       information?.definition ?? "keine Definition verfügbar",
     );
+    if (options?.collapsed) {
+      let currentButton: HTMLButtonElement | null = null;
+      let hasClickedButton = false;
+      const resizeListener = () => {
+        if (definitionElement.scrollHeight === definitionElement.clientHeight) {
+          if (!currentButton) return;
+          currentButton.remove();
+          currentButton = null;
+        } else {
+          if (currentButton || hasClickedButton) return;
+          currentButton = document.createElement("button");
+          currentButton.textContent = "volle Definition anzeigen";
+          currentButton.addEventListener("click", () => {
+            definitionElement.classList.remove(
+              "cotsu-tools-definition-collapsed",
+            );
+            if (currentButton) currentButton.remove();
+            currentButton = null;
+            hasClickedButton = true;
+          });
+          wrapperElement.append(currentButton);
+        }
+      };
+      window.addEventListener("resize", resizeListener);
+      resizeListener();
+    }
   });
   return wrapperElement;
 };

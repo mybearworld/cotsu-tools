@@ -169,6 +169,13 @@ div.card-word.cotsu-tools-card-word-clone {
   margin-bottom: -0.5rem;
   margin-top: 0.5rem;
 }
+.cotsu-tools-definition-collapsed {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
 .cotsu-tools-definition-index-number {
   margin-left: 0.3rem;
 }
