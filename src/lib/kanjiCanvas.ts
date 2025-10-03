@@ -62,17 +62,6 @@ const checkStroke = (userStroke: Path, correctStroke: Path) => {
   );
 };
 
-const REPLACED_KANJI = {
-  "１": "一",
-  "２": "二",
-  "３": "三",
-  "４": "四",
-  "５": "五",
-  "６": "六",
-  "７": "七",
-  "８": "八",
-  "９": "九",
-};
 const domParser = new DOMParser();
 export type RequestCanvasOptions = CanvasOptions & {
   onLoad?: () => void;
@@ -81,10 +70,7 @@ export const requestCanvas = (
   character: string,
   options?: RequestCanvasOptions,
 ) => {
-  const codePoint = (
-    character in REPLACED_KANJI ?
-      REPLACED_KANJI[character as keyof typeof REPLACED_KANJI]
-    : character).codePointAt(0);
+  const codePoint = character.codePointAt(0);
   if (!codePoint) throw new Error("Invalid Kanji");
   const container = document.createElement("div");
   container.classList.add("cotsu-tools-writing-override-canvas-wrapper");
@@ -98,16 +84,26 @@ export const requestCanvas = (
       ".svg",
     headers: {},
     method: "GET",
-  }).then((text) => {
-    const parsedDocument = domParser.parseFromString(text, "image/svg+xml");
-    const svg = parsedDocument.querySelector("svg");
-    if (!svg) throw new Error("No SVG");
-    container.innerHTML = "";
-    const result = createCanvas(svg, options);
-    container.append(result.element);
-    returnObject.hint = result.hint;
-    options?.onLoad?.();
-  });
+  })
+    .then((text) => {
+      const parsedDocument = domParser.parseFromString(text, "image/svg+xml");
+      const svg = parsedDocument.querySelector("svg");
+      if (!svg) throw new Error("No SVG");
+      container.innerHTML = "";
+      const result = createCanvas(svg, options);
+      container.append(result.element);
+      returnObject.hint = result.hint;
+      options?.onLoad?.();
+    })
+    .catch(() => {
+      container.textContent = `Von dem Zeichen 「${character}」 scheint KanjiVG keine Stroke-Order zu kennen. Das ist wahrscheinlich ein Bug von Cotsu-Tools.`;
+      const continueButton = document.createElement("button");
+      continueButton.textContent = "Zum nächsten Zeichen";
+      continueButton.addEventListener("click", () => {
+        options?.onFinish?.(false);
+      });
+      container.append(document.createElement("br"), continueButton);
+    });
   const returnObject: CanvasReturn = {
     element: container,
     hint: () => {},

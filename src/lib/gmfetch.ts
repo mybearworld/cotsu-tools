@@ -5,6 +5,9 @@ export const gmfetch = (
     GM.xmlHttpRequest({
       ...options,
       onload: (response) => {
+        if (response.status < 200 || response.status > 299) {
+          reject();
+        }
         resolve(response.response);
       },
       onerror: () => {
