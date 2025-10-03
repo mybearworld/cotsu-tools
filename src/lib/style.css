@@ -312,8 +312,13 @@ div[class^="index-module--action-card-text--"] {
   touch-action: none;
 }
 
+.cotsu-tools-writing-override-character-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
 .cotsu-tools-writing-override-finished-character {
   font-size: 3rem;
-  margin-right: 0.5rem;
   font-weight: 400;
 }

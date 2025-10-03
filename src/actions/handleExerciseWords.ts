@@ -1,6 +1,6 @@
 import { element, text } from "../lib/element";
 import { DUMMY_QUESTION_ID, readingExercise } from "../lib/interceptedFetch";
-import { requestCanvas } from "../lib/kanjiCanvas";
+import { CanvasReturn, requestCanvas } from "../lib/kanjiCanvas";
 import {
   getWadokuInformation,
   pitchAccentElement,
@@ -27,6 +27,8 @@ const currentQuestionId = () => {
   return Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
 };
 
+// prettier-ignore
+const KNOWN_INVALID_CHARACTERS = new Set(["０", "１", "２", "３", "４", "５", "６", "７", "８", "９", "〜"]);
 const handleUpdatedWord = (record: MutationRecord) => {
   const firstAddedNode = record.addedNodes[0];
   if (
@@ -103,20 +105,36 @@ const handleUpdatedWord = (record: MutationRecord) => {
       }),
     );
     exampleSentence.insertAdjacentElement("afterend", wordInformation);
-    const finishedCharacters = document.createElement("div");
+    const characterWrapper = document.createElement("div");
+    characterWrapper.classList.add(
+      "cotsu-tools-writing-override-character-wrapper",
+    );
     element(
       document.querySelector(
         "[class^=ReadingQuestionCard-module--input-field--]",
       ),
-    ).insertAdjacentElement("afterend", finishedCharacters);
-    let currentCharacter = 0;
+    ).insertAdjacentElement("afterend", characterWrapper);
+    let currentCharacter = -1;
     let madeMistake = false;
+    let hintButton: HTMLButtonElement | null = null;
+    const addHintButton = () => {
+      hintButton = checkButton.cloneNode(true) as HTMLButtonElement;
+      hintButton.classList.add(
+        "cotsu-tools-writing-override-hint-button",
+        "cotsu-tools-writing-override-button",
+      );
+      hintButton.textContent = "Nächsten Stroke anzeigen";
+      hintButton.addEventListener("click", () => {
+        currentCanvas.hint();
+      });
+      checkButton.insertAdjacentElement("afterend", hintButton);
+    };
+    let currentCanvas: CanvasReturn;
     const canvasFinishListener = (madeMistakeForThisCharacter: boolean) => {
       madeMistake ||= madeMistakeForThisCharacter;
       if (currentCharacter === currentQuestion.writing.length - 1) {
-        currentCanvas.element.remove();
+        characterWrapper.remove();
         wordInformation.remove();
-        finishedCharacters.innerHTML = "";
         hintButton?.remove();
         hintButton = null;
         if (madeMistake) {
@@ -141,44 +159,41 @@ const handleUpdatedWord = (record: MutationRecord) => {
         }
         return;
       }
-      const finishedCharacter = document.createElement("span");
-      finishedCharacter.classList.add(
-        "cotsu-tools-writing-override-finished-character",
-      );
-      finishedCharacter.textContent = currentQuestion.writing[currentCharacter];
-      finishedCharacters.append(finishedCharacter);
       currentCharacter++;
-      currentCanvas.element.remove();
+      if (
+        KNOWN_INVALID_CHARACTERS.has(currentQuestion.writing[currentCharacter])
+      ) {
+        canvasFinishListener(false);
+        return;
+      }
       hintButton?.remove();
       hintButton = null;
-      currentCanvas = requestCanvas(currentQuestion.writing[currentCharacter], {
-        onFinish: canvasFinishListener,
-        onLoad: addHintButton,
+      characterWrapper.innerHTML = "";
+      [...currentQuestion.writing].forEach((character, i) => {
+        if (i === currentCharacter) {
+          currentCanvas = requestCanvas(
+            currentQuestion.writing[currentCharacter],
+            {
+              onFinish: canvasFinishListener,
+              onLoad: addHintButton,
+            },
+          );
+          characterWrapper.append(currentCanvas.element);
+        } else {
+          const finishedCharacter = document.createElement("span");
+          finishedCharacter.classList.add(
+            "cotsu-tools-writing-override-finished-character",
+          );
+          finishedCharacter.append(
+            i < currentCharacter || KNOWN_INVALID_CHARACTERS.has(character) ?
+              character
+            : "？",
+          );
+          characterWrapper.append(finishedCharacter);
+        }
       });
-      finishedCharacter.insertAdjacentElement(
-        "afterend",
-        currentCanvas.element,
-      );
     };
-    let hintButton: HTMLButtonElement | null = null;
-    const addHintButton = () => {
-      hintButton = checkButton.cloneNode(true) as HTMLButtonElement;
-      hintButton.classList.add(
-        "cotsu-tools-writing-override-hint-button",
-        "cotsu-tools-writing-override-button",
-      );
-      hintButton.textContent = "Nächsten Stroke anzeigen";
-      hintButton.addEventListener("click", () => {
-        currentCanvas.hint();
-      });
-      checkButton.insertAdjacentElement("afterend", hintButton);
-    };
-    let currentCanvas = requestCanvas(currentQuestion.writing[0], {
-      onFinish: canvasFinishListener,
-      onLoad: addHintButton,
-    });
-
-    finishedCharacters.insertAdjacentElement("afterend", currentCanvas.element);
+    canvasFinishListener(false);
   } else {
     void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
   }
