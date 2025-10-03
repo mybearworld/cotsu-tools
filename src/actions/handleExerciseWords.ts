@@ -220,15 +220,27 @@ const handleUpdatedWord = (record: MutationRecord) => {
         },
       });
       canvasWrapper.append(currentCanvas.element);
-      if (readingExercise.questions[id + 1]) {
-        (async () => {
-          for (const character of readingExercise.questions[id + 1].writing) {
-            if (!KNOWN_INVALID_CHARACTERS.has(character)) {
-              void (await getStrokeOrderInformation(character));
-            }
+      (async () => {
+        const prefetch = async (character: string) => {
+          if (!KNOWN_INVALID_CHARACTERS.has(character)) {
+            void (await getStrokeOrderInformation(character));
           }
-        })();
-      }
+        };
+        if (id === 0) {
+          for (const character of currentQuestion.writing.slice(1)) {
+            await prefetch(character);
+          }
+        }
+        if (readingExercise.questions[id + 1]) {
+          for (const character of readingExercise.questions[id + 1].writing) {
+            await prefetch(character);
+          }
+          void getWadokuInformation(
+            readingExercise.questions[id + 1].writing,
+            readingExercise.questions[id + 1].reading,
+          );
+        }
+      })();
     };
     canvasFinishListener(false);
   } else {
