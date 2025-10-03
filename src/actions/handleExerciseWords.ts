@@ -164,7 +164,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
             ) as keyof typeof input
             // @ts-expect-error
           ]?.onChange();
-          input.value = currentQuestion.reading;
+          input.value = currentQuestion.reading.split("・")[0];
           checkButton = element(
             document.querySelector(
               "[class*=ReadingQuestionCard-module--action-check--]",
