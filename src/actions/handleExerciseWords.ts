@@ -107,12 +107,12 @@ const handleUpdatedWord = (record: MutationRecord) => {
       wordInformation.append(germanWrapper);
     }
     exampleSentence.insertAdjacentElement("afterend", wordInformation);
-    wordInformation.insertAdjacentElement(
-      "afterend",
-      definitionElement(currentQuestion.writing, currentQuestion.reading, {
-        collapsed: true,
-      }),
+    const definition = definitionElement(
+      currentQuestion.writing,
+      currentQuestion.reading,
+      { collapsed: true },
     );
+    wordInformation.insertAdjacentElement("afterend", definition);
     const canvasWrapper = document.createElement("div");
     element(
       document.querySelector(
@@ -152,6 +152,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
         characterWrapper.remove();
         canvasWrapper.remove();
         wordInformation.remove();
+        definition.remove();
         hintButtons?.remove();
         hintButtons = null;
         if (madeMistake) {
