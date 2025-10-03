@@ -54,7 +54,7 @@ const checkStroke = (userStroke: Path, correctStroke: Path) => {
     : 0,
   );
   const zeroIndex = scores.findIndex((score) => score.degrees === 0);
-  if (zeroIndex > ZERO_INDEX_THRESHHOLD) return;
+  if (zeroIndex > ZERO_INDEX_THRESHHOLD) return false;
   const allDistances: number[] = [];
   correctStrokePoints.forEach((correctStrokePoint, i) => {
     const userStrokePoint = userStrokePoints[i];
@@ -201,6 +201,7 @@ export const createCanvas = (
       correctStroke ?
         checkStroke(canvasState.currentStroke, correctStroke)
       : false;
+    console.log(result);
     if (result === true) {
       canvasState.hintStroke = null;
       canvasState.correctStrokes.push(correctStroke!);
