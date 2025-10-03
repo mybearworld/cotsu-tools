@@ -284,7 +284,8 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-writing-override [class^="Button-module--button-primary--"] {
   display: none;
 }
-[class^="ReadingQuestionCard-module--section-action--"] {
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--section-action--"] {
   display: none;
 }
 

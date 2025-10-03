@@ -61,11 +61,13 @@ const handleUpdatedWord = (record: MutationRecord) => {
   ).style.transform =
     `translateX(${-100 * (1 - (id + 1) / readingExercise.questionCount)}%)`;
   if (currentQuestion.qid === DUMMY_QUESTION_ID) {
-    element(
+    const questionContainer = element(
       document.querySelector(
         "[class^=QuestionContainer-module--question-container--]",
       ),
-    ).classList.add("cotsu-tools-dummy-question");
+    );
+    questionContainer.classList.add("cotsu-tools-dummy-question");
+    questionContainer.classList.remove("cotsu-tools-writing-override");
     element(
       document.querySelector(
         "[class*=ReadingQuestionCard-module--action-check--]",
