@@ -166,8 +166,12 @@ div.card-word.cotsu-tools-card-word-clone {
 .cotsu-tools-definition-header {
   font-weight: 700;
   font-size: 12px;
-  margin-bottom: -0.5rem;
+  line-height: 1.2;
   margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
 }
 .cotsu-tools-definition-collapsed {
   overflow: hidden;

@@ -270,7 +270,7 @@ export const definitionElement = (
             currentButton = null;
             hasClickedButton = true;
           });
-          wrapperElement.append(currentButton);
+          headerElement.append(currentButton);
         }
       };
       window.addEventListener("resize", resizeListener);
