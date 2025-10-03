@@ -113,6 +113,7 @@ export const requestCanvas = (
 };
 
 export type CanvasOptions = {
+  beforeFinish?: () => void;
   onFinish?: (madeMistake: boolean) => void;
   onNewStroke?: () => void;
 };
@@ -201,6 +202,7 @@ export const createCanvas = (
       currentStrokeNumber++;
       const wasLastStroke = currentStrokeNumber >= strokePaths.length;
       if (wasLastStroke) {
+        options?.beforeFinish?.();
         canDraw = false;
         let blur = 0;
         const callback = () => {

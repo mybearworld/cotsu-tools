@@ -99,6 +99,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
     );
     exampleSentence.insertAdjacentElement("afterend", wordInformation);
     const characterWrapper = document.createElement("div");
+    const canvasWrapper = document.createElement("div");
     characterWrapper.classList.add(
       "cotsu-tools-writing-override-character-wrapper",
     );
@@ -107,6 +108,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
         "[class^=ReadingQuestionCard-module--input-field--]",
       ),
     ).insertAdjacentElement("afterend", characterWrapper);
+    characterWrapper.insertAdjacentElement("afterend", canvasWrapper);
     let currentCharacter = -1;
     let madeMistake = false;
     let showAllHints = false;
@@ -138,6 +140,7 @@ const handleUpdatedWord = (record: MutationRecord) => {
       madeMistake ||= madeMistakeForThisCharacter;
       if (currentCharacter === currentQuestion.writing.length - 1) {
         characterWrapper.remove();
+        canvasWrapper.remove();
         wordInformation.remove();
         hintButtons?.remove();
         hintButtons = null;
@@ -173,35 +176,40 @@ const handleUpdatedWord = (record: MutationRecord) => {
       hintButtons?.remove();
       hintButtons = null;
       characterWrapper.innerHTML = "";
+      canvasWrapper.innerHTML = "";
+      let currentPromptCharacter: HTMLSpanElement;
       [...currentQuestion.writing].forEach((character, i) => {
+        const promptCharacter = document.createElement("span");
+        promptCharacter.classList.add(
+          "cotsu-tools-writing-override-prompt-character",
+        );
+        promptCharacter.append(
+          i < currentCharacter || KNOWN_INVALID_CHARACTERS.has(character) ?
+            character
+          : "？",
+        );
         if (i === currentCharacter) {
-          currentCanvas = requestCanvas(
-            currentQuestion.writing[currentCharacter],
-            {
-              onFinish: canvasFinishListener,
-              onLoad: addHintButtons,
-              onNewStroke: () => {
-                if (showAllHints) {
-                  currentCanvas.hint();
-                }
-              },
-            },
+          promptCharacter.classList.add(
+            "cotsu-tools-writing-override-prompt-character-active",
           );
-
-          characterWrapper.append(currentCanvas.element);
-        } else {
-          const finishedCharacter = document.createElement("span");
-          finishedCharacter.classList.add(
-            "cotsu-tools-writing-override-finished-character",
-          );
-          finishedCharacter.append(
-            i < currentCharacter || KNOWN_INVALID_CHARACTERS.has(character) ?
-              character
-            : "？",
-          );
-          characterWrapper.append(finishedCharacter);
+          currentPromptCharacter = promptCharacter;
         }
+        characterWrapper.append(promptCharacter);
       });
+      currentCanvas = requestCanvas(currentQuestion.writing[currentCharacter], {
+        beforeFinish: () => {
+          currentPromptCharacter.textContent =
+            currentQuestion.writing[currentCharacter];
+        },
+        onFinish: canvasFinishListener,
+        onLoad: addHintButtons,
+        onNewStroke: () => {
+          if (showAllHints) {
+            currentCanvas.hint();
+          }
+        },
+      });
+      canvasWrapper.append(currentCanvas.element);
     };
     canvasFinishListener(false);
   } else {
