@@ -1,11 +1,17 @@
 import { element, text } from "../lib/element";
 import { DUMMY_QUESTION_ID, readingExercise } from "../lib/interceptedFetch";
 import {
+  CanvasReturn,
+  getStrokeOrderInformation,
+  requestCanvas,
+} from "../lib/kanjiCanvas";
+import {
   getWadokuInformation,
   pitchAccentElement,
   meaningElement,
   definitionElement,
 } from "../lib/wadokuInformation";
+import { writingOverride } from "../lib/writingOverride";
 
 let previousReadingExercise: typeof readingExercise | null = null;
 
@@ -25,6 +31,8 @@ const currentQuestionId = () => {
   return Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
 };
 
+// prettier-ignore
+const KNOWN_INVALID_CHARACTERS = new Set(["０", "１", "２", "３", "４", "５", "６", "７", "８", "９", "〜"]);
 const handleUpdatedWord = (record: MutationRecord) => {
   const firstAddedNode = record.addedNodes[0];
   if (
@@ -44,28 +52,200 @@ const handleUpdatedWord = (record: MutationRecord) => {
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
   }
+  const currentQuestion = readingExercise.questions[id];
   element(
     document.querySelector(
       "[class^=StudyProgress-module--study-progress--] .MuiLinearProgress-bar",
     ),
   ).style.transform =
     `translateX(${-100 * (1 - (id + 1) / readingExercise.questionCount)}%)`;
-  if (readingExercise.questions[id].qid === DUMMY_QUESTION_ID) {
-    element(
+  if (currentQuestion.qid === DUMMY_QUESTION_ID) {
+    const questionContainer = element(
       document.querySelector(
         "[class^=QuestionContainer-module--question-container--]",
       ),
-    ).classList.add("cotsu-tools-dummy-question");
+    );
+    questionContainer.classList.add("cotsu-tools-dummy-question");
+    questionContainer.classList.remove("cotsu-tools-writing-override");
     element(
       document.querySelector(
         "[class*=ReadingQuestionCard-module--action-check--]",
       ),
     ).textContent = "Zum Ende";
-  } else {
-    void getWadokuInformation(
-      readingExercise.questions[id].writing,
-      readingExercise.questions[id].reading,
+  } else if (writingOverride()) {
+    const input = element(document.querySelector("input")) as HTMLInputElement;
+    let checkButton = element(
+      document.querySelector(
+        "[class*=ReadingQuestionCard-module--action-check--]",
+      ),
     );
+    element(
+      document.querySelector(
+        "[class^=QuestionContainer-module--question-container--]",
+      ),
+    ).classList.add("cotsu-tools-writing-override");
+    const exampleSentence = element(
+      document.querySelector(
+        "[class^=ReadingQuestionCard-module--cardExampleSentence--]",
+      ),
+    );
+    const wordInformation = document.createElement("div");
+    wordInformation.classList.add(
+      "cotsu-tools-writing-override-word-information",
+    );
+    const characterWrapper = document.createElement("div");
+    characterWrapper.classList.add(
+      "cotsu-tools-writing-override-character-wrapper",
+    );
+    wordInformation.append(characterWrapper);
+    wordInformation.append(
+      pitchAccentElement(currentQuestion.writing, currentQuestion.reading),
+    );
+    if (currentQuestion.german) {
+      const germanWrapper = document.createElement("span");
+      germanWrapper.textContent = currentQuestion.german;
+      wordInformation.append(germanWrapper);
+    }
+    exampleSentence.insertAdjacentElement("afterend", wordInformation);
+    const definition = definitionElement(
+      currentQuestion.writing,
+      currentQuestion.reading,
+      { collapsed: true },
+    );
+    wordInformation.insertAdjacentElement("afterend", definition);
+    const canvasWrapper = document.createElement("div");
+    element(
+      document.querySelector(
+        "[class^=ReadingQuestionCard-module--input-field--]",
+      ),
+    ).insertAdjacentElement("afterend", canvasWrapper);
+    let currentCharacter = -1;
+    let madeMistake = false;
+    let showAllHints = false;
+    let hintButtons: HTMLDivElement | null = null;
+    const addHintButtons = () => {
+      if (showAllHints) return;
+      hintButtons = document.createElement("div");
+      hintButtons.classList.add("cotsu-tools-writing-override-hint-buttons");
+      const oneHintButton = checkButton.cloneNode(true) as HTMLDivElement;
+      oneHintButton.classList.add("cotsu-tools-writing-override-button");
+      oneHintButton.textContent = "Nächsten Stroke anzeigen";
+      oneHintButton.addEventListener("click", () => {
+        currentCanvas.hint();
+      });
+      hintButtons.append(oneHintButton);
+      const allHintsButton = checkButton.cloneNode(true) as HTMLDivElement;
+      allHintsButton.classList.add("cotsu-tools-writing-override-button");
+      allHintsButton.textContent = "Alle Strokes anzeigen";
+      allHintsButton.addEventListener("click", () => {
+        currentCanvas.hint();
+        showAllHints = true;
+        hintButtons?.remove();
+      });
+      hintButtons.append(allHintsButton);
+      checkButton.insertAdjacentElement("afterend", hintButtons);
+    };
+    let currentCanvas: CanvasReturn;
+    const canvasFinishListener = (madeMistakeForThisCharacter: boolean) => {
+      madeMistake ||= madeMistakeForThisCharacter;
+      if (currentCharacter === currentQuestion.writing.length - 1) {
+        characterWrapper.remove();
+        canvasWrapper.remove();
+        wordInformation.remove();
+        definition.remove();
+        hintButtons?.remove();
+        hintButtons = null;
+        if (madeMistake) {
+          input.value = "";
+          checkButton.click();
+          input[
+            Object.keys(input).find((key) =>
+              key.startsWith("__reactEventHandlers$"),
+            ) as keyof typeof input
+            // @ts-expect-error
+          ]?.onChange();
+          input.value = currentQuestion.reading;
+          checkButton = element(
+            document.querySelector(
+              "[class*=ReadingQuestionCard-module--action-check--]",
+            ),
+          );
+          checkButton.click();
+        } else {
+          input.value = currentQuestion.reading;
+          checkButton.click();
+        }
+        return;
+      }
+      currentCharacter++;
+      if (
+        KNOWN_INVALID_CHARACTERS.has(currentQuestion.writing[currentCharacter])
+      ) {
+        canvasFinishListener(false);
+        return;
+      }
+      hintButtons?.remove();
+      hintButtons = null;
+      characterWrapper.innerHTML = "";
+      canvasWrapper.innerHTML = "";
+      let currentPromptCharacter: HTMLSpanElement;
+      [...currentQuestion.writing].forEach((character, i) => {
+        const promptCharacter = document.createElement("span");
+        promptCharacter.classList.add(
+          "cotsu-tools-writing-override-prompt-character",
+        );
+        promptCharacter.append(
+          i < currentCharacter || KNOWN_INVALID_CHARACTERS.has(character) ?
+            character
+          : "？",
+        );
+        if (i === currentCharacter) {
+          promptCharacter.classList.add(
+            "cotsu-tools-writing-override-prompt-character-active",
+          );
+          currentPromptCharacter = promptCharacter;
+        }
+        characterWrapper.append(promptCharacter);
+      });
+      currentCanvas = requestCanvas(currentQuestion.writing[currentCharacter], {
+        beforeFinish: () => {
+          currentPromptCharacter.textContent =
+            currentQuestion.writing[currentCharacter];
+        },
+        onFinish: canvasFinishListener,
+        onLoad: addHintButtons,
+        onNewStroke: () => {
+          if (showAllHints) {
+            currentCanvas.hint();
+          }
+        },
+      });
+      canvasWrapper.append(currentCanvas.element);
+      (async () => {
+        const prefetch = async (character: string) => {
+          if (!KNOWN_INVALID_CHARACTERS.has(character)) {
+            void (await getStrokeOrderInformation(character));
+          }
+        };
+        if (id === 0) {
+          for (const character of currentQuestion.writing.slice(1)) {
+            await prefetch(character);
+          }
+        }
+        if (readingExercise.questions[id + 1]) {
+          for (const character of readingExercise.questions[id + 1].writing) {
+            await prefetch(character);
+          }
+          void getWadokuInformation(
+            readingExercise.questions[id + 1].writing,
+            readingExercise.questions[id + 1].reading,
+          );
+        }
+      })();
+    };
+    canvasFinishListener(false);
+  } else {
+    void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
   }
 };
 
@@ -108,6 +288,7 @@ const handleWrongAnswer = (record: MutationRecord) => {
     )
   )
     return;
+  if (writingOverride()) return;
   const reading = firstAddedNode.textContent.replace("Die Antwort ist ", "");
   const kanji = element(
     document.querySelector(
@@ -176,25 +357,26 @@ const handleSummary = (record: MutationRecord) => {
           question.writing === kanji && question.reading === reading,
       )?.german ?? meaningElement(kanji, reading),
     );
-    let shownSolution;
-    if (isIncorrect) {
+    const spoilerWrap = (toWrap: Node | string) => {
       const spoilerElement = document.createElement("button");
       spoilerElement.classList.add("cotsu-tools-spoiler");
       spoilerElement.ariaLabel = "Lösung anzeigen";
       const accessibilityWrapper = document.createElement("span");
       accessibilityWrapper.ariaHidden = "true";
-      accessibilityWrapper.append(solution);
+      accessibilityWrapper.append(toWrap);
       spoilerElement.append(accessibilityWrapper);
       spoilerElement.addEventListener("click", () => {
         spoilerElement.classList.add("cotsu-tools-spoiler-shown");
         spoilerElement.ariaLabel = null;
         accessibilityWrapper.ariaHidden = "false";
       });
-      shownSolution = spoilerElement;
-    } else {
-      shownSolution = solution;
-    }
-    row.append(kanji, " → ", shownSolution);
+      return spoilerElement;
+    };
+    row.append(
+      isIncorrect && writingOverride() ? spoilerWrap(kanji) : kanji,
+      " → ",
+      isIncorrect && !writingOverride() ? spoilerWrap(solution) : solution,
+    );
     (isIncorrect ? incorrectKanji : correctKanji).append(row);
   });
   if (originalSummaryElement) {

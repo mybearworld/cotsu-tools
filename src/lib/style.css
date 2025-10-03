@@ -166,8 +166,19 @@ div.card-word.cotsu-tools-card-word-clone {
 .cotsu-tools-definition-header {
   font-weight: 700;
   font-size: 12px;
-  margin-bottom: -0.5rem;
+  line-height: 1.2;
   margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+.cotsu-tools-definition-collapsed {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 .cotsu-tools-definition-index-number {
   margin-left: 0.3rem;
@@ -268,4 +279,76 @@ div[class^="index-module--action-card-text--"] {
     "Noto Sans JP All Katakana",
     Noto Sans Japanese,
     sans-serif;
+}
+
+/* Writing override */
+.cotsu-tools-writing-override-switch-button {
+  font-size: 1rem;
+  white-space: nowrap;
+}
+.cotsu-tools-writing-override-switch-button:hover {
+  cursor: pointer;
+}
+.cotsu-tools-writing-override input,
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--cardExampleSentence--"],
+.cotsu-tools-writing-override
+  [class^="Button-module--button-"]:not(.cotsu-tools-writing-override-button),
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--wrong-answer--"] {
+  display: none;
+}
+.cotsu-tools-writing-override-hint-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.cotsu-tools-writing-override-hint-buttons button {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--section-action--IDsDG"] {
+  height: auto;
+}
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--newWordHint--"] {
+  display: none;
+}
+.cotsu-tools-writing-override-canvas-wrapper {
+  vertical-align: middle;
+  display: inline-block;
+  border: 2px solid currentcolor;
+}
+.cotsu-tools-writing-override-canvas-wrapper canvas {
+  touch-action: none;
+}
+.cotsu-tools-writing-override-word-information {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.5rem;
+}
+.cotsu-tools-writing-override-character-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.cotsu-tools-writing-override-prompt-character {
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+.cotsu-tools-writing-override-prompt-character.cotsu-tools-writing-override-prompt-character-active {
+  font-weight: 700;
+}
+.cotsu-tools-writing-override-word-information
+  + .cotsu-tools-definition
+  .cotsu-tools-definition-header {
+  margin-top: 0;
 }
