@@ -318,7 +318,6 @@ div[class^="index-module--action-card-text--"] {
   [class^="ReadingQuestionCard-module--newWordHint--"] {
   display: none;
 }
-
 .cotsu-tools-writing-override-canvas-wrapper {
   vertical-align: middle;
   display: inline-block;
@@ -327,7 +326,6 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-writing-override-canvas-wrapper canvas {
   touch-action: none;
 }
-
 .cotsu-tools-writing-override-word-information {
   display: flex;
   flex-wrap: wrap;

@@ -110,7 +110,6 @@ const handleUpdatedWord = (record: MutationRecord) => {
       }),
     );
     const canvasWrapper = document.createElement("div");
-
     element(
       document.querySelector(
         "[class^=ReadingQuestionCard-module--input-field--]",
