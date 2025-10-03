@@ -201,7 +201,6 @@ export const createCanvas = (
       correctStroke ?
         checkStroke(canvasState.currentStroke, correctStroke)
       : false;
-    console.log(result);
     if (result === true) {
       canvasState.hintStroke = null;
       canvasState.correctStrokes.push(correctStroke!);
