@@ -109,18 +109,29 @@ const handleUpdatedWord = (record: MutationRecord) => {
     ).insertAdjacentElement("afterend", characterWrapper);
     let currentCharacter = -1;
     let madeMistake = false;
-    let hintButton: HTMLButtonElement | null = null;
-    const addHintButton = () => {
-      hintButton = checkButton.cloneNode(true) as HTMLButtonElement;
-      hintButton.classList.add(
-        "cotsu-tools-writing-override-hint-button",
-        "cotsu-tools-writing-override-button",
-      );
-      hintButton.textContent = "Nächsten Stroke anzeigen";
-      hintButton.addEventListener("click", () => {
+    let showAllHints = false;
+    let hintButtons: HTMLDivElement | null = null;
+    const addHintButtons = () => {
+      if (showAllHints) return;
+      hintButtons = document.createElement("div");
+      hintButtons.classList.add("cotsu-tools-writing-override-hint-buttons");
+      const oneHintButton = checkButton.cloneNode(true) as HTMLDivElement;
+      oneHintButton.classList.add("cotsu-tools-writing-override-button");
+      oneHintButton.textContent = "Nächsten Stroke anzeigen";
+      oneHintButton.addEventListener("click", () => {
         currentCanvas.hint();
       });
-      checkButton.insertAdjacentElement("afterend", hintButton);
+      hintButtons.append(oneHintButton);
+      const allHintsButton = checkButton.cloneNode(true) as HTMLDivElement;
+      allHintsButton.classList.add("cotsu-tools-writing-override-button");
+      allHintsButton.textContent = "Alle Strokes anzeigen";
+      allHintsButton.addEventListener("click", () => {
+        currentCanvas.hint();
+        showAllHints = true;
+        hintButtons?.remove();
+      });
+      hintButtons.append(allHintsButton);
+      checkButton.insertAdjacentElement("afterend", hintButtons);
     };
     let currentCanvas: CanvasReturn;
     const canvasFinishListener = (madeMistakeForThisCharacter: boolean) => {
@@ -128,8 +139,8 @@ const handleUpdatedWord = (record: MutationRecord) => {
       if (currentCharacter === currentQuestion.writing.length - 1) {
         characterWrapper.remove();
         wordInformation.remove();
-        hintButton?.remove();
-        hintButton = null;
+        hintButtons?.remove();
+        hintButtons = null;
         if (madeMistake) {
           input.value = "";
           checkButton.click();
@@ -159,8 +170,8 @@ const handleUpdatedWord = (record: MutationRecord) => {
         canvasFinishListener(false);
         return;
       }
-      hintButton?.remove();
-      hintButton = null;
+      hintButtons?.remove();
+      hintButtons = null;
       characterWrapper.innerHTML = "";
       [...currentQuestion.writing].forEach((character, i) => {
         if (i === currentCharacter) {
@@ -168,9 +179,15 @@ const handleUpdatedWord = (record: MutationRecord) => {
             currentQuestion.writing[currentCharacter],
             {
               onFinish: canvasFinishListener,
-              onLoad: addHintButton,
+              onLoad: addHintButtons,
+              onNewStroke: () => {
+                if (showAllHints) {
+                  currentCanvas.hint();
+                }
+              },
             },
           );
+
           characterWrapper.append(currentCanvas.element);
         } else {
           const finishedCharacter = document.createElement("span");

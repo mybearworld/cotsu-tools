@@ -294,6 +294,11 @@ div[class^="index-module--action-card-text--"] {
   [class^="ReadingQuestionCard-module--wrong-answer--"] {
   display: none;
 }
+.cotsu-tools-writing-override-hint-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
 .cotsu-tools-writing-override
   [class^="ReadingQuestionCard-module--section-action--IDsDG"] {
   height: auto;

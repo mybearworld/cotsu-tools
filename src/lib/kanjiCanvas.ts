@@ -94,6 +94,7 @@ export const requestCanvas = (
       container.append(result.element);
       returnObject.hint = result.hint;
       options?.onLoad?.();
+      options?.onNewStroke?.();
     })
     .catch(() => {
       container.textContent = `Von dem Zeichen 「${character}」 scheint KanjiVG keine Stroke-Order zu kennen. Das ist wahrscheinlich ein Bug von Cotsu-Tools.`;
@@ -113,6 +114,7 @@ export const requestCanvas = (
 
 export type CanvasOptions = {
   onFinish?: (madeMistake: boolean) => void;
+  onNewStroke?: () => void;
 };
 export type CanvasReturn = {
   element: HTMLElement;
@@ -197,7 +199,8 @@ export const createCanvas = (
       canvasState.correctStrokes.push(correctStroke!);
       incorrectStrokesInARow = 0;
       currentStrokeNumber++;
-      if (currentStrokeNumber >= strokePaths.length) {
+      const wasLastStroke = currentStrokeNumber >= strokePaths.length;
+      if (wasLastStroke) {
         canDraw = false;
         let blur = 0;
         const callback = () => {
@@ -211,6 +214,8 @@ export const createCanvas = (
           }
         };
         requestAnimationFrame(callback);
+      } else {
+        options?.onNewStroke?.();
       }
     } else if (result === false) {
       madeMistake = true;
@@ -311,6 +316,7 @@ export const createCanvas = (
   };
   tick();
 
+  options?.onNewStroke?.();
   return {
     element: canvas,
     hint: () => {
