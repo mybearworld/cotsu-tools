@@ -62,9 +62,23 @@ const checkStroke = (userStroke: Path, correctStroke: Path) => {
   );
 };
 
+const REPLACED_KANJI = {
+  "１": "一",
+  "２": "二",
+  "３": "三",
+  "４": "四",
+  "５": "五",
+  "６": "六",
+  "７": "七",
+  "８": "八",
+  "９": "九",
+};
 const domParser = new DOMParser();
 export const requestCanvas = (character: string, options?: CanvasOptions) => {
-  const codePoint = character.normalize("NFKC").codePointAt(0);
+  const codePoint = (
+    character in REPLACED_KANJI ?
+      REPLACED_KANJI[character as keyof typeof REPLACED_KANJI]
+    : character).codePointAt(0);
   if (!codePoint) throw new Error("Invalid Kanji");
   const container = document.createElement("div");
   container.classList.add("cotsu-tools-writing-override-canvas-wrapper");
