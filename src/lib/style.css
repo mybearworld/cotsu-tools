@@ -288,11 +288,18 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-writing-override input,
 .cotsu-tools-writing-override
   [class^="ReadingQuestionCard-module--cardExampleSentence--"],
-.cotsu-tools-writing-override [class^="Button-module--button-primary--"] {
+.cotsu-tools-writing-override
+  [class^="Button-module--button-"]:not(.cotsu-tools-writing-override-button),
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--wrong-answer--"] {
   display: none;
 }
 .cotsu-tools-writing-override
-  [class^="ReadingQuestionCard-module--section-action--"] {
+  [class^="ReadingQuestionCard-module--section-action--IDsDG"] {
+  height: auto;
+}
+.cotsu-tools-writing-override
+  [class^="ReadingQuestionCard-module--newWordHint--"] {
   display: none;
 }
 

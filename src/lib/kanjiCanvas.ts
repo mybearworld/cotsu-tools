@@ -74,7 +74,13 @@ const REPLACED_KANJI = {
   "９": "九",
 };
 const domParser = new DOMParser();
-export const requestCanvas = (character: string, options?: CanvasOptions) => {
+export type RequestCanvasOptions = CanvasOptions & {
+  onLoad: () => void;
+};
+export const requestCanvas = (
+  character: string,
+  options?: RequestCanvasOptions,
+) => {
   const codePoint = (
     character in REPLACED_KANJI ?
       REPLACED_KANJI[character as keyof typeof REPLACED_KANJI]
@@ -97,15 +103,29 @@ export const requestCanvas = (character: string, options?: CanvasOptions) => {
     const svg = parsedDocument.querySelector("svg");
     if (!svg) throw new Error("No SVG");
     container.innerHTML = "";
-    container.append(createCanvas(svg, options));
+    const result = createCanvas(svg, options);
+    container.append(result.element);
+    returnObject.hint = result.hint;
+    options?.onLoad();
   });
-  return container;
+  const returnObject: CanvasReturn = {
+    element: container,
+    hint: () => {},
+  };
+  return returnObject;
 };
 
 export type CanvasOptions = {
-  onFinish: (madeMistake: boolean) => void;
+  onFinish?: (madeMistake: boolean) => void;
 };
-export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
+export type CanvasReturn = {
+  element: HTMLElement;
+  hint: () => void;
+};
+export const createCanvas = (
+  kanji: SVGElement,
+  options?: CanvasOptions,
+): CanvasReturn => {
   const canvas = document.createElement("canvas");
   canvas.width = CANVAS_SIZE;
   canvas.height = CANVAS_SIZE;
@@ -295,5 +315,11 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
   };
   tick();
 
-  return canvas;
+  return {
+    element: canvas,
+    hint: () => {
+      madeMistake = true;
+      showHint();
+    },
+  };
 };

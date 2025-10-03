@@ -76,7 +76,9 @@ const handleUpdatedWord = (record: MutationRecord) => {
   } else if (writingOverride()) {
     const input = element(document.querySelector("input")) as HTMLInputElement;
     let checkButton = element(
-      document.querySelector("[class^=Button-module--button-primary--]"),
+      document.querySelector(
+        "[class*=ReadingQuestionCard-module--action-check--]",
+      ),
     );
     element(
       document.querySelector(
@@ -112,9 +114,11 @@ const handleUpdatedWord = (record: MutationRecord) => {
     const canvasFinishListener = (madeMistakeForThisCharacter: boolean) => {
       madeMistake ||= madeMistakeForThisCharacter;
       if (currentCharacter === currentQuestion.writing.length - 1) {
-        currentCanvas.remove();
+        currentCanvas.element.remove();
         wordInformation.remove();
         finishedCharacters.innerHTML = "";
+        hintButton?.remove();
+        hintButton = null;
         if (madeMistake) {
           input.value = "";
           checkButton.click();
@@ -126,7 +130,9 @@ const handleUpdatedWord = (record: MutationRecord) => {
           ]?.onChange();
           input.value = currentQuestion.reading;
           checkButton = element(
-            document.querySelector("[class^=Button-module--button-primary--]"),
+            document.querySelector(
+              "[class*=ReadingQuestionCard-module--action-check--]",
+            ),
           );
           checkButton.click();
         } else {
@@ -142,16 +148,37 @@ const handleUpdatedWord = (record: MutationRecord) => {
       finishedCharacter.textContent = currentQuestion.writing[currentCharacter];
       finishedCharacters.append(finishedCharacter);
       currentCharacter++;
-      currentCanvas.remove();
+      currentCanvas.element.remove();
+      hintButton?.remove();
+      hintButton = null;
       currentCanvas = requestCanvas(currentQuestion.writing[currentCharacter], {
         onFinish: canvasFinishListener,
+        onLoad: addHintButton,
       });
-      finishedCharacter.insertAdjacentElement("afterend", currentCanvas);
+      finishedCharacter.insertAdjacentElement(
+        "afterend",
+        currentCanvas.element,
+      );
+    };
+    let hintButton: HTMLButtonElement | null = null;
+    const addHintButton = () => {
+      hintButton = checkButton.cloneNode(true) as HTMLButtonElement;
+      hintButton.classList.add(
+        "cotsu-tools-writing-override-hint-button",
+        "cotsu-tools-writing-override-button",
+      );
+      hintButton.textContent = "Nächsten Stroke anzeigen";
+      hintButton.addEventListener("click", () => {
+        currentCanvas.hint();
+      });
+      checkButton.insertAdjacentElement("afterend", hintButton);
     };
     let currentCanvas = requestCanvas(currentQuestion.writing[0], {
       onFinish: canvasFinishListener,
+      onLoad: addHintButton,
     });
-    finishedCharacters.insertAdjacentElement("afterend", currentCanvas);
+
+    finishedCharacters.insertAdjacentElement("afterend", currentCanvas.element);
   } else {
     void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
   }
