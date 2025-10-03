@@ -186,9 +186,9 @@ export const createCanvas = (kanji: SVGElement, options?: CanvasOptions) => {
         let blur = 0;
         const callback = () => {
           blur += 0.1;
-          context.filter = `blur(${blur > 2 ? 2 - (blur - 2) : blur}px`;
+          canvas.style.filter = `blur(${blur > 2 ? 2 - (blur - 2) : blur}px`;
           if (blur >= 4) {
-            context.filter = "blur(0px)";
+            canvas.style.filter = "blur(0px)";
             options?.onFinish?.(madeMistake);
           } else {
             requestAnimationFrame(callback);
