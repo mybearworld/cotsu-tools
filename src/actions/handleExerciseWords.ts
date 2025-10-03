@@ -86,29 +86,36 @@ const handleUpdatedWord = (record: MutationRecord) => {
       ),
     );
     const wordInformation = document.createElement("div");
+    wordInformation.classList.add(
+      "cotsu-tools-writing-override-word-information",
+    );
+    const characterWrapper = document.createElement("div");
+    characterWrapper.classList.add(
+      "cotsu-tools-writing-override-character-wrapper",
+    );
+    wordInformation.append(characterWrapper);
     wordInformation.append(
       pitchAccentElement(currentQuestion.writing, currentQuestion.reading),
     );
     if (currentQuestion.german) {
-      wordInformation.append(" → ", currentQuestion.german);
+      const germanWrapper = document.createElement("span");
+      germanWrapper.textContent = currentQuestion.german;
+      wordInformation.append(germanWrapper);
     }
-    wordInformation.append(
+    exampleSentence.insertAdjacentElement("afterend", wordInformation);
+    wordInformation.insertAdjacentElement(
+      "afterend",
       definitionElement(currentQuestion.writing, currentQuestion.reading, {
         collapsed: true,
       }),
     );
-    exampleSentence.insertAdjacentElement("afterend", wordInformation);
-    const characterWrapper = document.createElement("div");
     const canvasWrapper = document.createElement("div");
-    characterWrapper.classList.add(
-      "cotsu-tools-writing-override-character-wrapper",
-    );
+
     element(
       document.querySelector(
         "[class^=ReadingQuestionCard-module--input-field--]",
       ),
-    ).insertAdjacentElement("afterend", characterWrapper);
-    characterWrapper.insertAdjacentElement("afterend", canvasWrapper);
+    ).insertAdjacentElement("afterend", canvasWrapper);
     let currentCharacter = -1;
     let madeMistake = false;
     let showAllHints = false;
