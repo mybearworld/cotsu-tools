@@ -357,25 +357,26 @@ const handleSummary = (record: MutationRecord) => {
           question.writing === kanji && question.reading === reading,
       )?.german ?? meaningElement(kanji, reading),
     );
-    let shownSolution;
-    if (isIncorrect) {
+    const spoilerWrap = (toWrap: Node | string) => {
       const spoilerElement = document.createElement("button");
       spoilerElement.classList.add("cotsu-tools-spoiler");
       spoilerElement.ariaLabel = "Lösung anzeigen";
       const accessibilityWrapper = document.createElement("span");
       accessibilityWrapper.ariaHidden = "true";
-      accessibilityWrapper.append(solution);
+      accessibilityWrapper.append(toWrap);
       spoilerElement.append(accessibilityWrapper);
       spoilerElement.addEventListener("click", () => {
         spoilerElement.classList.add("cotsu-tools-spoiler-shown");
         spoilerElement.ariaLabel = null;
         accessibilityWrapper.ariaHidden = "false";
       });
-      shownSolution = spoilerElement;
-    } else {
-      shownSolution = solution;
-    }
-    row.append(kanji, " → ", shownSolution);
+      return spoilerElement;
+    };
+    row.append(
+      isIncorrect && writingOverride() ? spoilerWrap(kanji) : kanji,
+      " → ",
+      isIncorrect && !writingOverride() ? spoilerWrap(solution) : solution,
+    );
     (isIncorrect ? incorrectKanji : correctKanji).append(row);
   });
   if (originalSummaryElement) {
