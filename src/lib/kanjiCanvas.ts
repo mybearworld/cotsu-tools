@@ -68,6 +68,35 @@ const checkStroke = (userStroke: Path, correctStroke: Path) => {
   );
 };
 
+const cachedResponses = new Map<number, Promise<string>>();
+export const getStrokeOrderInformation = (character: string) => {
+  const codePoint = character.codePointAt(0);
+  if (!codePoint) throw new Error("Invalid character");
+  const cachedResponse = cachedResponses.get(codePoint);
+  let resolveCachedPromise: ((arg: string) => void) | null = null;
+  if (!cachedResponse) {
+    cachedResponses.set(
+      codePoint,
+      new Promise((resolve) => {
+        resolveCachedPromise = resolve;
+      }),
+    );
+  }
+  return cachedResponse ?
+      Promise.resolve(cachedResponse)
+    : gmfetch({
+        url:
+          "https://raw.githubusercontent.com/KanjiVG/kanjivg/refs/heads/master/kanji/" +
+          encodeURIComponent(codePoint.toString(16).padStart(5, "0")) +
+          ".svg",
+        headers: {},
+        method: "GET",
+      }).then((response) => {
+        resolveCachedPromise?.(response);
+        return response;
+      });
+};
+
 const domParser = new DOMParser();
 export type RequestCanvasOptions = CanvasOptions & {
   onLoad?: () => void;
@@ -76,21 +105,12 @@ export const requestCanvas = (
   character: string,
   options?: RequestCanvasOptions,
 ) => {
-  const codePoint = character.codePointAt(0);
-  if (!codePoint) throw new Error("Invalid Kanji");
   const container = document.createElement("div");
   container.classList.add("cotsu-tools-writing-override-canvas-wrapper");
   container.textContent = "lädt...";
   container.style.width = `${CANVAS_SIZE}px`;
   container.style.height = `${CANVAS_SIZE}px`;
-  gmfetch({
-    url:
-      "https://raw.githubusercontent.com/KanjiVG/kanjivg/refs/heads/master/kanji/" +
-      encodeURIComponent(codePoint.toString(16).padStart(5, "0")) +
-      ".svg",
-    headers: {},
-    method: "GET",
-  })
+  getStrokeOrderInformation(character)
     .then((text) => {
       const parsedDocument = domParser.parseFromString(text, "image/svg+xml");
       const svg = parsedDocument.querySelector("svg");

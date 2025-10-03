@@ -1,6 +1,10 @@
 import { element, text } from "../lib/element";
 import { DUMMY_QUESTION_ID, readingExercise } from "../lib/interceptedFetch";
-import { CanvasReturn, requestCanvas } from "../lib/kanjiCanvas";
+import {
+  CanvasReturn,
+  getStrokeOrderInformation,
+  requestCanvas,
+} from "../lib/kanjiCanvas";
 import {
   getWadokuInformation,
   pitchAccentElement,
@@ -216,6 +220,15 @@ const handleUpdatedWord = (record: MutationRecord) => {
         },
       });
       canvasWrapper.append(currentCanvas.element);
+      if (readingExercise.questions[id + 1]) {
+        (async () => {
+          for (const character of readingExercise.questions[id + 1].writing) {
+            if (!KNOWN_INVALID_CHARACTERS.has(character)) {
+              void (await getStrokeOrderInformation(character));
+            }
+          }
+        })();
+      }
     };
     canvasFinishListener(false);
   } else {
