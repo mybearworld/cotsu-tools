@@ -75,7 +75,7 @@ const REPLACED_KANJI = {
 };
 const domParser = new DOMParser();
 export type RequestCanvasOptions = CanvasOptions & {
-  onLoad: () => void;
+  onLoad?: () => void;
 };
 export const requestCanvas = (
   character: string,
@@ -106,7 +106,7 @@ export const requestCanvas = (
     const result = createCanvas(svg, options);
     container.append(result.element);
     returnObject.hint = result.hint;
-    options?.onLoad();
+    options?.onLoad?.();
   });
   const returnObject: CanvasReturn = {
     element: container,
