@@ -28,22 +28,15 @@ const currentQuestionId = () => {
 const handleUpdatedWord = (record: MutationRecord) => {
   const firstAddedNode = record.addedNodes[0];
   if (
+    (record.type !== "characterData" ||
+      record.target.parentElement?.tagName !== "P" ||
+      !record.target.parentElement?.parentElement?.className.startsWith(
+        "StudyProgress-module--study-progress--",
+      )) &&
     (record.type !== "childList" ||
       !(firstAddedNode instanceof HTMLElement) ||
-      (!firstAddedNode.className.startsWith(
+      !firstAddedNode.className.startsWith(
         "StudyProgress-module--study-progress--",
-      ) &&
-        !firstAddedNode.className.startsWith("JapaneseText-module--red--"))) &&
-    (record.type !== "childList" ||
-      !(record.target instanceof HTMLElement) ||
-      !record.target.className.startsWith("JapaneseText-module--red--") ||
-      !(firstAddedNode instanceof Text)) &&
-    (record.type !== "characterData" ||
-      !record.target.parentElement?.className.startsWith(
-        "JapaneseText-module--red--",
-      ) ||
-      !record.target.parentElement?.parentElement?.className.startsWith(
-        "ReadingQuestionCard-module--cardExampleSentence--",
       ))
   )
     return;
