@@ -292,8 +292,8 @@ export const createCanvas = (
     });
     context.strokeStyle = "rgb(0, 0, 255, 50%)";
     context.save();
-    context.scale(CANVAS_SIZE / IMAGE_SIZE, CANVAS_SIZE / IMAGE_SIZE);
-    context.lineWidth = (LINE_WIDTH * IMAGE_SIZE) / CANVAS_SIZE;
+    context.scale(CANVAS_SIZE, CANVAS_SIZE);
+    context.lineWidth = LINE_WIDTH / CANVAS_SIZE;
     context.beginPath();
     if (canvasState.hintStroke) {
       context.beginPath();
@@ -302,12 +302,17 @@ export const createCanvas = (
           toPath(
             samplePoints(canvasState.hintStroke.line, {
               ratio: canvasState.hintStroke.ratio,
-              scale: 1,
+              scale: IMAGE_SIZE,
+              density: 0.01,
             }),
           ),
         ),
       );
     }
+    context.restore();
+    context.save();
+    context.scale(CANVAS_SIZE / IMAGE_SIZE, CANVAS_SIZE / IMAGE_SIZE);
+    context.lineWidth = (LINE_WIDTH * IMAGE_SIZE) / CANVAS_SIZE;
     context.strokeStyle = "black";
     canvasState.correctStrokes.forEach((line) => {
       context.beginPath();

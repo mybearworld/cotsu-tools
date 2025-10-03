@@ -50,7 +50,16 @@ const DEFAULT_DENSITY = 0.08;
 const samplePointsCache = new Map<string, Point[]>();
 export const samplePoints = (
   path: Path,
-  { amount, scale, ratio }: { amount?: number; scale: number; ratio?: number },
+  {
+    amount,
+    density,
+    scale,
+    ratio,
+  }: { scale: number; ratio?: number } & (
+    | { amount: number; density?: never }
+    | { amount?: never; density: number }
+    | { amount?: never; density?: never }
+  ),
 ) => {
   const doReturn = (points: Point[]) => {
     if (!cached || points.length > cached.length) {
@@ -61,7 +70,9 @@ export const samplePoints = (
   const svgPathElement = toSVGPathElement(path);
   const totalLength = svgPathElement.getTotalLength();
   const sampleAmount =
-    amount ? amount - 1 : Math.round(totalLength / (DEFAULT_DENSITY * scale));
+    amount ?
+      amount - 1
+    : Math.round(totalLength / ((density ?? DEFAULT_DENSITY) * scale));
   const sampleDensity = totalLength / sampleAmount;
   if (!Number.isFinite(sampleDensity)) {
     return doReturn([]);
