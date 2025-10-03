@@ -87,6 +87,13 @@ export const getWadokuInformation = async (
       );
       const fillElement = (elementToFill: Element, currentNode: Node) => {
         if (currentNode instanceof Text) {
+          if (
+            currentNode.textContent === " " &&
+            (elementToFill.lastChild?.textContent === " " ||
+              elementToFill.lastChild?.textContent === "\xa0")
+          ) {
+            return;
+          }
           elementToFill.append(currentNode.textContent);
           return;
         }
@@ -97,7 +104,8 @@ export const getWadokuInformation = async (
           currentNode.classList.contains("season") ||
           currentNode.matches(".transcr:has(+ .jap)") ||
           (currentNode.classList.contains("klammer") &&
-            currentNode.classList.contains("global"))
+            currentNode.classList.contains("global")) ||
+          currentNode.classList.contains("badge")
         ) {
           return;
         }
