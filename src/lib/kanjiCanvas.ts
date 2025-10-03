@@ -17,6 +17,9 @@ const INCORRECT_ANIMATION_SECONDS = 1;
 const HINT_ANIMATIONS_SECONDS = 1;
 const UPDATE_RATE_PER_SECOND = 30;
 
+const average = (numbers: number[]) =>
+  numbers.reduce((a, b) => a + b, 0) / numbers.length;
+
 const checkStroke = (userStroke: Path, correctStroke: Path) => {
   const correctStrokeLength =
     toSVGPathElement(correctStroke).getTotalLength() / IMAGE_SIZE;
@@ -51,14 +54,17 @@ const checkStroke = (userStroke: Path, correctStroke: Path) => {
     : 0,
   );
   const zeroIndex = scores.findIndex((score) => score.degrees === 0);
+  if (zeroIndex > ZERO_INDEX_THRESHHOLD) return;
+  const allDistances: number[] = [];
+  correctStrokePoints.forEach((correctStrokePoint, i) => {
+    const userStrokePoint = userStrokePoints[i];
+    const distance = pointDistance(userStrokePoint, correctStrokePoint);
+    allDistances.push(distance);
+  });
+  const distanceAverage = average(allDistances);
   return (
-    zeroIndex <= ZERO_INDEX_THRESHHOLD &&
-    correctStrokePoints.every((correctStrokePoint, i) => {
-      const userStrokePoint = userStrokePoints[i];
-      return (
-        pointDistance(userStrokePoint, correctStrokePoint) < SCORE_THRESHHOLD
-      );
-    })
+    distanceAverage < SCORE_THRESHHOLD &&
+    Math.max(...allDistances) - distanceAverage < 0.115
   );
 };
 

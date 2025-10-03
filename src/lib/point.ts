@@ -46,7 +46,7 @@ export const rotatePoints = (points: Point[], angle: number) => {
   });
 };
 
-const DEFAULT_DENSITY = 0.03;
+const DEFAULT_DENSITY = 0.08;
 const samplePointsCache = new Map<string, Point[]>();
 export const samplePoints = (
   path: Path,
