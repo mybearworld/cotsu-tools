@@ -1,6 +1,13 @@
 /* General */
 input {
   font-weight: 400 !important;
+}
+a,
+body,
+button,
+p,
+span,
+input {
   font-family:
     Noto Sans JP,
     Noto Sans Japanese,
