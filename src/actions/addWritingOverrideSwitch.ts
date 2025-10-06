@@ -39,7 +39,7 @@ export const addWritingOverrideSwitch = (records: MutationRecord[]) => {
           !stats.progress.n2.learning &&
           !stats.progress.n1.learning) ||
         confirm(
-          `Du hast auf diesem Konto schon Fortschritt. Wenn du jetzt anfängst, zu ${name}, wird dein Fortschritt beim Lesen und beim Schreiben gemischt und eher hinderlich sein.\n\nWenn du willst, kannst du trotzdem trotzdem jetzt zum ${name[0].toUpperCase() + name.slice(1).toLowerCase()} wechseln - wenn du dich zum Beispiel gerade zum ersten Mal auf diesem Gerät auf diesem Konto anmeldet.\n\nMöchtest du das machen?`,
+          `Du hast auf diesem Konto schon Fortschritt. Wenn du jetzt anfängst, zu ${name}, wird dein Fortschritt beim Lesen und beim Schreiben gemischt und eher hinderlich sein.\n\nWenn du willst, kannst du trotzdem jetzt zum ${name[0].toUpperCase() + name.slice(1).toLowerCase()} wechseln - wenn du dich zum Beispiel gerade zum ersten Mal auf diesem Gerät auf diesem Konto anmeldet.\n\nMöchtest du das machen?`,
         )
       ) {
         toggleWritingOverride();
