@@ -1,6 +1,10 @@
 /* General */
 input {
   font-weight: 400 !important;
+  font-family:
+    Noto Sans JP,
+    Noto Sans Japanese,
+    sans-serif !important;
 }
 
 /* Dialog */
