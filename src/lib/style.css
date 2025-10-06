@@ -289,7 +289,7 @@ div[class^="index-module--action-card-text--"] {
   font-family:
     "Noto Sans JP All Katakana",
     Noto Sans Japanese,
-    sans-serif;
+    sans-serif !important;
 }
 
 /* Writing override */
