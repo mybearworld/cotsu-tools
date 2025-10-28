@@ -124,7 +124,8 @@ export const getWadokuInformation = async (
           wrap = ["[", "]"];
         } else if (
           currentNode.classList.contains("reg") ||
-          currentNode.classList.contains("dom")
+          currentNode.classList.contains("dom") ||
+          currentNode.classList.contains("usage")
         ) {
           nextElementToFillClass = "cotsu-tools-definition-context";
         } else if (
