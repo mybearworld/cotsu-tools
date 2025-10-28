@@ -58,7 +58,15 @@ export const getWadokuInformation = async (
     done(information);
     return information;
   };
-  let suboptimalResult: WadokuInformation | null = null;
+  let suboptimalResult: {
+    segmentedPitchAccent: WadokuInformation | null;
+    noPitchAccent: WadokuInformation | null;
+    alternateSpelling: WadokuInformation | null;
+  } = {
+    segmentedPitchAccent: null,
+    noPitchAccent: null,
+    alternateSpelling: null,
+  };
   try {
     const searchResponse = await gmfetch({
       url: `https://wadoku.de/search/${kanji}`,
@@ -173,13 +181,15 @@ export const getWadokuInformation = async (
         }
       }
       information.meaning = information.meaning.trim().replace(/\.$/, "");
-      if (information.pitchAccent?.includes("･")) {
-        suboptimalResult = information;
-      } else if (
-        suboptimalResult === null &&
-        information.pitchAccent === null
-      ) {
-        suboptimalResult = information;
+      const orth = element(resultLine.querySelector(".orth")).textContent.split(
+        "；",
+      );
+      if (orth[0] !== kanji) {
+        suboptimalResult.alternateSpelling ??= information;
+      } else if (information.pitchAccent?.includes("･")) {
+        suboptimalResult.segmentedPitchAccent ??= information;
+      } else if (information.pitchAccent === null) {
+        suboptimalResult.noPitchAccent ??= information;
       } else {
         return doReturn(information);
       }
@@ -188,7 +198,11 @@ export const getWadokuInformation = async (
     console.error(e);
     return doReturn(null);
   }
-  return doReturn(suboptimalResult);
+  return doReturn(
+    suboptimalResult.alternateSpelling ??
+      suboptimalResult.segmentedPitchAccent ??
+      suboptimalResult.noPitchAccent,
+  );
 };
 
 export const pitchAccentElement = (kanji: string, reading: string) => {
