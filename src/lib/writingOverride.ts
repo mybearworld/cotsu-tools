@@ -11,7 +11,7 @@ const updateStorage = () => {
 updateStorage();
 
 export const writingOverride = () => {
-  if (!stats) throw new Error("Trying to get writing override without stats");
+  if (!stats) return false;
   if (writingOverrideByAccount[stats.userid])
     return writingOverrideByAccount[stats.userid];
   return false;
