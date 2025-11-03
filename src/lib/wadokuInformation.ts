@@ -176,6 +176,8 @@ export const getWadokuInformation = async (
             break;
           } else if (childNode.classList.contains("token")) {
             information.meaning += childNode.firstChild?.textContent;
+          } else if (childNode.classList.contains("def")) {
+            information.meaning += childNode.textContent;
           }
         } else if (childNode.nodeType === Node.TEXT_NODE) {
           information.meaning += childNode.textContent;
