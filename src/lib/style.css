@@ -161,6 +161,7 @@ div.card-word.cotsu-tools-card-word-clone {
   border: 0;
   background-color: transparent;
   font-size: inherit;
+  font-weight: inherit;
 }
 .cotsu-tools-meaning,
 .cotsu-tools-meaning-summary,
