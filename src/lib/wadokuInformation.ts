@@ -8,6 +8,7 @@ export type WadokuInformation = {
 } | null;
 
 const parser = new DOMParser();
+const wadokuSearchResultCache = new Map<string, Document | Promise<Document>>();
 const wadokuInformationCache = new Map<
   string,
   WadokuInformation | Promise<WadokuInformation>
@@ -16,15 +17,17 @@ const wadokuInformationCache = new Map<
 export const getWadokuInformation = async (
   kanji: string,
   reading: string,
+  bulk: string[] = [kanji],
 ): Promise<WadokuInformation> => {
   kanji = kanji.replace(/～/g, "");
   reading = reading.replace(/～/g, "");
+  bulk = bulk.map((s) => s.replace(/～/g, ""));
   if (reading.includes("・")) {
     const results = await Promise.all(
       reading
         .split("・")
         .map((individualReading) =>
-          getWadokuInformation(kanji, individualReading),
+          getWadokuInformation(kanji, individualReading, bulk),
         ),
     );
     const nonNullResult = results.find((result) => result !== null);
@@ -70,16 +73,39 @@ export const getWadokuInformation = async (
     undesirableDefinition: null,
   };
   try {
-    const searchResponse = await gmfetch({
-      url: `https://wadoku.de/search/${kanji}`,
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      data: "searchType=JAPANESE&matchType=EXACT",
-    });
-    const searchResponseDocument = parser.parseFromString(
-      searchResponse,
-      "text/html",
-    );
+    const cachedSearchResponseDocument = wadokuSearchResultCache.get(kanji);
+    let searchResponseDocument: Document;
+    if (cachedSearchResponseDocument) {
+      searchResponseDocument = await cachedSearchResponseDocument;
+      console.log(
+        kanji,
+        [...searchResponseDocument.querySelectorAll(".orth")].map(
+          (s) => s.textContent,
+        ),
+      );
+    } else {
+      const res: ((value: Document) => void)[] = [];
+      bulk.forEach((kanji) => {
+        wadokuSearchResultCache.set(
+          kanji,
+          new Promise((resolve) => res.push(resolve)),
+        );
+      });
+      console.log(bulk.join("。"));
+      const searchResponse = await gmfetch({
+        // ¡ is a separator character that's not used in an entry and probably
+        // won't be at any point.
+        url: `https://wadoku.de/search/${bulk.join("¡")}`,
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        data: "searchType=JAPANESE&matchType=EXACT",
+      });
+      searchResponseDocument = parser.parseFromString(
+        searchResponse,
+        "text/html",
+      );
+      res.forEach((resolve) => resolve(searchResponseDocument));
+    }
     for (const resultLine of searchResponseDocument.querySelectorAll(
       ".resultline",
     )) {
@@ -218,14 +244,18 @@ export const getWadokuInformation = async (
   );
 };
 
-export const pitchAccentElement = (kanji: string, reading: string) => {
+export const pitchAccentElement = (
+  kanji: string,
+  reading: string,
+  bulk: string[] = [],
+) => {
   const pitchAccentElement = document.createElement("span");
   pitchAccentElement.classList.add(
     "cotsu-tools-pitch-accent",
     "cotsu-tools-pitch-accent-loading",
   );
   pitchAccentElement.textContent = reading;
-  getWadokuInformation(kanji, reading).then((information) => {
+  getWadokuInformation(kanji, reading, bulk).then((information) => {
     pitchAccentElement.classList.remove("cotsu-tools-pitch-accent-loading");
     if (information?.pitchAccent) {
       pitchAccentElement.innerHTML = information.pitchAccent.replace(
@@ -239,11 +269,15 @@ export const pitchAccentElement = (kanji: string, reading: string) => {
   return pitchAccentElement;
 };
 
-export const meaningElement = (kanji: string, reading: string) => {
+export const meaningElement = (
+  kanji: string,
+  reading: string,
+  bulk: string[] = [],
+) => {
   const meaningElement = document.createElement("span");
   meaningElement.classList.add("cotsu-tools-meaning");
   meaningElement.textContent = "lädt...";
-  getWadokuInformation(kanji, reading).then((information) => {
+  getWadokuInformation(kanji, reading, bulk).then((information) => {
     if (information?.meaning) {
       meaningElement.innerHTML = `${information.meaning} (Wadoku)`;
     } else {
@@ -255,6 +289,7 @@ export const meaningElement = (kanji: string, reading: string) => {
 
 export type DefinitionElementOptions = {
   collapsed?: boolean;
+  bulk?: string[];
 };
 export const definitionElement = (
   kanji: string,
@@ -273,7 +308,7 @@ export const definitionElement = (
   }
   definitionElement.textContent = "lädt...";
   wrapperElement.append(definitionElement);
-  getWadokuInformation(kanji, reading).then((information) => {
+  getWadokuInformation(kanji, reading, options?.bulk).then((information) => {
     definitionElement.replaceChildren(
       information?.definition ?? "keine Definition verfügbar",
     );
