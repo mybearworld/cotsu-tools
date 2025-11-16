@@ -62,10 +62,12 @@ export const getWadokuInformation = async (
     segmentedPitchAccent: WadokuInformation | null;
     noPitchAccent: WadokuInformation | null;
     alternateSpelling: WadokuInformation | null;
+    undesirableDefinition: WadokuInformation | null;
   } = {
     segmentedPitchAccent: null,
     noPitchAccent: null,
     alternateSpelling: null,
+    undesirableDefinition: null,
   };
   try {
     const searchResponse = await gmfetch({
@@ -93,6 +95,7 @@ export const getWadokuInformation = async (
       const senses = element(
         resultLine.querySelector(".senses")?.cloneNode(true),
       );
+      let isUndesirableDefinition = false;
       const fillElement = (elementToFill: Element, currentNode: Node) => {
         if (currentNode instanceof Text) {
           if (
@@ -124,9 +127,13 @@ export const getWadokuInformation = async (
           wrap = ["[", "]"];
         } else if (
           currentNode.classList.contains("reg") ||
-          currentNode.classList.contains("dom") ||
           currentNode.classList.contains("usage")
         ) {
+          nextElementToFillClass = "cotsu-tools-definition-context";
+        } else if (currentNode.classList.contains("dom")) {
+          if (currentNode.textContent === "Buchtitel") {
+            isUndesirableDefinition = true;
+          }
           nextElementToFillClass = "cotsu-tools-definition-context";
         } else if (
           currentNode.classList.contains("klammer") ||
@@ -187,7 +194,9 @@ export const getWadokuInformation = async (
       const orth = element(resultLine.querySelector(".orth")).textContent.split(
         "；",
       );
-      if (orth[0] !== kanji) {
+      if (isUndesirableDefinition) {
+        suboptimalResult.undesirableDefinition = information;
+      } else if (orth[0] !== kanji) {
         suboptimalResult.alternateSpelling ??= information;
       } else if (information.pitchAccent?.includes("･")) {
         suboptimalResult.segmentedPitchAccent ??= information;
@@ -204,6 +213,7 @@ export const getWadokuInformation = async (
   return doReturn(
     suboptimalResult.alternateSpelling ??
       suboptimalResult.segmentedPitchAccent ??
+      suboptimalResult.undesirableDefinition ??
       suboptimalResult.noPitchAccent,
   );
 };
