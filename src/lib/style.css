@@ -45,15 +45,17 @@ body:has(.cotsu-tools-dialog:open) {
   border-radius: 20px;
   width: min(calc(100% - 2rem), 30rem);
   max-width: none;
-  max-height: none;
   box-sizing: border-box;
   padding: 0;
+  margin-top: max(auto, 1rem);
+  max-height: 100vh;
 }
 .cotsu-tools-dialog-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
+  max-height: calc(100vh - 4rem);
 }
 .cotsu-tools-dialog header {
   display: flex;
@@ -74,6 +76,13 @@ body:has(.cotsu-tools-dialog:open) {
   font-weight: 700;
   margin: 0;
   margin-top: 0.5rem;
+}
+.cotsu-tools-dialog summary {
+  margin-top: 0.5rem;
+}
+.cotsu-tools-dialog summary h3 {
+  margin-top: 0;
+  display: inline-block;
 }
 .cotsu-tools-dialog header span {
   font-size: 1rem;

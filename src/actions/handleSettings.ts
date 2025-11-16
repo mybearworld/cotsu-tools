@@ -1,5 +1,9 @@
 import { isSceneChange } from "../lib/isSceneChange";
 import { element } from "../lib/element";
+import {
+  definitionElement,
+  pitchAccentElement,
+} from "../lib/wadokuInformation";
 
 const SETTINGS: {
   name: string;
@@ -73,6 +77,33 @@ const createDialog = () => {
     label.append(name);
     dialogWrapper.append(label);
   });
+  const debuggingDetails = document.createElement("details");
+  const debuggingSummary = document.createElement("summary");
+  const debuggingHeader = document.createElement("h3");
+  debuggingHeader.textContent = "Debugging";
+  debuggingSummary.append(debuggingHeader);
+  debuggingDetails.append(debuggingSummary);
+  const debuggingWadokuKanjiInput = document.createElement("input");
+  debuggingWadokuKanjiInput.placeholder = "Kanji";
+  const debuggingWadokuReadingInput = document.createElement("input");
+  debuggingWadokuReadingInput.placeholder = "Lesung";
+  const debuggingWadokuButton = document.createElement("button");
+  debuggingWadokuButton.textContent = "Wadoku-Informationen erhalten";
+  const debuggingWadoku = document.createElement("div");
+  debuggingWadokuButton.addEventListener("click", () => {
+    debuggingWadoku.innerHTML = "";
+    const kanji = debuggingWadokuKanjiInput.value;
+    const reading = debuggingWadokuReadingInput.value;
+    debuggingWadoku.append(pitchAccentElement(kanji, reading));
+    debuggingWadoku.append(definitionElement(kanji, reading));
+  });
+  debuggingDetails.append(
+    debuggingWadokuKanjiInput,
+    debuggingWadokuReadingInput,
+    debuggingWadokuButton,
+    debuggingWadoku,
+  );
+  dialogWrapper.append(debuggingDetails);
   const closeButton = document.createElement("button");
   closeButton.textContent = "Schließen";
   closeButton.addEventListener("click", () => {
