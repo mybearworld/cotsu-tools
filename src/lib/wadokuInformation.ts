@@ -77,12 +77,6 @@ export const getWadokuInformation = async (
     let searchResponseDocument: Document;
     if (cachedSearchResponseDocument) {
       searchResponseDocument = await cachedSearchResponseDocument;
-      console.log(
-        kanji,
-        [...searchResponseDocument.querySelectorAll(".orth")].map(
-          (s) => s.textContent,
-        ),
-      );
     } else {
       const res: ((value: Document) => void)[] = [];
       bulk.forEach((kanji) => {
@@ -91,7 +85,6 @@ export const getWadokuInformation = async (
           new Promise((resolve) => res.push(resolve)),
         );
       });
-      console.log(bulk.join("。"));
       const searchResponse = await gmfetch({
         // ¡ is a separator character that's not used in an entry and probably
         // won't be at any point.
