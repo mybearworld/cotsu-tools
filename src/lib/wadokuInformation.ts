@@ -150,7 +150,11 @@ export const getWadokuInformation = async (
         ) {
           nextElementToFillClass = "cotsu-tools-definition-context";
         } else if (currentNode.classList.contains("dom")) {
-          if (currentNode.textContent === "Buchtitel") {
+          if (
+            currentNode.textContent === "Buchtitel" ||
+            currentNode.textContent === "weibl. Name" ||
+            currentNode.textContent === "männl. Name"
+          ) {
             isUndesirableDefinition = true;
           }
           nextElementToFillClass = "cotsu-tools-definition-context";
