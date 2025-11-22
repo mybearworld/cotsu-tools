@@ -247,7 +247,7 @@ export const getWadokuInformation = async (
 export const pitchAccentElement = (
   kanji: string,
   reading: string,
-  bulk: string[] = [],
+  bulk?: string[],
 ) => {
   const pitchAccentElement = document.createElement("span");
   pitchAccentElement.classList.add(
@@ -272,7 +272,7 @@ export const pitchAccentElement = (
 export const meaningElement = (
   kanji: string,
   reading: string,
-  bulk: string[] = [],
+  bulk?: string[],
 ) => {
   const meaningElement = document.createElement("span");
   meaningElement.classList.add("cotsu-tools-meaning");
