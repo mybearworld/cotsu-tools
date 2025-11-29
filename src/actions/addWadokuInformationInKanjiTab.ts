@@ -10,7 +10,10 @@ export const addWadokuInformationInKanjiTab = async (
     const firstAddedNode = record.addedNodes[0];
     if (
       record.target instanceof HTMLElement &&
-      record.target.classList.contains("jss26") &&
+      record.target.parentElement?.parentElement?.className.startsWith(
+        "suche-module--container--",
+      ) &&
+      record.target.classList.contains("MuiList-root") &&
       firstAddedNode instanceof HTMLElement
     ) {
       const text = element(
