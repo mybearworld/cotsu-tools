@@ -1,5 +1,5 @@
 import { element } from "../lib/element";
-import { KATAKANA_TO_HIRAGANA } from "../lib/katakanaToHiragana";
+import { katakanaToHiragana } from "../lib/katakanaToHiragana";
 import { pitchAccentElement, meaningElement } from "../lib/wadokuInformation";
 
 export const addWadokuInformationInKanjiTab = async (
@@ -24,13 +24,7 @@ export const addWadokuInformationInKanjiTab = async (
       const match = text.textContent.match(/^(.+?)（(.+?)） (.+)?$/);
       if (!match) throw new Error("Unexpected text format");
       const [, kanji, kana, german] = match;
-      const reading = [...kana]
-        .map((kana) =>
-          kana in KATAKANA_TO_HIRAGANA ?
-            KATAKANA_TO_HIRAGANA[kana as keyof typeof KATAKANA_TO_HIRAGANA]
-          : kana,
-        )
-        .join("");
+      const reading = katakanaToHiragana(kana);
       items.push({ kanji, reading, german, element: text });
     }
   }

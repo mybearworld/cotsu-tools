@@ -21,10 +21,15 @@ export let readingExercise: {
 
 export const DUMMY_QUESTION_ID = "cotsu-tools-dummy-question";
 
+export let authorization: string;
+
 const _fetch = unsafeWindow.fetch;
 
 export const startInterceptingFetch = () => {
   unsafeWindow.fetch = async (url, options) => {
+    if (options?.headers && "Authorization" in options?.headers) {
+      authorization = options.headers.Authorization;
+    }
     let requestBody = options?.body;
     if (
       typeof requestBody === "string" &&

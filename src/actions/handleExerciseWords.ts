@@ -5,6 +5,8 @@ import {
   getStrokeOrderInformation,
   requestCanvas,
 } from "../lib/kanjiCanvas";
+import { kanjiSearch, KanjiSearchWord } from "../lib/kanjiSearch";
+import { katakanaToHiragana } from "../lib/katakanaToHiragana";
 import {
   getWadokuInformation,
   pitchAccentElement,
@@ -277,6 +279,76 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
   cardWordClone.append(definitionElement(exercise.writing, exercise.reading));
   hiraganaElement.after(pitchAccentElement(exercise.writing, exercise.reading));
   cardWord.insertAdjacentElement("afterend", cardWordClone);
+  const studyCardContainer =
+    cardWord.parentElement?.parentElement?.parentElement;
+  if (!studyCardContainer) return;
+  studyCardContainer
+    .querySelectorAll("[class^=KanjiCard-module--row--]")
+    .forEach((row) => {
+      const previousOtherKanjiElement = row.querySelector(
+        ".cotsu-tools-other-kanji",
+      );
+      if (previousOtherKanjiElement) {
+        previousOtherKanjiElement.remove();
+      }
+      const kanji = element(
+        row.querySelector("[class^=KanjiCard-module--kanjiBig--]"),
+      ).textContent;
+      const otherKanjiElement = document.createElement("div");
+      otherKanjiElement.className = element(row.lastChild).className;
+      otherKanjiElement.classList.add("cotsu-tools-other-kanji");
+      const button = document.createElement("button");
+      button.classList.add("cotsu-tools-other-kanji-init-button");
+      button.textContent = `andere Wörter mit ${kanji}`;
+      button.addEventListener("click", async () => {
+        button.textContent = "lädt...";
+        const result = await kanjiSearch(kanji);
+        const relevantBulk: string[] = [];
+        const relevantWords: KanjiSearchWord[] = [];
+        result.forEach((word) => {
+          if (!word.maturity) return;
+          if (word.word === exercise.writing) return;
+          relevantBulk.push(word.word);
+          relevantWords.push(word);
+        });
+        button.remove();
+        otherKanjiElement.classList.add("cotsu-tools-other-kanji-loaded");
+        const heading = document.createElement("div");
+        otherKanjiElement.append(heading);
+        if (relevantWords.length === 0) {
+          heading.textContent =
+            "Du kennst das Kanji noch in keinen anderen Wörtern.";
+          return;
+        }
+        heading.textContent = "Du kennst das Kanji noch in diesen Wörtern:";
+        const ul = document.createElement("ul");
+        otherKanjiElement.append(ul);
+        relevantWords.forEach((word) => {
+          const li = document.createElement("li");
+          const reading = katakanaToHiragana(word.reading);
+          const kanji = document.createElement("span");
+          kanji.classList.add("cotsu-tools-other-kanji-kanji");
+          kanji.append(word.word);
+          li.append(kanji);
+          const moreButton = document.createElement("button");
+          moreButton.classList.add("cotsu-tools-other-kanji-more");
+          moreButton.textContent = "?";
+          moreButton.addEventListener("click", () => {
+            moreButton.remove();
+            li.append(
+              " (",
+              pitchAccentElement(word.word, reading),
+              ") ",
+              word.word_de ?? meaningElement(word.word, reading),
+            );
+          });
+          li.append(" ", moreButton);
+          ul.append(li);
+        });
+      });
+      otherKanjiElement.append(button);
+      row.append(otherKanjiElement);
+    });
 };
 
 const handleWrongAnswer = (record: MutationRecord) => {

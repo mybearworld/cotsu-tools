@@ -302,6 +302,31 @@ div[class^="index-module--action-card-text--"] {
     sans-serif !important;
 }
 
+/* Other words with Kanji */
+.cotsu-tools-other-kanji-init-button {
+  white-space: nowrap;
+}
+.cotsu-tools-other-kanji {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding: 0;
+  text-align: left;
+}
+.cotsu-tools-other-kanji li {
+  margin-bottom: 0.25rem;
+}
+.cotsu-tools-other-kanji.cotsu-tools-other-kanji-loaded {
+  align-items: start;
+}
+.cotsu-tools-other-kanji-kanji {
+  font-weight: 400;
+}
+.cotsu-tools-other-kanji-more {
+  margin-left: 0.25rem;
+}
+
 /* Writing override */
 .cotsu-tools-writing-override-switch-button {
   font-size: 1rem;
