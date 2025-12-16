@@ -64,11 +64,13 @@ export const getWadokuInformation = async (
   let suboptimalResult: {
     segmentedPitchAccent: WadokuInformation | null;
     noPitchAccent: WadokuInformation | null;
+    hasAlternateSpellings: WadokuInformation | null;
     alternateSpelling: WadokuInformation | null;
     undesirableDefinition: WadokuInformation | null;
   } = {
     segmentedPitchAccent: null,
     noPitchAccent: null,
+    hasAlternateSpellings: null,
     alternateSpelling: null,
     undesirableDefinition: null,
   };
@@ -227,6 +229,8 @@ export const getWadokuInformation = async (
         suboptimalResult.segmentedPitchAccent ??= information;
       } else if (information.pitchAccent === null) {
         suboptimalResult.noPitchAccent ??= information;
+      } else if (orth.length !== 1) {
+        suboptimalResult.hasAlternateSpellings ??= information;
       } else {
         return doReturn(information);
       }
@@ -236,7 +240,8 @@ export const getWadokuInformation = async (
     return doReturn(null);
   }
   return doReturn(
-    suboptimalResult.alternateSpelling ??
+    suboptimalResult.hasAlternateSpellings ??
+      suboptimalResult.alternateSpelling ??
       suboptimalResult.segmentedPitchAccent ??
       suboptimalResult.undesirableDefinition ??
       suboptimalResult.noPitchAccent,
