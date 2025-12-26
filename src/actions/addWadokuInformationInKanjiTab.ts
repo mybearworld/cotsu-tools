@@ -21,6 +21,9 @@ export const addWadokuInformationInKanjiTab = async (
           ".MuiListItemText-root .MuiTypography-root",
         ),
       );
+      if (text.dataset.cotsuToolsAddedWadokuInformation === "true") {
+        continue;
+      }
       const match = text.textContent.match(/^(.+?)（(.+?)） (.+)?$/);
       if (!match) throw new Error("Unexpected text format");
       const [, kanji, kana, german] = match;
@@ -32,6 +35,7 @@ export const addWadokuInformationInKanjiTab = async (
   const bulk = items.map(({ kanji }) => kanji);
   items.forEach(({ element, kanji, reading, german }) => {
     element.innerHTML = "";
+    element.dataset.cotsuToolsAddedWadokuInformation = "true";
     element.append(
       kanji,
       "（",
