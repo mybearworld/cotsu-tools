@@ -326,3 +326,32 @@ div[class^="index-module--action-card-text--"] {
 .cotsu-tools-other-kanji-more {
   margin-left: 0.25rem;
 }
+
+/* Didn't know word */
+.cotsu-tools-didnt-know-word {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  user-select: none;
+}
+.cotsu-tools-didnt-know-word-strike .card-level-up {
+  text-decoration: line-through;
+}
+.cotsu-tools-didnt-know-word-strike
+  [class^="MaturityTallies-module--tally-icon--"] {
+  filter: grayscale(1);
+  position: relative;
+}
+.cotsu-tools-didnt-know-word-strike
+  [class^="MaturityTallies-module--tally-icon--"]::before {
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  rotate: -45deg;
+  width: 20px;
+  height: 1px;
+  display: inline-block;
+  background-color: black;
+  content: "";
+}

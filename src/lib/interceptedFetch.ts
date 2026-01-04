@@ -18,6 +18,7 @@ export let readingExercise: {
   }[];
   questionCount: number;
 };
+export let didntKnowQids = new Set<string>();
 
 export const DUMMY_QUESTION_ID = "cotsu-tools-dummy-question";
 
@@ -36,9 +37,14 @@ export const startInterceptingFetch = () => {
       url === "https://api.cotsu.de/user.php?r=update-progress"
     ) {
       const parsedRequestBody = JSON.parse(requestBody);
-      parsedRequestBody.answers = parsedRequestBody.answers.filter(
+      parsedRequestBody.answers = parsedRequestBody.answers.flatMap(
         (answer: { correct: number; qid: string }) =>
-          answer.qid !== DUMMY_QUESTION_ID,
+          answer.qid === DUMMY_QUESTION_ID ?
+            []
+          : {
+              qid: answer.qid,
+              correct: didntKnowQids.has(answer.qid) ? 0 : answer.correct,
+            },
       );
       requestBody = JSON.stringify(parsedRequestBody);
     }
@@ -65,6 +71,7 @@ export const startInterceptingFetch = () => {
             kanjis: [],
           });
           readingExercise = parsedBody;
+          didntKnowQids = new Set();
         }
         body = JSON.stringify(parsedBody);
       }

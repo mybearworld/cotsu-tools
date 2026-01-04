@@ -1,5 +1,9 @@
 import { element, text } from "../lib/element";
-import { DUMMY_QUESTION_ID, readingExercise } from "../lib/interceptedFetch";
+import {
+  DUMMY_QUESTION_ID,
+  readingExercise,
+  didntKnowQids,
+} from "../lib/interceptedFetch";
 import { kanjiSearch, KanjiSearchWord } from "../lib/kanjiSearch";
 import { katakanaToHiragana } from "../lib/katakanaToHiragana";
 import {
@@ -85,6 +89,9 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
       element(firstAddedNode).querySelector(".card-word")
     : record.target.parentElement;
   if (!cardWord) return;
+  cardWord.parentElement?.classList.remove(
+    "cotsu-tools-didnt-know-word-strike",
+  );
   cardWord.nextSibling?.remove();
   const cardWordClone = element(cardWord.cloneNode(true));
   cardWordClone.classList.add("cotsu-tools-card-word-clone");
@@ -97,6 +104,30 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
   hiraganaElement.textContent = "";
   cardWordClone.append(definitionElement(exercise.writing, exercise.reading));
   hiraganaElement.after(pitchAccentElement(exercise.writing, exercise.reading));
+  const wasAnsweredCorrectly = !cardWordClone.querySelector(
+    "[class*=MaturityTallies-module--tally-icon_0--]",
+  );
+  if (wasAnsweredCorrectly) {
+    const didntKnowWord = document.createElement("label");
+    didntKnowWord.classList.add("cotsu-tools-didnt-know-word");
+    didntKnowWord.append("Doch nicht gewusst?");
+    const didntKnowWordCheckBox = document.createElement("input");
+    didntKnowWordCheckBox.type = "checkbox";
+    didntKnowWordCheckBox.addEventListener("input", () => {
+      const qid = readingExercise.questions[currentQuestionId()].qid;
+      if (didntKnowWordCheckBox.checked) {
+        didntKnowQids.add(qid);
+      } else {
+        didntKnowQids.delete(qid);
+      }
+      cardWordClone.parentElement?.classList.toggle(
+        "cotsu-tools-didnt-know-word-strike",
+        didntKnowWordCheckBox.checked,
+      );
+    });
+    didntKnowWord.append(didntKnowWordCheckBox);
+    cardWordClone.insertAdjacentElement("afterbegin", didntKnowWord);
+  }
   cardWord.insertAdjacentElement("afterend", cardWordClone);
   const studyCardContainer =
     cardWord.parentElement?.parentElement?.parentElement;
@@ -236,7 +267,8 @@ const handleSummary = (record: MutationRecord) => {
   });
   readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
     if (qid === DUMMY_QUESTION_ID) return;
-    const isIncorrect = wrongKanji.has(`${kanji}/${reading}`);
+    const isIncorrect =
+      wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
     const row = document.createElement("div");
     const solution = document.createElement("span");
     solution.append(
@@ -262,11 +294,7 @@ const handleSummary = (record: MutationRecord) => {
       });
       return spoilerElement;
     };
-    row.append(
-      kanji,
-      " → ",
-      isIncorrect  ? spoilerWrap(solution) : solution,
-    );
+    row.append(kanji, " → ", isIncorrect ? spoilerWrap(solution) : solution);
     (isIncorrect ? incorrectKanji : correctKanji).append(row);
   });
   if (originalSummaryElement) {
@@ -282,4 +310,12 @@ const handleSummary = (record: MutationRecord) => {
     actions.append(h3);
     actions.append(wordSummary);
   }
+  const summaryText = element(
+    document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
+  );
+  const summaryTextMatch = summaryText.textContent.match(/^(\d+)(.*)$/);
+  if (!summaryTextMatch) throw new Error("No summaryTextMatch");
+  summaryText.textContent =
+    (Number(summaryTextMatch[1]) - didntKnowQids.size).toString() +
+    summaryTextMatch[2];
 };
