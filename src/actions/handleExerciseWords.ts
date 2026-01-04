@@ -210,14 +210,12 @@ const handleWrongAnswer = (record: MutationRecord) => {
     )
   )
     return;
-  const reading = firstAddedNode.textContent.replace("Die Antwort ist ", "");
-  const kanji = element(
-    document.querySelector(
-      "[class^=ReadingQuestionCard-module--cardExampleSentence--] [class^=JapaneseText-module--red--]",
-    ),
-  ).textContent;
+  const currentQuestion = readingExercise.questions[currentQuestionId()];
   firstAddedNode.innerHTML = "";
-  firstAddedNode.append("Die Antwort ist ", pitchAccentElement(kanji, reading));
+  firstAddedNode.append(
+    "Die Antwort ist ",
+    pitchAccentElement(currentQuestion.writing, currentQuestion.reading),
+  );
 };
 
 const handleSummary = (record: MutationRecord) => {
