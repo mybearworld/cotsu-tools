@@ -114,7 +114,7 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
     const didntKnowWordCheckBox = document.createElement("input");
     didntKnowWordCheckBox.type = "checkbox";
     didntKnowWordCheckBox.addEventListener("input", () => {
-      const qid = readingExercise.questions[currentQuestionId()].qid;
+      const qid = readingExercise.questions[currentQuestionId() - 1].qid;
       if (didntKnowWordCheckBox.checked) {
         didntKnowQids.add(qid);
       } else {
