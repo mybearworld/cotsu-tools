@@ -17,6 +17,13 @@ const SETTINGS: {
       document.body.classList.toggle("cotsu-tools-katakana-mode", newSetting);
     },
   },
+  {
+    name: "Am Ende einer Übung die Vokabelübersicht mischen",
+    id: "cotsu-tools-shuffle-summary",
+    effect: (newSetting) => {
+      document.body.classList.toggle("cotsu-tools-shuffle-summary", newSetting);
+    },
+  },
 ];
 const STORAGE_KEY = "cotsu-tools";
 

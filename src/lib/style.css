@@ -95,6 +95,7 @@ body:has(.cotsu-tools-dialog:open) {
 .cotsu-tools-dialog label {
   display: flex;
   gap: 0.5rem;
+  align-items: baseline;
 }
 .cotsu-tools-dialog input {
   margin: 0;
@@ -257,6 +258,15 @@ div.card-word.cotsu-tools-card-word-clone {
     color 0.5s;
   user-select: text;
   color: inherit;
+}
+.cotsu-tools-summary-shuffled {
+  display: none;
+}
+.cotsu-tools-shuffle-summary .cotsu-tools-summary-shuffled {
+  display: block;
+}
+.cotsu-tools-shuffle-summary .cotsu-tools-summary-unshuffled {
+  display: none;
 }
 
 /* Stats */

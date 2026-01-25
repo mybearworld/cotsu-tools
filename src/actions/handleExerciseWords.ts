@@ -243,15 +243,23 @@ const handleSummary = (record: MutationRecord) => {
   const wordSummary = document.createElement("div");
   const incorrectKanjiHeading = document.createElement("h4");
   incorrectKanjiHeading.textContent = "Falsch waren:";
-  const incorrectKanji = document.createElement("div");
+  const incorrectKanjiUnshuffled = document.createElement("div");
+  incorrectKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
+  const incorrectKanjiShuffled = document.createElement("div");
+  incorrectKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
   const correctKanjiHeading = document.createElement("h4");
   correctKanjiHeading.textContent = "Richtig waren:";
-  const correctKanji = document.createElement("div");
+  const correctKanjiUnshuffled = document.createElement("div");
+  correctKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
+  const correctKanjiShuffled = document.createElement("div");
+  correctKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
   wordSummary.append(
     incorrectKanjiHeading,
-    incorrectKanji,
+    incorrectKanjiUnshuffled,
+    incorrectKanjiShuffled,
     correctKanjiHeading,
-    correctKanji,
+    correctKanjiUnshuffled,
+    correctKanjiShuffled,
   );
   wordSummary.classList.add("word-summary");
   const wrongKanji = new Set();
@@ -265,18 +273,6 @@ const handleSummary = (record: MutationRecord) => {
   });
   readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
     if (qid === DUMMY_QUESTION_ID) return;
-    const isIncorrect =
-      wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
-    const row = document.createElement("div");
-    const solution = document.createElement("span");
-    solution.append(
-      pitchAccentElement(kanji, reading),
-      " ",
-      readingExercise.questions.find(
-        (question) =>
-          question.writing === kanji && question.reading === reading,
-      )?.german ?? meaningElement(kanji, reading),
-    );
     const spoilerWrap = (toWrap: Node | string) => {
       const spoilerElement = document.createElement("button");
       spoilerElement.classList.add("cotsu-tools-spoiler");
@@ -292,9 +288,45 @@ const handleSummary = (record: MutationRecord) => {
       });
       return spoilerElement;
     };
-    row.append(kanji, " → ", isIncorrect ? spoilerWrap(solution) : solution);
-    (isIncorrect ? incorrectKanji : correctKanji).append(row);
+    const isIncorrect =
+      wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
+    const makeRow = () => {
+      const row = document.createElement("div");
+      const solution = document.createElement("span");
+      solution.append(
+        pitchAccentElement(kanji, reading),
+        " ",
+        readingExercise.questions.find(
+          (question) =>
+            question.writing === kanji && question.reading === reading,
+        )?.german ?? meaningElement(kanji, reading),
+      );
+      row.append(kanji, " → ", isIncorrect ? spoilerWrap(solution) : solution);
+      return row;
+    };
+    if (isIncorrect) {
+      incorrectKanjiUnshuffled.append(makeRow());
+      incorrectKanjiShuffled.append(makeRow());
+    } else {
+      correctKanjiUnshuffled.append(makeRow());
+      correctKanjiShuffled.append(makeRow());
+    }
   });
+  const shuffle = (container: HTMLElement) => {
+    const children = [...container.children];
+    let remaining = children.length;
+    while (remaining) {
+      const i = Math.floor(Math.random() * remaining);
+      remaining--;
+      [children[remaining], children[i]] = [children[i], children[remaining]];
+    }
+    container.innerHTML = "";
+    children.forEach((child) => {
+      container.append(child);
+    });
+  };
+  shuffle(correctKanjiShuffled);
+  shuffle(incorrectKanjiShuffled);
   if (originalSummaryElement) {
     element(document.querySelector("h3")).textContent =
       "Hier nochmal alle Wörter";
