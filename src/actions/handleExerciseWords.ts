@@ -284,6 +284,8 @@ const handleSummary = (record: MutationRecord) => {
       spoilerElement.addEventListener("click", () => {
         spoilerElement.classList.add("cotsu-tools-spoiler-shown");
         spoilerElement.ariaLabel = null;
+        spoilerElement.role = "none";
+        spoilerElement.disabled = true;
         accessibilityWrapper.ariaHidden = "false";
       });
       return spoilerElement;
