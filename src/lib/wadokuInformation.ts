@@ -14,14 +14,18 @@ const wadokuInformationCache = new Map<
   WadokuInformation | Promise<WadokuInformation>
 >();
 
+// These are two different tilde characters that are both used interchangibly
+// by the site.
+const TILDE = /[～〜]/g;
+
 export const getWadokuInformation = async (
   kanji: string,
   reading: string,
   bulk: string[] = [kanji],
 ): Promise<WadokuInformation> => {
-  kanji = kanji.replace(/～/g, "");
-  reading = reading.replace(/～/g, "");
-  bulk = bulk.map((s) => s.replace(/～/g, ""));
+  kanji = kanji.replace(TILDE, "…");
+  reading = reading.replace(TILDE, "…");
+  bulk = bulk.map((s) => s.replace(TILDE, "…"));
   if (reading.includes("・")) {
     const results = await Promise.all(
       reading
@@ -109,7 +113,7 @@ export const getWadokuInformation = async (
         resultLine.querySelector(".reading");
       if (
         !readingRow ||
-        readingRow.textContent.trim().replace(/\uffe8|･|~|…/g, "") !== reading
+        readingRow.textContent.trim().replace(/\uffe8|･|~/g, "") !== reading
       ) {
         continue;
       }
@@ -262,10 +266,9 @@ export const pitchAccentElement = (
   getWadokuInformation(kanji, reading, bulk).then((information) => {
     pitchAccentElement.classList.remove("cotsu-tools-pitch-accent-loading");
     if (information?.pitchAccent) {
-      pitchAccentElement.innerHTML = information.pitchAccent.replace(
-        /class/g,
-        "data-cotsu-tools-pitch-accent-segment",
-      );
+      pitchAccentElement.innerHTML = information.pitchAccent
+        .replace(/class/g, "data-cotsu-tools-pitch-accent-segment")
+        .replace(/…/g, "〜");
     } else {
       pitchAccentElement.append(" (kein Pitch-Accent verfügbar)");
     }
