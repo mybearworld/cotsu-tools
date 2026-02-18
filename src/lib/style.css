@@ -365,3 +365,9 @@ div[class^="index-module--action-card-text--"] {
   background-color: black;
   content: "";
 }
+
+/* Hide question maturity */
+.cotsu-tools-hide-question-maturity
+  [class^="ReadingQuestionCard-module--icons--"] {
+  display: none;
+}

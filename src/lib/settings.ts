@@ -15,6 +15,15 @@ const SETTINGS = {
       document.body.classList.toggle("cotsu-tools-shuffle-summary", newSetting);
     },
   },
+  "cotsu-tools-hide-question-maturity": {
+    name: "Indikator des Fortschritts einer Vokabel während einer Übung verstecken",
+    effect: (newSetting) => {
+      document.body.classList.toggle(
+        "cotsu-tools-hide-question-maturity",
+        newSetting,
+      );
+    },
+  },
 } satisfies Record<string, Setting>;
 export type SettingID = keyof typeof SETTINGS;
 export const SETTING_IDS = Object.keys(SETTINGS) as SettingID[];
