@@ -6,6 +6,7 @@ import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
 import { addWadokuInformationInKanjiTab } from "./actions/addWadokuInformationInKanjiTab";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
 import { insertCSS } from "./lib/style";
+import "./lib/settings";
 
 insertCSS();
 startInterceptingFetch();

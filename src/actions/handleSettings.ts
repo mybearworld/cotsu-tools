@@ -4,38 +4,14 @@ import {
   definitionElement,
   pitchAccentElement,
 } from "../lib/wadokuInformation";
-
-const SETTINGS: {
-  name: string;
-  id: string;
-  effect: (newSetting: boolean) => void;
-}[] = [
-  {
-    name: "Katakana statt Hiragana bei Übungen nutzen",
-    id: "cotsu-tools-katakana-mode",
-    effect: (newSetting) => {
-      document.body.classList.toggle("cotsu-tools-katakana-mode", newSetting);
-    },
-  },
-  {
-    name: "Am Ende einer Übung die Vokabelübersicht mischen",
-    id: "cotsu-tools-shuffle-summary",
-    effect: (newSetting) => {
-      document.body.classList.toggle("cotsu-tools-shuffle-summary", newSetting);
-    },
-  },
-];
-const STORAGE_KEY = "cotsu-tools";
+import {
+  getSetting,
+  setSetting,
+  SETTING_IDS,
+  settingName,
+} from "../lib/settings";
 
 const createDialog = () => {
-  const loadedSettingsString = localStorage.getItem(STORAGE_KEY);
-  let settings;
-  if (loadedSettingsString) {
-    settings = JSON.parse(loadedSettingsString);
-  } else {
-    settings = Object.fromEntries(SETTINGS.map(({ id }) => [id, false]));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-  }
   const dialog = document.createElement("dialog");
   dialog.classList.add("cotsu-tools-dialog");
   const dialogWrapper = document.createElement("div");
@@ -67,20 +43,17 @@ const createDialog = () => {
   const settingsHeader = document.createElement("h3");
   settingsHeader.textContent = "Einstellungen";
   dialogWrapper.append(settingsHeader);
-  SETTINGS.forEach((setting) => {
+  SETTING_IDS.forEach((id) => {
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = settings[setting.id];
-    setting.effect(settings[setting.id]);
+    checkbox.checked = getSetting(id);
     checkbox.addEventListener("input", () => {
-      setting.effect(checkbox.checked);
-      settings[setting.id] = checkbox.checked;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+      setSetting(id, checkbox.checked);
     });
     label.append(checkbox);
     const name = document.createElement("span");
-    name.textContent = setting.name;
+    name.textContent = settingName(id);
     label.append(name);
     dialogWrapper.append(label);
   });
