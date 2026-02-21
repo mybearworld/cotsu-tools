@@ -294,6 +294,9 @@ const handleSummary = (record: MutationRecord) => {
       wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
     const makeRow = () => {
       const row = document.createElement("div");
+      const word = document.createElement("span");
+      word.lang = "ja";
+      word.textContent = kanji;
       const solution = document.createElement("span");
       solution.append(
         pitchAccentElement(kanji, reading),
@@ -303,7 +306,7 @@ const handleSummary = (record: MutationRecord) => {
             question.writing === kanji && question.reading === reading,
         )?.german ?? meaningElement(kanji, reading),
       );
-      row.append(kanji, " → ", isIncorrect ? spoilerWrap(solution) : solution);
+      row.append(word, " → ", isIncorrect ? spoilerWrap(solution) : solution);
       return row;
     };
     if (isIncorrect) {
