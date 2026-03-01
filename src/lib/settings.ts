@@ -24,6 +24,12 @@ const SETTINGS = {
       );
     },
   },
+  "cotsu-tools-cursive-font": {
+    name: "Kursive Schriftart für Kanji verwenden (Yuji Syuku)",
+    effect: (newSetting) => {
+      document.body.classList.toggle("cotsu-tools-cursive-font", newSetting);
+    },
+  },
 } satisfies Record<string, Setting>;
 export type SettingID = keyof typeof SETTINGS;
 export const SETTING_IDS = Object.keys(SETTINGS) as SettingID[];

@@ -3,7 +3,7 @@ import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { showMoreStats } from "./actions/showMoreStats";
 import { showExercisesLeftInKanjiLearningTab } from "./actions/showExercisesLeftInKanjiLearningTab";
 import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
-import { addWadokuInformationInKanjiTab } from "./actions/addWadokuInformationInKanjiTab";
+import { handleKanjiTab } from "./actions/handleKanjiTab";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
 import { insertCSS } from "./lib/style";
 import "./lib/settings";
@@ -16,7 +16,7 @@ new MutationObserver(async (records) => {
   showMoreStats(records);
   showExercisesLeftInKanjiLearningTab(records);
   fixFontInNewKanjiTab(records);
-  addWadokuInformationInKanjiTab(records);
+  handleKanjiTab(records);
 }).observe(document.body, {
   childList: true,
   subtree: true,

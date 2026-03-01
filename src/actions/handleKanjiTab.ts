@@ -2,9 +2,7 @@ import { element } from "../lib/element";
 import { katakanaToHiragana } from "../lib/katakanaToHiragana";
 import { pitchAccentElement, meaningElement } from "../lib/wadokuInformation";
 
-export const addWadokuInformationInKanjiTab = async (
-  records: MutationRecord[],
-) => {
+export const handleKanjiTab = async (records: MutationRecord[]) => {
   const items = [];
   for (const record of records) {
     const firstAddedNode = record.addedNodes[0];
@@ -36,8 +34,11 @@ export const addWadokuInformationInKanjiTab = async (
   items.forEach(({ element, kanji, reading, german }) => {
     element.innerHTML = "";
     element.dataset.cotsuToolsAddedWadokuInformation = "true";
+    const kanjiElement = document.createElement("span");
+    kanjiElement.textContent = kanji;
+    kanjiElement.classList.add("cotsu-tools-kanji");
     element.append(
-      kanji,
+      kanjiElement,
       "（",
       pitchAccentElement(kanji, reading, bulk),
       "） ",
