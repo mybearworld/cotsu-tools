@@ -5,7 +5,10 @@ import {
   pitchAccentElement,
 } from "../lib/wadokuInformation";
 import {
+  acknowledgeSettings,
+  doAcknowledgeableSettingsExist,
   getSetting,
+  isAcknowledged,
   setSetting,
   SETTING_IDS,
   settingName,
@@ -14,11 +17,17 @@ import {
 const createDialog = () => {
   const dialog = document.createElement("dialog");
   dialog.classList.add("cotsu-tools-dialog");
+  const closeDialog = () => {
+    dialog.close();
+    dialog.querySelectorAll(".cotsu-tools-new-badge").forEach((badge) => {
+      badge.remove();
+    });
+  };
   const dialogWrapper = document.createElement("div");
   dialogWrapper.classList.add("cotsu-tools-dialog-wrapper");
   dialog.addEventListener("mousedown", (e) => {
     if (!element(e.target).closest(".cotsu-tools-dialog-wrapper")) {
-      dialog.close();
+      closeDialog();
     }
   });
   dialog.append(dialogWrapper);
@@ -52,9 +61,18 @@ const createDialog = () => {
       setSetting(id, checkbox.checked);
     });
     label.append(checkbox);
-    const name = document.createElement("span");
-    name.textContent = settingName(id);
-    label.append(name);
+    const description = document.createElement("span");
+    description.textContent = settingName(id);
+    if (!isAcknowledged(id)) {
+      const newBadge = document.createElement("span");
+      newBadge.textContent = "Neu";
+      newBadge.classList.add(
+        "cotsu-tools-new-badge",
+        "cotsu-tools-new-badge-dialog",
+      );
+      description.append(newBadge);
+    }
+    label.append(description);
     dialogWrapper.append(label);
   });
   const debuggingDetails = document.createElement("details");
@@ -87,7 +105,7 @@ const createDialog = () => {
   const closeButton = document.createElement("button");
   closeButton.textContent = "Schließen";
   closeButton.addEventListener("click", () => {
-    dialog.close();
+    closeDialog();
   });
   dialogWrapper.append(closeButton);
   document.body.append(dialog);
@@ -107,8 +125,20 @@ export const handleSettings = async (records: MutationRecord[]) => {
   const settingsButton = document.createElement("button");
   settingsButton.classList.add("cotsu-tools-button");
   settingsButton.textContent = "Cotsu-Tools";
+  let newBadge = null;
+  if (doAcknowledgeableSettingsExist()) {
+    newBadge = document.createElement("span");
+    newBadge.textContent = "Neu";
+    newBadge.classList.add(
+      "cotsu-tools-new-badge",
+      "cotsu-tools-new-badge-nav-bar",
+    );
+    settingsButton.append(newBadge);
+  }
   settingsButton.addEventListener("click", () => {
     dialog.showModal();
+    acknowledgeSettings();
+    newBadge?.remove();
   });
   element(header.lastChild).insertAdjacentElement("afterbegin", settingsButton);
 };

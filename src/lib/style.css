@@ -40,6 +40,21 @@ input {
 body:has(.cotsu-tools-dialog:open) {
   overflow: hidden;
 }
+.cotsu-tools-new-badge {
+  background-color: #ff4e71;
+  color: white;
+  font-weight: bold;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+}
+.cotsu-tools-new-badge.cotsu-tools-new-badge-nav-bar {
+  background-color: white;
+  color: #ff4e71;
+  margin-left: 0.5rem;
+}
+.cotsu-tools-new-badge.cotsu-tools-new-badge-dialog {
+  margin-left: 0.25rem;
+}
 .cotsu-tools-dialog {
   border: 1px solid #f6f6f6;
   border-radius: 20px;

@@ -1,22 +1,26 @@
 export type Setting = {
   name: string;
+  acknowledgeable: boolean;
   effect: (newSetting: boolean) => void;
 };
 const SETTINGS = {
   "cotsu-tools-katakana-mode": {
     name: "Katakana statt Hiragana bei Übungen nutzen",
+    acknowledgeable: false,
     effect: (newSetting) => {
       document.body.classList.toggle("cotsu-tools-katakana-mode", newSetting);
     },
   },
   "cotsu-tools-shuffle-summary": {
     name: "Am Ende einer Übung die Vokabelübersicht mischen",
+    acknowledgeable: false,
     effect: (newSetting) => {
       document.body.classList.toggle("cotsu-tools-shuffle-summary", newSetting);
     },
   },
   "cotsu-tools-hide-question-maturity": {
     name: "Indikator des Fortschritts einer Vokabel während einer Übung verstecken",
+    acknowledgeable: false,
     effect: (newSetting) => {
       document.body.classList.toggle(
         "cotsu-tools-hide-question-maturity",
@@ -26,6 +30,7 @@ const SETTINGS = {
   },
   "cotsu-tools-cursive-font": {
     name: "Kursive Schriftart für Kanji verwenden (Yuji Syuku)",
+    acknowledgeable: true,
     effect: (newSetting) => {
       document.body.classList.toggle("cotsu-tools-cursive-font", newSetting);
     },
@@ -35,8 +40,11 @@ export type SettingID = keyof typeof SETTINGS;
 export const SETTING_IDS = Object.keys(SETTINGS) as SettingID[];
 
 const STORAGE_KEY = "cotsu-tools";
+const ACKNOWLEDGED_STORAGE_KEY = "cotsu-tools-acknowledged";
 
 const loadedSettingsString = localStorage.getItem(STORAGE_KEY);
+const loadedAcknowledgedString = localStorage.getItem(ACKNOWLEDGED_STORAGE_KEY);
+
 let settings: Record<SettingID, boolean>;
 if (loadedSettingsString) {
   settings = JSON.parse(loadedSettingsString);
@@ -56,6 +64,20 @@ SETTING_IDS.forEach((id) => {
   }
 });
 
+let acknowledged: SettingID[];
+if (loadedAcknowledgedString) {
+  acknowledged = JSON.parse(loadedAcknowledgedString);
+} else {
+  if (loadedSettingsString) {
+    // Not installed for the first time.
+    acknowledged = SETTING_IDS.filter((id) => !SETTINGS[id].acknowledgeable);
+  } else {
+    // Installed for the first time.
+    acknowledged = SETTING_IDS;
+  }
+  localStorage.setItem(ACKNOWLEDGED_STORAGE_KEY, JSON.stringify(acknowledged));
+}
+
 export const getSetting = (id: SettingID) => settings[id];
 export const settingName = (id: SettingID) => SETTINGS[id].name;
 
@@ -63,4 +85,14 @@ export const setSetting = (id: SettingID, value: boolean) => {
   settings[id] = value;
   SETTINGS[id].effect(value);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+};
+
+export const doAcknowledgeableSettingsExist = () =>
+  SETTING_IDS.some(
+    (id) => SETTINGS[id].acknowledgeable && !acknowledged.includes(id),
+  );
+export const isAcknowledged = (id: SettingID) => acknowledged.includes(id);
+export const acknowledgeSettings = () => {
+  acknowledged = SETTING_IDS;
+  localStorage.setItem(ACKNOWLEDGED_STORAGE_KEY, JSON.stringify(acknowledged));
 };
