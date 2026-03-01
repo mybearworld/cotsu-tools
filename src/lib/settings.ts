@@ -29,7 +29,7 @@ const SETTINGS = {
     },
   },
   "cotsu-tools-cursive-font": {
-    name: "Kursive Schriftart für Kanji verwenden (Yuji Syuku)",
+    name: "Handschriftliche Schriftart für japanischen Text verwenden (Yuji Syuku)",
     acknowledgeable: true,
     effect: (newSetting) => {
       document.body.classList.toggle("cotsu-tools-cursive-font", newSetting);
