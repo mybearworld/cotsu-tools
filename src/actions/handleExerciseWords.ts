@@ -311,6 +311,7 @@ const handleSummary = (record: MutationRecord) => {
       const row = document.createElement("div");
       const word = document.createElement("span");
       word.lang = "ja";
+      word.classList.add("cotsu-tools-kanji");
       word.textContent = kanji;
       const solution = document.createElement("span");
       solution.append(
