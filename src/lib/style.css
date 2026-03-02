@@ -1,6 +1,31 @@
 /* General */
+@font-face {
+  font-family: "Noto Sans JP All Katakana";
+  src: url("https://mybearworld.github.io/japanese-fonts/out/NotoSansJPAllKatakana.ttf");
+}
+@font-face {
+  font-family: "Yuji Syuku";
+  src: url("https://mybearworld.github.io/japanese-fonts/src/YujiSyuku-Regular.ttf");
+  size-adjust: 120%;
+  font-weight: 400;
+  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF66-FF9F;
+}
+@font-face {
+  font-family: "Yuji Syuku All Katakana";
+  src: url("https://mybearworld.github.io/japanese-fonts/out/YujiSyukuAllKatakana.ttf");
+  size-adjust: 120%;
+  font-weight: 400;
+  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF66-FF9F;
+}
 input {
   font-weight: 400 !important;
+}
+body {
+  --cotsu-tools-default-font: Noto Sans JP, Noto Sans Japanese, sans-serif;
+  --cotsu-tools-font: var(--cotsu-tools-default-font);
+}
+body.cotsu-tools-cursive-font {
+  --cotsu-tools-font: Yuji Syuku, var(--cotsu-tools-default-font);
 }
 a,
 body,
@@ -8,10 +33,7 @@ button,
 p,
 span,
 input {
-  font-family:
-    Noto Sans JP,
-    Noto Sans Japanese,
-    sans-serif !important;
+  font-family: var(--cotsu-tools-font) !important;
 }
 
 /* Dialog */
@@ -311,38 +333,7 @@ div[class^="index-module--action-card-text--"] {
   font-weight: bold;
 }
 
-/* Fonts */
-@font-face {
-  font-family: "Noto Sans JP All Katakana";
-  src: url("https://mybearworld.github.io/japanese-fonts/out/NotoSansJPAllKatakana.ttf");
-}
-@font-face {
-  font-family: "Yuji Syuku";
-  src: url("https://mybearworld.github.io/japanese-fonts/src/YujiSyuku-Regular.ttf");
-  size-adjust: 120%;
-  font-weight: 400;
-  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF66-FF9F;
-}
-@font-face {
-  font-family: "Yuji Syuku All Katakana";
-  src: url("https://mybearworld.github.io/japanese-fonts/out/YujiSyukuAllKatakana.ttf");
-  size-adjust: 120%;
-  font-weight: 400;
-  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF66-FF9F;
-}
-.cotsu-tools-cursive-font
-  [class^="ReadingQuestionCard-module--cardExampleSentence--"]
-  *,
-.cotsu-tools-cursive-font div[class^="KanjiCard-module--kanjiBig--"],
-.cotsu-tools-cursive-font span[class^="KanjiCard-module--radical--"],
-.cotsu-tools-cursive-font input[class^="suche-module--search-field--"],
-.cotsu-tools-cursive-font .cotsu-tools-kanji {
-  font-family:
-    Yuji Syuku,
-    Noto Sans JP,
-    Noto Sans Japanese,
-    sans-serif !important;
-}
+/* Katakana mode */
 body {
   --cotsu-tools-kana-font: ;
 }
@@ -364,9 +355,6 @@ body.cotsu-tools-cursive-font.cotsu-tools-katakana-mode {
 .commonReading,
 .commonReading b {
   font-family: var(--cotsu-tools-kana-font) !important;
-}
-span.cotsu-tools-kanji {
-  font-weight: inherit;
 }
 
 /* Other words with Kanji */

@@ -95,15 +95,6 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
   cardWord.nextSibling?.remove();
   const cardWordClone = element(cardWord.cloneNode(true));
   cardWordClone.classList.add("cotsu-tools-card-word-clone");
-  const kanjiElement = text(
-    [...cardWordClone.childNodes].find(
-      (_node, i) => cardWordClone.childNodes[i + 1]?.textContent === " → ",
-    ),
-  );
-  const newKanjiElement = document.createElement("span");
-  newKanjiElement.textContent = kanjiElement.textContent;
-  newKanjiElement.classList.add("cotsu-tools-kanji");
-  kanjiElement.replaceWith(newKanjiElement);
   const hiraganaElement = text(
     [...cardWordClone.childNodes].find(
       (_node, i) => cardWordClone.childNodes[i - 1]?.textContent === " → ",
@@ -158,10 +149,7 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
       otherKanjiElement.classList.add("cotsu-tools-other-kanji");
       const button = document.createElement("button");
       button.classList.add("cotsu-tools-other-kanji-init-button");
-      const buttonKanji = document.createElement("span");
-      buttonKanji.classList.add("cotsu-tools-kanji");
-      buttonKanji.textContent = kanji;
-      button.append("andere Wörter mit ", buttonKanji);
+      button.textContent = "andere Wörter mit " + kanji;
       button.addEventListener("click", async () => {
         button.textContent = "lädt...";
         const result = await kanjiSearch(kanji);
@@ -189,10 +177,7 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
           const li = document.createElement("li");
           const reading = katakanaToHiragana(word.reading);
           const kanji = document.createElement("span");
-          kanji.classList.add(
-            "cotsu-tools-other-kanji-kanji",
-            "cotsu-tools-kanji",
-          );
+          kanji.classList.add("cotsu-tools-other-kanji-kanji");
           kanji.append(word.word);
           li.append(kanji);
           const moreButton = document.createElement("button");
@@ -311,7 +296,6 @@ const handleSummary = (record: MutationRecord) => {
       const row = document.createElement("div");
       const word = document.createElement("span");
       word.lang = "ja";
-      word.classList.add("cotsu-tools-kanji");
       word.textContent = kanji;
       const solution = document.createElement("span");
       solution.append(

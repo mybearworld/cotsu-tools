@@ -34,11 +34,8 @@ export const handleKanjiTab = async (records: MutationRecord[]) => {
   items.forEach(({ element, kanji, reading, german }) => {
     element.innerHTML = "";
     element.dataset.cotsuToolsAddedWadokuInformation = "true";
-    const kanjiElement = document.createElement("span");
-    kanjiElement.textContent = kanji;
-    kanjiElement.classList.add("cotsu-tools-kanji");
     element.append(
-      kanjiElement,
+      kanji,
       "（",
       pitchAccentElement(kanji, reading, bulk),
       "） ",
