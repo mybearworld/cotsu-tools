@@ -330,7 +330,9 @@ div[class^="index-module--action-card-text--"] {
   font-weight: 400;
   unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF66-FF9F;
 }
-.cotsu-tools-cursive-font span[class^="JapaneseText-module--"],
+.cotsu-tools-cursive-font
+  [class^="ReadingQuestionCard-module--cardExampleSentence--"]
+  *,
 .cotsu-tools-cursive-font div[class^="KanjiCard-module--kanjiBig--"],
 .cotsu-tools-cursive-font span[class^="KanjiCard-module--radical--"],
 .cotsu-tools-cursive-font input[class^="suche-module--search-field--"],
