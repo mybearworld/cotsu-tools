@@ -8,14 +8,14 @@
   src: url("https://mybearworld.github.io/japanese-fonts/src/YujiSyuku-Regular.ttf");
   size-adjust: 120%;
   font-weight: 400;
-  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF66-FF9F;
+  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF10-FF19, U+FF66-FF9F;
 }
 @font-face {
   font-family: "Yuji Syuku All Katakana";
   src: url("https://mybearworld.github.io/japanese-fonts/out/YujiSyukuAllKatakana.ttf");
   size-adjust: 120%;
   font-weight: 400;
-  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF66-FF9F;
+  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF10-FF19, U+FF66-FF9F;
 }
 input {
   font-weight: 400 !important;
