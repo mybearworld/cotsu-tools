@@ -81,7 +81,8 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
       !(firstAddedNode instanceof HTMLElement) ||
       !firstAddedNode.className?.startsWith("StudyContainer")) &&
     (record.type !== "characterData" ||
-      !record.target.parentElement?.classList?.contains("card-word"))
+      !record.target.parentElement?.classList?.contains("card-word") ||
+      record.target.nextSibling?.textContent !== " → ")
   )
     return;
   const cardWord =
