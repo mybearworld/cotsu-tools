@@ -23,8 +23,9 @@ export const getWadokuInformation = async (
   reading: string,
   bulk: string[] = [kanji],
 ): Promise<WadokuInformation> => {
+  const shouldHaveEllipsis = kanji.includes("…");
   kanji = kanji.replace(TILDE, "…");
-  reading = reading.replace(TILDE, "…");
+  reading = reading.replace(TILDE, "");
   bulk = bulk.map((s) => s.replace(TILDE, "…"));
   if (reading.includes("・")) {
     const results = await Promise.all(
@@ -71,12 +72,14 @@ export const getWadokuInformation = async (
     hasAlternateSpellings: WadokuInformation | null;
     alternateSpelling: WadokuInformation | null;
     undesirableDefinition: WadokuInformation | null;
+    ellipsis: WadokuInformation | null;
   } = {
     segmentedPitchAccent: null,
     noPitchAccent: null,
     hasAlternateSpellings: null,
     alternateSpelling: null,
     undesirableDefinition: null,
+    ellipsis: null,
   };
   try {
     const cachedSearchResponseDocument = wadokuSearchResultCache.get(kanji);
@@ -113,7 +116,7 @@ export const getWadokuInformation = async (
         resultLine.querySelector(".reading");
       if (
         !readingRow ||
-        readingRow.textContent.trim().replace(/\uffe8|･|~/g, "") !== reading
+        readingRow.textContent.trim().replace(/\uffe8|･|~|…/g, "") !== reading
       ) {
         continue;
       }
@@ -229,6 +232,11 @@ export const getWadokuInformation = async (
         suboptimalResult.undesirableDefinition = information;
       } else if (orth[0] !== kanji) {
         suboptimalResult.alternateSpelling ??= information;
+      } else if (
+        !shouldHaveEllipsis &&
+        information.pitchAccent?.includes("…")
+      ) {
+        suboptimalResult.ellipsis ??= information;
       } else if (information.pitchAccent?.includes("･")) {
         suboptimalResult.segmentedPitchAccent ??= information;
       } else if (information.pitchAccent === null) {
@@ -246,6 +254,7 @@ export const getWadokuInformation = async (
   return doReturn(
     suboptimalResult.hasAlternateSpellings ??
       suboptimalResult.alternateSpelling ??
+      suboptimalResult.ellipsis ??
       suboptimalResult.segmentedPitchAccent ??
       suboptimalResult.undesirableDefinition ??
       suboptimalResult.noPitchAccent,
