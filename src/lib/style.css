@@ -15,7 +15,7 @@
   src: url("https://mybearworld.github.io/japanese-fonts/out/YujiSyukuAllKatakana.ttf");
   size-adjust: 120%;
   font-weight: 400;
-  unicode-range: U+A5, U+4E00-9FFF, U+30??, U+FF10-FF19, U+FF66-FF9F;
+  unicode-range: U+3041-3096;
 }
 input {
   font-weight: 400 !important;
@@ -347,7 +347,8 @@ body.cotsu-tools-cursive-font {
 }
 body.cotsu-tools-cursive-font.cotsu-tools-katakana-mode {
   --cotsu-tools-kana-font:
-    Yuji Syuku All Katakana, Noto Sans JP, Noto Sans Japanese, sans-serif;
+    Yuji Syuku All Katakana, Yuji Syuku, Noto Sans JP, Noto Sans Japanese,
+    sans-serif;
 }
 [class^="ReadingQuestionCard-module--input-field--"],
 .cotsu-tools-pitch-accent,
