@@ -288,6 +288,10 @@ div.card-word.cotsu-tools-card-word-clone {
   cursor: pointer;
   color: #555;
 }
+.cotsu-tools-spoiler:not(.cotsu-tools-spoiler-shown)::selection {
+  background-color: currentcolor;
+  color: currentcolor;
+}
 .cotsu-tools-spoiler.cotsu-tools-spoiler-shown {
   background-color: #eee;
   transition:
