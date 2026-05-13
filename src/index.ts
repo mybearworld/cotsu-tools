@@ -1,3 +1,12 @@
+window.addEventListener("error", (e) => {
+  e.preventDefault();
+  if (e.error instanceof Error) {
+    alert("[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" + e.error.stack);
+  } else {
+    alert("[Cotsu-Tools] Etwas ist schiefgelaufen (kein Error):\n\n" + e.error);
+  }
+});
+
 import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { showMoreStats } from "./actions/showMoreStats";
