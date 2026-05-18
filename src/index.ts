@@ -1,3 +1,13 @@
+window.addEventListener("unhandledrejection", (e) => {
+  e.preventDefault();
+  if (e.reason instanceof Error) {
+    alert("[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" + e.reason.stack);
+  } else {
+    alert(
+      "[Cotsu-Tools] Etwas ist schiefgelaufen (kein Error):\n\n" + e.reason,
+    );
+  }
+});
 window.addEventListener("error", (e) => {
   e.preventDefault();
   if (e.error instanceof Error) {

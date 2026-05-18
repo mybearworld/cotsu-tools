@@ -20,7 +20,8 @@ import { context } from "esbuild";
 // @description Userscript für https://cotsu.de.
 // @updateURL   https://openuserjs.org/meta/mybearworld/Cotsu-Tools.meta.js
 // @downloadURL https://openuserjs.org/install/mybearworld/Cotsu-Tools.user.js
-// ==/UserScript==`,
+// ==/UserScript==
+`,
     },
   })
 ).watch();
