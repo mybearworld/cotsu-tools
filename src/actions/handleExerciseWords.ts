@@ -38,11 +38,22 @@ const handleUpdatedWord = (record: MutationRecord) => {
       record.target.parentElement?.tagName !== "P" ||
       !record.target.parentElement?.parentElement?.className.startsWith(
         "StudyProgress-module--study-progress--",
+      ) ||
+      !(
+        record.target.parentElement.parentElement.nextElementSibling
+          ?.firstChild instanceof Element
+      ) ||
+      record.target.parentElement.parentElement.nextElementSibling.firstChild.className.startsWith(
+        "WritingQuestionCard-",
       )) &&
     (record.type !== "childList" ||
       !(firstAddedNode instanceof HTMLElement) ||
       !firstAddedNode.className.startsWith(
         "StudyProgress-module--study-progress--",
+      ) ||
+      !(firstAddedNode.nextElementSibling?.firstChild instanceof Element) ||
+      firstAddedNode.nextElementSibling.firstChild.className.startsWith(
+        "WritingQuestionCard-",
       ))
   )
     return;
@@ -226,15 +237,16 @@ const handleSummary = (record: MutationRecord) => {
     !firstAddedNode.className.startsWith("SummaryCard-module--summary-card--")
   )
     return;
-  if (readingExercise.questions.length === 0) return;
+  if (readingExercise && readingExercise.questions.length === 0) return;
+  const summaryCorrectText = element(
+    document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
+  );
+  if (summaryCorrectText.textContent === "") return; // Writing question
   element(
     document.querySelector(
       "[class^=QuestionContainer-module--question-container--]",
     ),
   ).classList.remove("cotsu-tools-dummy-question");
-  const summaryCorrectText = element(
-    document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
-  );
   const summaryCorrectTextMatch = summaryCorrectText.textContent.match(
     /^(\d+) von (\d+) richtig$/,
   );
