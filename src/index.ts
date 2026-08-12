@@ -1,7 +1,12 @@
 window.addEventListener("unhandledrejection", (e) => {
   e.preventDefault();
   if (e.reason instanceof Error) {
-    alert("[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" + e.reason.stack);
+    alert(
+      "[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" +
+        e.reason.message +
+        "\n" +
+        e.reason.stack,
+    );
   } else {
     alert(
       "[Cotsu-Tools] Etwas ist schiefgelaufen (kein Error):\n\n" + e.reason,
@@ -11,7 +16,12 @@ window.addEventListener("unhandledrejection", (e) => {
 window.addEventListener("error", (e) => {
   e.preventDefault();
   if (e.error instanceof Error) {
-    alert("[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" + e.error.stack);
+    alert(
+      "[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" +
+        e.error.message +
+        "\n" +
+        e.error.stack,
+    );
   } else {
     alert("[Cotsu-Tools] Etwas ist schiefgelaufen (kein Error):\n\n" + e.error);
   }
