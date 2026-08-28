@@ -1,3 +1,4 @@
+import { gmfetch } from "./gmfetch";
 import { LowercaseLevel } from "./levels";
 
 export let stats: {
@@ -74,6 +75,28 @@ export const startInterceptingFetch = () => {
           didntKnowQids = new Set();
         }
         body = JSON.stringify(parsedBody);
+      } else if (
+        url === "https://api.cotsu.de/user.php?r=start-reading" &&
+        typeof requestBody === "string"
+      ) {
+        const parsedRequestBody = JSON.parse(requestBody);
+        const qids: { qid: string }[] = parsedRequestBody.qids;
+        const auth =
+          options?.headers ?
+            "Authorization" in options.headers ?
+              options.headers.Authorization
+            : null
+          : null;
+        if (auth) {
+          await gmfetch({
+            url: "https://api.cotsu.de/user.php?r=update-progress",
+            method: "POST",
+            headers: { Authorization: auth },
+            data: JSON.stringify({
+              answers: qids.map((qid) => ({ qid: qid.qid, correct: 0 })),
+            }),
+          });
+        }
       }
     }
     return new Response(body, response);

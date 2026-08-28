@@ -1,8 +1,26 @@
 import { element } from "../lib/element";
+import { isSceneChange } from "../lib/isSceneChange";
 import { katakanaToHiragana } from "../lib/katakanaToHiragana";
 import { pitchAccentElement, meaningElement } from "../lib/wadokuInformation";
 
 export const handleKanjiTab = async (records: MutationRecord[]) => {
+  if (isSceneChange(records)) {
+    const lastParagraph = document.querySelector(
+      "[class^=suche-module--container--] p:last-of-type",
+    );
+    const xIcon = document.querySelector(
+      "[class*=MaturityTallies-module--tally-icon_0--]",
+    );
+    if (lastParagraph && xIcon) {
+      const info = document.createElement("p");
+      info.append(
+        "Cotsu-Tools: Wenn du ein Wort hinzufügst, das du bereits lernst, kommt das Wort ebenfalls zurück in die Stufe ",
+        xIcon.cloneNode(),
+        ".",
+      );
+      lastParagraph.insertAdjacentElement("afterend", info);
+    }
+  }
   const items = [];
   for (const record of records) {
     const firstAddedNode = record.addedNodes[0];
