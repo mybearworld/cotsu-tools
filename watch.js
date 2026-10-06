@@ -14,7 +14,7 @@ import { context } from "esbuild";
 // @namespace   mybearworld
 // @match       *://cotsu.de/*
 // @grant       GM.xmlHttpRequest
-// @version     1.18.0
+// @version     1.19.0
 // @license     MIT
 // @author      mybearworld
 // @description Userscript für https://cotsu.de.
