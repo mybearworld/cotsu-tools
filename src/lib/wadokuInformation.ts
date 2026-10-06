@@ -5,6 +5,10 @@ export type WadokuInformation = {
   pitchAccent: string | null;
   meaning: string;
   definition: HTMLDivElement;
+  image: {
+    url: string;
+    caption: string;
+  } | null;
 } | null;
 
 const parser = new DOMParser();
@@ -44,6 +48,7 @@ export const getWadokuInformation = async (
         .join("・"),
       meaning: nonNullResult.meaning,
       definition: nonNullResult.definition,
+      image: nonNullResult.image,
     };
   }
   const cacheKey = `${kanji}/${reading}`;
@@ -209,6 +214,7 @@ export const getWadokuInformation = async (
         definition,
         pitchAccent:
           readingRow.classList.contains("accent") ? readingRow.innerHTML : null,
+        image: null,
       };
       let sense = element(resultLine.querySelector(".sense:not(.master)"));
       sense = sense.querySelector(".prior1") ?? sense;
@@ -226,6 +232,14 @@ export const getWadokuInformation = async (
         }
       }
       information.meaning = information.meaning.trim().replace(/\.$/, "");
+      const figure = resultLine.querySelector(".figures");
+      if (figure) {
+        const img = figure.querySelector("img");
+        const caption = figure.querySelector("figcaption");
+        if (img && caption) {
+          information.image = { url: img.src, caption: caption.textContent };
+        }
+      }
       const orth = element(resultLine.querySelector(".orth")).textContent.split(
         "；",
       );
@@ -329,6 +343,18 @@ export const definitionElement = (
     definitionElement.replaceChildren(
       information?.definition ?? "keine Definition verfügbar",
     );
+    if (information?.image) {
+      const imageWrapper = document.createElement("div");
+      imageWrapper.classList.add("cotsu-tools-definition-image");
+      const img = document.createElement("img");
+      img.src = information.image.url;
+      img.alt = information.image.caption;
+      imageWrapper.append(img);
+      const span = document.createElement("span");
+      span.textContent = information.image.caption;
+      imageWrapper.append(span);
+      wrapperElement.append(imageWrapper);
+    }
     if (options?.collapsed) {
       let currentButton: HTMLButtonElement | null = null;
       let hasClickedButton = false;
