@@ -247,6 +247,13 @@ const handleSummary = (record: MutationRecord) => {
       "[class^=QuestionContainer-module--question-container--]",
     ),
   ).classList.remove("cotsu-tools-dummy-question");
+  if (
+    summaryCorrectText.textContent ===
+    "In dieser Stufe gibt es nichts mehr zu Lernen."
+  ) {
+    return;
+  }
+  console.log(summaryCorrectText.textContent);
   const summaryCorrectTextMatch = summaryCorrectText.textContent.match(
     /^(\d+) von (\d+) richtig$/,
   );
