@@ -18,8 +18,7 @@ interface Writer {
 declare const HanziWriter: {
   create(target: HTMLElement, character: string, options: Record<string, unknown>): Writer;
 };
-export const createWriter = (target: HTMLElement, character: string, data: CharacterData) => {
-  const size = Math.min(200, Math.max(128, Math.floor((document.documentElement.clientWidth - 112) / 2)));
+export const createWriter = (target: HTMLElement, character: string, data: CharacterData, size: number) => {
   return HanziWriter.create(target, character, {
     width: size, height: size, padding: 10,
     showCharacter: false, showOutline: false, showHintAfterMisses: 3,

@@ -18,7 +18,7 @@ import { context } from "esbuild";
 // @connect     wadoku.de
 // @connect     api.cotsu.de
 // @connect     raw.githubusercontent.com
-// @version     1.20.6
+// @version     1.20.7
 // @license     MIT
 // @author      mybearworld
 // @description Userscript für https://cotsu.de.

@@ -88,11 +88,12 @@ export const handleWritingMode = () => {
         const box = document.createElement("div");
         boxes.append(box);
         box.setAttribute("aria-label", `Zeichen ${i + 1}`);
-        const size = Math.min(200, Math.max(128, Math.floor((document.documentElement.clientWidth - 112) / 2)));
+        const mobile = document.documentElement.clientWidth <= 600;
+        const size = Math.max(1, Math.floor(Math.min(mobile ? 320 : 200, boxes.clientWidth - 2)));
         box.style.width = `${size}px`;
         box.style.height = `${size}px`;
         if (data[i]) {
-          const writer = createWriter(box, characters[i], data[i]);
+          const writer = createWriter(box, characters[i], data[i], size);
           state.writer = writer;
           writers.push(writer);
           const markComplete = () => {
