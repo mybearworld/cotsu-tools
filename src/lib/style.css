@@ -531,3 +531,252 @@ body.cotsu-tools-cursive-font.cotsu-tools-katakana-mode {
   pointer-events: none;
 }
 .cotsu-tools-writing-error .cotsu-tools-writing-finished { color: #d90050; }
+
+/* Dark mode: scoped to the saved setting, including portalled MUI dialogs. */
+body.cotsu-tools-dark-mode {
+  color-scheme: dark;
+  --cotsu-tools-dark-background: #17191f;
+  --cotsu-tools-dark-surface: #22262e;
+  --cotsu-tools-dark-raised: #2d333e;
+  --cotsu-tools-dark-text: #eceef3;
+  --cotsu-tools-dark-muted: #b3bac7;
+  --cotsu-tools-dark-border: #535d6d;
+  background: var(--cotsu-tools-dark-background);
+  color: var(--cotsu-tools-dark-text);
+  accent-color: #ff80ab;
+}
+
+body.cotsu-tools-dark-mode :is(
+  .cm-card,
+  [class*="--cm-card--"],
+  .front,
+  .back,
+  [class*="--front--"],
+  [class*="--back--"],
+  .MuiPaper-root,
+  .cotsu-tools-dialog
+) {
+  background: var(--cotsu-tools-dark-surface);
+  color: var(--cotsu-tools-dark-text);
+  border-color: var(--cotsu-tools-dark-border);
+}
+
+body.cotsu-tools-dark-mode :is(
+  .card-header,
+  footer,
+  [class*="index-module--action-card-normal--"]
+) {
+  background: var(--cotsu-tools-dark-raised);
+  color: var(--cotsu-tools-dark-text);
+}
+
+body.cotsu-tools-dark-mode :is(
+  [class^="MainLayout-module--header--"],
+  [class^="index-module--landing--"],
+  [class^="index-module--landingSectionColor--"]
+) {
+  background: var(--cotsu-tools-dark-surface);
+}
+
+body.cotsu-tools-dark-mode :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select
+) {
+  background-color: var(--cotsu-tools-dark-background);
+  color: var(--cotsu-tools-dark-text);
+  border-color: var(--cotsu-tools-dark-border);
+}
+
+body.cotsu-tools-dark-mode :is(
+  .card-german,
+  .cotsu-tools-meaning,
+  .MuiInputBase-root,
+  .MuiTypography-colorTextPrimary,
+  .MuiTableCell-root,
+  .MuiFormLabel-root
+) {
+  color: var(--cotsu-tools-dark-text);
+}
+
+body.cotsu-tools-dark-mode :is(
+  .cotsu-tools-definition-image,
+  .cotsu-tools-definition-paren,
+  .MuiTypography-colorTextSecondary,
+  .MuiSlider-markLabel,
+  .MuiIconButton-root,
+  .MuiCheckbox-root,
+  [class^="ReadingQuestionCard-module--newWordHint--"],
+  [class*="KanjiCard-module--meaningRadical--"],
+  [class*="KanjiCard-module--readingEnglish--"],
+  [class*="KanjiCard-module--attrLabel--"]
+) {
+  color: var(--cotsu-tools-dark-muted);
+}
+
+body.cotsu-tools-dark-mode ::placeholder {
+  color: var(--cotsu-tools-dark-muted);
+  opacity: 1;
+}
+
+body.cotsu-tools-dark-mode :where(a:not([class*="btn-"]):not([class*="Button-module--"])) {
+  color: #ff9cbe;
+}
+body.cotsu-tools-dark-mode :where(a:not([class*="btn-"]):not([class*="Button-module--"])):hover {
+  color: #ffc5da;
+}
+body.cotsu-tools-dark-mode :is(
+  [class*="KanjiCard-module--kanjiBig--"],
+  [class*="KanjiCard-module--commonReading--"]
+) {
+  color: #ff80ab;
+}
+
+body.cotsu-tools-dark-mode .MuiOutlinedInput-notchedOutline,
+body.cotsu-tools-dark-mode .MuiTableCell-root {
+  border-color: var(--cotsu-tools-dark-border);
+}
+body.cotsu-tools-dark-mode .MuiInput-underline::before {
+  border-bottom-color: var(--cotsu-tools-dark-border);
+}
+body.cotsu-tools-dark-mode .MuiDivider-root {
+  background-color: var(--cotsu-tools-dark-border);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-dialog::backdrop {
+  background: rgb(0 0 0 / 65%);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-spoiler.cotsu-tools-spoiler-shown {
+  background-color: var(--cotsu-tools-dark-raised);
+}
+body.cotsu-tools-dark-mode
+  .cotsu-tools-didnt-know-word-strike
+  [class^="MaturityTallies-module--tally-icon--"]::before {
+  background-color: var(--cotsu-tools-dark-text);
+}
+
+/* Shared exercise controls and dashboard cards. Keep status colors distinct. */
+body.cotsu-tools-dark-mode [class*="Button-module--button-primary--"] {
+  background: #265f4e;
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode
+  [class*="Button-module--button-primary--"]:is(:hover, :active):not(:disabled) {
+  background: #30745f;
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode
+  [class*="MainLayout-module--header--"] :is(a, .cotsu-tools-button) {
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode
+  [class*="MainLayout-module--header--"] :is(a, .cotsu-tools-button):is(:hover, :active, :focus-visible) {
+  color: #ffdc79;
+}
+body.cotsu-tools-dark-mode :is(
+  [class*="Button-module--button--"],
+  [class*="Button-module--button-secondary--"]
+) {
+  background: var(--cotsu-tools-dark-raised);
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode :is(
+  [class*="Button-module--button--"],
+  [class*="Button-module--button-secondary--"],
+  [class*="Button-module--button-ghost--"]
+):is(:hover, :active):not(:disabled) {
+  background: var(--cotsu-tools-dark-border);
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode
+  [class*="Button-module--button-ghost--"]:disabled {
+  color: var(--cotsu-tools-dark-muted);
+  border-color: var(--cotsu-tools-dark-border);
+}
+
+body.cotsu-tools-dark-mode [class*="index-module--action-card-highlight--"] {
+  background: #204b40;
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode [class*="MaturityTallies-module--tally_"] {
+  /* Invert the dark symbols into bright marks and deepen the colored squares.
+     Filter the matching tile background too, so the SVG has no visible seam. */
+  filter: invert(0.9) hue-rotate(180deg) saturate(0.15) brightness(1) contrast(140%);
+  color: #17191f;
+}
+body.cotsu-tools-dark-mode [class*="MaturityTallies-module--tally-icon_"] {
+  filter: invert(0.9) hue-rotate(180deg) saturate(0.15) brightness(1) contrast(140%);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-didnt-know-word-strike
+  [class*="MaturityTallies-module--tally-icon_"] {
+  filter: invert(0.9) grayscale(1) brightness(0.85);
+}
+/* Invert the X's baked-in pale square; rotate its hue back to pink.
+   Filtering the whole dashboard tile also keeps its background matched. */
+body.cotsu-tools-dark-mode :is(
+  [class*="MaturityTallies-module--tally_0--"],
+  [class*="MaturityTallies-module--tally-icon_0--"]
+) {
+  filter: invert(0.9) hue-rotate(180deg) brightness(0.85);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-didnt-know-word-strike
+  [class*="MaturityTallies-module--tally-icon_0--"] {
+  filter: invert(0.9) grayscale(1) brightness(0.85);
+}
+body.cotsu-tools-dark-mode .MuiLinearProgress-root:not(.MuiLinearProgress-buffer) {
+  background-color: var(--cotsu-tools-dark-raised);
+}
+body.cotsu-tools-dark-mode .MuiLinearProgress-buffer .MuiLinearProgress-dashed {
+  background: var(--cotsu-tools-dark-raised);
+}
+body.cotsu-tools-dark-mode .MuiLinearProgress-bar1Buffer {
+  background-color: #39866b;
+}
+body.cotsu-tools-dark-mode .MuiLinearProgress-bar2Buffer {
+  background-color: #90783c;
+}
+body.cotsu-tools-dark-mode .MuiTab-root {
+  color: var(--cotsu-tools-dark-muted);
+}
+body.cotsu-tools-dark-mode .MuiTab-root.Mui-selected {
+  color: #ff9cbe;
+}
+
+body.cotsu-tools-dark-mode [class*="ReadingQuestionCard-module--wrong-answer--"] {
+  background: #742943;
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode :is(
+  [class*="JapaneseText-module--red--"],
+  [class*="StyledText-module--styledText__Highlight--"],
+  [class*="StyledText-module--styledText__Focus--"],
+  [class*="StyledText-module--styled-text__rubyFocus--"]
+) {
+  color: #ff80ab;
+  border-color: currentcolor;
+  text-decoration-color: currentcolor;
+}
+
+/* Keep a visible focus cue without the browser's bright default outline. */
+body.cotsu-tools-dark-mode :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select
+):focus {
+  border-color: #98768a;
+  outline: 1px solid #98768a;
+  outline-offset: 1px;
+  box-shadow: none;
+}
+body.cotsu-tools-dark-mode .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #98768a;
+  border-width: 1px;
+}
+body.cotsu-tools-dark-mode .MuiInput-underline::after {
+  border-bottom: 1px solid #98768a;
+}
+
+/* Lighten the mascot's dark line art and darken its white speech bubble. */
+body.cotsu-tools-dark-mode img[class*="Footer-module--footer-icon--"] {
+  filter: invert(0.9) hue-rotate(180deg);
+}
