@@ -780,3 +780,47 @@ body.cotsu-tools-dark-mode .MuiInput-underline::after {
 body.cotsu-tools-dark-mode img[class*="Footer-module--footer-icon--"] {
   filter: invert(0.9) hue-rotate(180deg);
 }
+
+/* Writing surfaces and controls follow the setting even during an exercise. */
+body.cotsu-tools-dark-mode .cotsu-tools-writing {
+  color: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing strong,
+body.cotsu-tools-dark-mode .cotsu-tools-writing a.cotsu-tools-writing-credit {
+  color: var(--cotsu-tools-dark-muted);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing-boxes > div {
+  border-color: var(--cotsu-tools-dark-border);
+  background:
+    linear-gradient(transparent 49.7%, var(--cotsu-tools-dark-raised) 50%, transparent 50.3%),
+    linear-gradient(90deg, transparent 49.7%, var(--cotsu-tools-dark-raised) 50%, transparent 50.3%),
+    var(--cotsu-tools-dark-background);
+}
+/* HanziWriter owns its SVG colors, including animated hints and live ink.
+   Lighten that SVG alone so theme changes preserve the current quiz. */
+body.cotsu-tools-dark-mode .cotsu-tools-writing-boxes svg:not(.cotsu-tools-writing-ink) {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing-ink path {
+  stroke: var(--cotsu-tools-dark-text);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing button {
+  background: var(--cotsu-tools-dark-raised);
+  color: var(--cotsu-tools-dark-text);
+  border-color: var(--cotsu-tools-dark-border);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing button:hover:not(:disabled) {
+  background: var(--cotsu-tools-dark-border);
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing-boxes > .cotsu-tools-writing-complete {
+  border-color: #40b594;
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing-finished {
+  color: #40d5ac;
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing-boxes > .cotsu-tools-writing-error {
+  border-color: #ff80ab;
+}
+body.cotsu-tools-dark-mode .cotsu-tools-writing-error .cotsu-tools-writing-finished {
+  color: #ff80ab;
+}
