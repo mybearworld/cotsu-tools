@@ -3,6 +3,8 @@ import {
   DUMMY_QUESTION_ID,
   readingExercise,
   didntKnowQids,
+  writingWrongQids,
+  writingOnlyWrongQids,
 } from "../lib/interceptedFetch";
 import { kanjiSearch, KanjiSearchWord } from "../lib/kanjiSearch";
 import { katakanaToHiragana } from "../lib/katakanaToHiragana";
@@ -119,7 +121,12 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
   const wasAnsweredCorrectly = !cardWordClone.querySelector(
     "[class*=MaturityTallies-module--tally-icon_0--]",
   );
-  if (wasAnsweredCorrectly) {
+  if (writingWrongQids.has(exercise.qid)) {
+    if (wasAnsweredCorrectly) writingOnlyWrongQids.add(exercise.qid);
+    cardWordClone.querySelectorAll(".card-level-up").forEach(level => level.remove());
+    cardWord.parentElement?.classList.add("cotsu-tools-didnt-know-word-strike");
+  }
+  if (wasAnsweredCorrectly && !writingWrongQids.has(exercise.qid)) {
     const didntKnowWord = document.createElement("label");
     didntKnowWord.classList.add("cotsu-tools-didnt-know-word");
     didntKnowWord.append("Doch nicht gewusst?");
@@ -311,7 +318,7 @@ const handleSummary = (record: MutationRecord) => {
       return spoilerElement;
     };
     const isIncorrect =
-      wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
+      wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid) || writingWrongQids.has(qid);
     const makeRow = () => {
       const row = document.createElement("div");
       const word = document.createElement("span");
@@ -371,6 +378,6 @@ const handleSummary = (record: MutationRecord) => {
   const summaryTextMatch = summaryText.textContent.match(/^(\d+)(.*)$/);
   if (!summaryTextMatch) throw new Error("No summaryTextMatch");
   summaryText.textContent =
-    (Number(summaryTextMatch[1]) - didntKnowQids.size).toString() +
+    (Number(summaryTextMatch[1]) - new Set([...didntKnowQids, ...writingOnlyWrongQids]).size).toString() +
     summaryTextMatch[2];
 };

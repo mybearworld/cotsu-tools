@@ -1,3 +1,4 @@
+import { getAccount, getAccountMode, setAccountMode, AccountMode } from "../lib/accountMode";
 import { isSceneChange } from "../lib/isSceneChange";
 import { element } from "../lib/element";
 import {
@@ -52,6 +53,26 @@ const createDialog = () => {
   const settingsHeader = document.createElement("h3");
   settingsHeader.textContent = "Einstellungen";
   dialogWrapper.append(settingsHeader);
+  const modeLabel = document.createElement("label");
+  modeLabel.append("Modus für dieses Konto ");
+  const mode = document.createElement("select");
+  for (const [value, name] of [["reading", "Lesen"], ["writing", "Schreiben"]]) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = name;
+    mode.append(option);
+  }
+  const refreshMode = () => {
+    mode.disabled = !getAccount();
+    mode.value = getAccountMode();
+  };
+  dialog.addEventListener("cotsu-tools-refresh", refreshMode);
+  refreshMode();
+  mode.addEventListener("change", () => setAccountMode(mode.value as AccountMode));
+  modeLabel.append(mode);
+  const modeHint = document.createElement("small");
+  modeHint.textContent = "Pro Konto in diesem Browser gespeichert. Gilt ab der nächsten Übung; bestehender Lernfortschritt bleibt erhalten.";
+  dialogWrapper.append(modeLabel, modeHint);
   SETTING_IDS.forEach((id) => {
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
@@ -113,7 +134,7 @@ const createDialog = () => {
 };
 
 export const handleSettings = async (records: MutationRecord[]) => {
-  if (!isSceneChange(records) || document.querySelector("cotsu-tools-button"))
+  if (!isSceneChange(records) || document.querySelector(".cotsu-tools-button"))
     return;
   const header = document.querySelector(
     "[class^=MainLayout-module--header--] .MuiGrid-root",
@@ -136,6 +157,7 @@ export const handleSettings = async (records: MutationRecord[]) => {
     settingsButton.append(newBadge);
   }
   settingsButton.addEventListener("click", () => {
+    dialog.dispatchEvent(new Event("cotsu-tools-refresh"));
     dialog.showModal();
     acknowledgeSettings();
     newBadge?.remove();
