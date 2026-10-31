@@ -113,7 +113,7 @@ const createDialog = () => {
 };
 
 export const handleSettings = async (records: MutationRecord[]) => {
-  if (!isSceneChange(records) || document.querySelector("cotsu-tools-button"))
+  if (!isSceneChange(records) || document.querySelector(".cotsu-tools-button"))
     return;
   const header = document.querySelector(
     "[class^=MainLayout-module--header--] .MuiGrid-root",

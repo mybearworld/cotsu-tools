@@ -4,6 +4,13 @@ export type Setting = {
   effect: (newSetting: boolean) => void;
 };
 const SETTINGS = {
+  "cotsu-tools-dark-mode": {
+    name: "Dunkelmodus verwenden",
+    acknowledgeable: true,
+    effect: (newSetting) => {
+      document.body.classList.toggle("cotsu-tools-dark-mode", newSetting);
+    },
+  },
   "cotsu-tools-katakana-mode": {
     name: "Katakana statt Hiragana bei Übungen nutzen",
     acknowledgeable: false,
