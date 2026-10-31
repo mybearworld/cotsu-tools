@@ -1,3 +1,4 @@
+import { handleWritingMode } from "./actions/handleWritingMode";
 window.addEventListener("unhandledrejection", (e) => {
   e.preventDefault();
   if (e.reason instanceof Error) {
@@ -42,6 +43,7 @@ startInterceptingFetch();
 new MutationObserver(async (records) => {
   handleSettings(records);
   handleExerciseWords(records);
+  handleWritingMode();
   showMoreStats(records);
   showExercisesLeftInKanjiLearningTab(records);
   fixFontInNewKanjiTab(records);

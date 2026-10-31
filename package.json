@@ -2,7 +2,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "watch": "node --watch watch.js"
+    "watch": "node --watch watch.js",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@types/greasemonkey": "^4.0.7",

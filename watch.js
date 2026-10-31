@@ -14,7 +14,11 @@ import { context } from "esbuild";
 // @namespace   mybearworld
 // @match       *://cotsu.de/*
 // @grant       GM.xmlHttpRequest
-// @version     1.19.1
+// @require     https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js
+// @connect     wadoku.de
+// @connect     api.cotsu.de
+// @connect     raw.githubusercontent.com
+// @version     1.20.6
 // @license     MIT
 // @author      mybearworld
 // @description Userscript für https://cotsu.de.

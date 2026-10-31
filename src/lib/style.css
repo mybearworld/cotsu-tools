@@ -429,3 +429,105 @@ body.cotsu-tools-cursive-font.cotsu-tools-katakana-mode {
   [class^="ReadingQuestionCard-module--icons--"] {
   display: none;
 }
+
+/* Account writing mode */
+.cotsu-tools-writing-question [class^="ReadingQuestionCard-module--cardContent--"],
+.cotsu-tools-writing-question [class^="ReadingQuestionCard-module--newWordHint--"] {
+  display: none;
+}
+.cotsu-tools-writing {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 0.5rem;
+  text-align: center;
+}
+.cotsu-tools-writing-definition {
+  line-height: 1.65;
+  font-size: 1rem;
+  text-wrap: pretty;
+}
+.cotsu-tools-writing strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #777;
+}
+.cotsu-tools-writing-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0.5rem;
+}
+.cotsu-tools-writing-boxes > div {
+  overflow: hidden;
+  border: 1px solid #d5d5d5;
+  border-radius: 8px;
+  background: linear-gradient(transparent 49.7%, #f0f0f0 50%, transparent 50.3%),
+    linear-gradient(90deg, transparent 49.7%, #f0f0f0 50%, transparent 50.3%), #fff;
+}
+.cotsu-tools-writing-boxes > .cotsu-tools-writing-complete {
+  border-color: #40b594;
+}
+.cotsu-tools-writing-boxes > .cotsu-tools-writing-error {
+  border-color: #ff4e71;
+}
+.cotsu-tools-writing-boxes svg { display: block; touch-action: none; }
+.cotsu-tools-writing-status:empty { display: none; }
+.cotsu-tools-writing-status { font-size: 0.85rem; margin: 0.5rem 0; }
+.cotsu-tools-writing a.cotsu-tools-writing-credit {
+  display: inline-block;
+  margin: 0.25rem 0;
+  color: #888;
+  font-size: 0.65rem;
+  text-decoration: none;
+}
+.cotsu-tools-writing a.cotsu-tools-writing-credit:hover { text-decoration: underline; }
+.cotsu-tools-writing-question form > input {
+  box-sizing: border-box;
+  display: block;
+  width: calc(100% - 2rem);
+  max-width: 32rem;
+  margin: 0.75rem auto 1rem;
+  min-height: 2.75rem;
+  border: 1px solid #d5d5d5;
+  border-radius: 6px;
+}
+.cotsu-tools-writing-boxes > div { position: relative; touch-action: none; }
+.cotsu-tools-writing-boxes svg.cotsu-tools-writing-ink {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.cotsu-tools-writing-ink path {
+  fill: none;
+  stroke: #555;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cotsu-tools-writing-add {
+  display: block;
+  margin: 0.75rem auto;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  color: #555;
+  font: inherit;
+  cursor: pointer;
+}
+.cotsu-tools-writing-add:disabled { opacity: 0.45; cursor: default; }
+
+.cotsu-tools-writing-finished {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.2rem;
+  color: #25866d;
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+.cotsu-tools-writing-error .cotsu-tools-writing-finished { color: #d90050; }
