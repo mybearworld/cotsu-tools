@@ -10,7 +10,7 @@ import { context } from "esbuild";
     outfile: "script.user.js",
     banner: {
       js: `// ==UserScript==
-// @name        Cotsu-Tools
+// @name        Cotsu-Tools - All Vibe Coded Features
 // @namespace   mybearworld
 // @match       *://cotsu.de/*
 // @grant       GM.xmlHttpRequest
@@ -21,9 +21,7 @@ import { context } from "esbuild";
 // @version     1.20.7
 // @license     MIT
 // @author      mybearworld
-// @description Userscript für https://cotsu.de.
-// @updateURL   https://openuserjs.org/meta/mybearworld/Cotsu-Tools.meta.js
-// @downloadURL https://openuserjs.org/install/mybearworld/Cotsu-Tools.user.js
+// @description vibes
 // ==/UserScript==
 `,
     },
