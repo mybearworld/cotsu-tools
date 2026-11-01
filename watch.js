@@ -17,6 +17,7 @@ import { context } from "esbuild";
 // @require     https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js
 // @connect     wadoku.de
 // @connect     api.cotsu.de
+// @connect     kanjiapi.dev
 // @connect     raw.githubusercontent.com
 // @version     1.20.7
 // @license     MIT

@@ -1,3 +1,4 @@
+import { kanjiComponents } from "../lib/kanjiComponents";
 import { element, text } from "../lib/element";
 import {
   DUMMY_QUESTION_ID,
@@ -163,9 +164,16 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
       const kanji = element(
         row.querySelector("[class^=KanjiCard-module--kanjiBig--]"),
       ).textContent;
+      row.querySelector(".cotsu-tools-components")?.remove();
       const otherKanjiElement = document.createElement("div");
       otherKanjiElement.className = element(row.lastChild).className;
       otherKanjiElement.classList.add("cotsu-tools-other-kanji");
+      if (kanji && [...kanji.trim()].length === 1) {
+        row.classList.add("cotsu-tools-component-row");
+        row.append(kanjiComponents(kanji.trim(), element(
+          row.querySelector("[class^=KanjiCard-module--kanjiBig--]"),
+        )));
+      }
       const button = document.createElement("button");
       button.classList.add("cotsu-tools-other-kanji-init-button");
       button.textContent = "andere Wörter mit " + kanji;
@@ -216,7 +224,7 @@ const handleUpdatedCardWord = (record: MutationRecord) => {
         });
       });
       otherKanjiElement.append(button);
-      row.append(otherKanjiElement);
+      row.insertBefore(otherKanjiElement, row.querySelector(".cotsu-tools-components"));
     });
 };
 
