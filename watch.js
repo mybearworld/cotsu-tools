@@ -14,6 +14,10 @@ import { context } from "esbuild";
 // @namespace   mybearworld
 // @match       *://cotsu.de/*
 // @grant       GM.xmlHttpRequest
+// @connect     wadoku.de
+// @connect     api.cotsu.de
+// @connect     raw.githubusercontent.com
+// @connect     kanjiapi.dev
 // @version     1.19.1
 // @license     MIT
 // @author      mybearworld

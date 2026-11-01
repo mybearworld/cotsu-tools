@@ -429,3 +429,138 @@ body.cotsu-tools-cursive-font.cotsu-tools-katakana-mode {
   [class^="ReadingQuestionCard-module--icons--"] {
   display: none;
 }
+
+/* KanjiVG component explorer: in-flow information also works without hover. */
+.cotsu-tools-component-row { flex-wrap: wrap; }
+.cotsu-tools-components {
+  flex: 0 0 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 0.75rem;
+  font-size: 14px;
+  text-align: left;
+}
+.cotsu-tools-components summary { cursor: pointer; padding: 0.5rem 0; }
+.cotsu-tools-components p { margin: 0.5rem 0; }
+.cotsu-tools-components svg {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  margin: 0;
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cotsu-tools-components svg g {
+  stroke: var(--component-color);
+  cursor: pointer;
+  pointer-events: none;
+}
+.cotsu-tools-components svg g.is-selected { stroke-width: 5; }
+.cotsu-tools-components button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  border: 1px solid #777;
+  border-radius: 6px;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+}
+.cotsu-tools-components button[aria-pressed="true"] { background: #d7edf0; border-color: #006b77; }
+.cotsu-tools-components button:disabled { opacity: 0.5; cursor: default; }
+.cotsu-tools-components button:focus-visible, .cotsu-tools-components summary:focus-visible { outline: 3px solid #006b77; outline-offset: 2px; }
+.cotsu-tools-component-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) max-content;
+  align-items: start;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+.cotsu-tools-component-controls,
+.cotsu-tools-component-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.cotsu-tools-component-controls button { width: 100%; }
+.cotsu-tools-component-controls > button:first-of-type { margin-top: 0.25rem; }
+.cotsu-tools-components small {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #666;
+}
+.cotsu-tools-components small a { color: inherit; }
+.cotsu-tools-components small a:hover { text-decoration: underline; }
+
+.cotsu-tools-components svg { cursor: pointer; }
+
+@media (hover: hover) {
+  .cotsu-tools-component-controls > .cotsu-tools-component-split { display: none; }
+}
+
+/* The overview glyph doubles as the component explorer disclosure. */
+.cotsu-tools-component-trigger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 72px;
+  min-height: 44px;
+  padding: 4px 6px;
+  border: 1px solid rgb(255 0 102 / 35%);
+  border-radius: 8px;
+  background: #fff0f6;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.cotsu-tools-component-trigger::after {
+  content: "Bestandteile ▾";
+  white-space: nowrap;
+  font-family: var(--cotsu-tools-default-font);
+  font-style: normal;
+  letter-spacing: normal;
+  color: #a80043;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+.cotsu-tools-component-trigger[aria-expanded="true"]::after { content: "Bestandteile ▴"; }
+.cotsu-tools-component-trigger:hover,
+.cotsu-tools-component-trigger[aria-expanded="true"] {
+  background: #ffe0ed;
+  border-color: #d60056;
+}
+.cotsu-tools-component-trigger:focus-visible { outline: 2px solid currentcolor; outline-offset: 2px; }
+.cotsu-tools-components-external-trigger > summary,
+.cotsu-tools-components-external-trigger:not([open]) { display: none; }
+
+/* Keep the overview's kanji typeface despite the global button font rule. */
+button.cotsu-tools-component-trigger { font-family: inherit !important; }
+
+/* Keep page scrolling natural and reserve a stable area for descriptions. */
+.cotsu-tools-component-workspace { overflow-anchor: none; }
+.cotsu-tools-component-preview {
+  position: sticky;
+  top: var(--cotsu-tools-component-sticky-top, 8px);
+  min-width: 0;
+}
+.cotsu-tools-component-preview svg { max-height: 35dvh; }
+.cotsu-tools-component-info {
+  height: 5.6em;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+  scrollbar-width: thin;
+}
+.cotsu-tools-component-preview-slot {
+  min-width: 0;
+  align-self: stretch;
+}
