@@ -512,14 +512,14 @@ body.cotsu-tools-dark-mode
   color: var(--cotsu-tools-dark-muted);
 }
 body.cotsu-tools-dark-mode
-  :is(
+  :where(
     :where(a:not([class*="--btn-"]):not([class*="Button-module--"])),
     .MuiButton-textPrimary
   ) {
   color: var(--cotsu-tools-dark-accent-text);
 }
 body.cotsu-tools-dark-mode
-  :is(
+  :where(
     :where(a:not([class*="--btn-"]):not([class*="Button-module--"])):hover,
     .MuiButton-textPrimary:hover
   ) {
