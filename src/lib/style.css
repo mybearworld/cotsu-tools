@@ -512,16 +512,19 @@ body.cotsu-tools-dark-mode
   color: var(--cotsu-tools-dark-muted);
 }
 body.cotsu-tools-dark-mode
-  :where(
-    :where(a:not([class*="--btn-"]):not([class*="Button-module--"])),
+  :is(
+    a:not([class*="--btn-"]):not([class*="Button-module--"]):not(
+        [class*="MainLayout-module--right--"] > *
+      ),
     .MuiButton-textPrimary
   ) {
   color: var(--cotsu-tools-dark-accent-text);
 }
 body.cotsu-tools-dark-mode
-  :where(
-    :where(a:not([class*="--btn-"]):not([class*="Button-module--"])):hover,
-    .MuiButton-textPrimary:hover
+  :is(
+    a:not([class*="--btn-"]):not([class*="Button-module--"]):hover,
+    .MuiButton-textPrimary:hover,
+    .cotsu-tools-button:hover
   ) {
   color: var(--cotsu-tools-dark-accent-text-hover);
   background: transparent;
