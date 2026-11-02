@@ -651,3 +651,6 @@ body.cotsu-tools-dark-mode
 body.cotsu-tools-dark-mode img[class*="Footer-module--footer-icon--"] {
   filter: invert(0.9) hue-rotate(180deg);
 }
+body.cotsu-tools-dark-mode .MuiList-root {
+  background-color: transparent;
+}
