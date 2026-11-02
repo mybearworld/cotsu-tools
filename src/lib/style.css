@@ -522,7 +522,6 @@ body.cotsu-tools-dark-mode
 body.cotsu-tools-dark-mode .cotsu-tools-spoiler.cotsu-tools-spoiler-shown {
   background-color: var(--cotsu-tools-dark-surface);
 }
-/* Shared exercise controls and dashboard cards. Keep status colors distinct. */
 body.cotsu-tools-dark-mode [class*="Button-module--button-primary--"] {
   background: #265f4e;
   color: var(--cotsu-tools-dark-text);
@@ -640,7 +639,6 @@ body.cotsu-tools-dark-mode
   border-color: currentcolor;
   text-decoration-color: currentcolor;
 }
-/* Keep a visible focus cue without the browser's bright default outline. */
 body.cotsu-tools-dark-mode
   :is(
     input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
@@ -650,7 +648,6 @@ body.cotsu-tools-dark-mode
   border: 1px solid var(--cotsu-tools-dark-accent);
   outline: 0;
 }
-/* Lighten the mascot's dark line art and darken its white speech bubble. */
 body.cotsu-tools-dark-mode img[class*="Footer-module--footer-icon--"] {
   filter: invert(0.9) hue-rotate(180deg);
 }
