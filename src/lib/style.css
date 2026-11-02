@@ -641,11 +641,17 @@ body.cotsu-tools-dark-mode
 body.cotsu-tools-dark-mode
   :is(
     [class*="JapaneseText-module--red--"],
-    [class*="KanjiCard-module--kanjiBig--"]
+    [class*="KanjiCard-module--kanjiBig--"],
+    [class*="StyledText-module--"]
   ) {
   color: var(--cotsu-tools-dark-accent-text);
-  border-color: currentcolor;
+}
+body.cotsu-tools-dark-mode [class*="JapaneseText-module--red--"] {
   text-decoration-color: currentcolor;
+}
+body.cotsu-tools-dark-mode
+  [class*="StyledText-module--styledText__Highlight--"] {
+  border-color: currentcolor;
 }
 body.cotsu-tools-dark-mode
   :is(
