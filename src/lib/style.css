@@ -444,7 +444,7 @@ body.cotsu-tools-dark-mode {
   --cotsu-tools-dark-accent-text-hover: #ffc5da;
   --cotsu-tools-dark-green-progress: #39866b;
   --cotsu-tools-dark-yellow-progress: #90783c;
-  --cotsu-tools-dark-wrong-answer: #742943;
+  --cotsu-tools-dark-wrong-answer: #8f2447;
   --cotsu-tools-dark-highlight-background: #204b40;
   --cotsu-tools-dark-button: #30745f;
   background: var(--cotsu-tools-dark-background);
@@ -521,7 +521,7 @@ body.cotsu-tools-dark-mode
   color: var(--cotsu-tools-hover);
 }
 body.cotsu-tools-dark-mode .cotsu-tools-spoiler.cotsu-tools-spoiler-shown {
-  background-color: var(--cotsu-tools-dark-raised);
+  background-color: var(--cotsu-tools-dark-surface);
 }
 /* Shared exercise controls and dashboard cards. Keep status colors distinct. */
 body.cotsu-tools-dark-mode [class*="Button-module--button-primary--"] {
