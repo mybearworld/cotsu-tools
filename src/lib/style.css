@@ -620,7 +620,8 @@ body.cotsu-tools-dark-mode
 body.cotsu-tools-dark-mode .MuiLinearProgress-buffer .MuiLinearProgress-dashed {
   background-color: var(--cotsu-tools-dark-raised);
 }
-body.cotsu-tools-dark-mode .MuiLinearProgress-bar1Buffer {
+body.cotsu-tools-dark-mode
+  :is(.MuiLinearProgress-bar1Buffer, .MuiLinearProgress-bar1Determinate) {
   background-color: var(--cotsu-tools-dark-green-progress);
 }
 body.cotsu-tools-dark-mode .MuiLinearProgress-bar2Buffer {
