@@ -451,7 +451,7 @@ body.cotsu-tools-dark-mode {
   color: var(--cotsu-tools-dark-text);
   accent-color: var(--cotsu-tools-dark-accent);
 }
-body.cotsu-tools-dark-mode .cotsu-tools-dialog {
+body.cotsu-tools-dark-mode :is(.cotsu-tools-dialog, .MuiPaper-root) {
   background: var(--cotsu-tools-dark-surface);
   color: var(--cotsu-tools-dark-text);
   border-color: var(--cotsu-tools-dark-border);
@@ -512,12 +512,19 @@ body.cotsu-tools-dark-mode
   color: var(--cotsu-tools-dark-muted);
 }
 body.cotsu-tools-dark-mode
-  :where(a:not([class*="--btn-"]):not([class*="Button-module--"])) {
+  :is(
+    :where(a:not([class*="--btn-"]):not([class*="Button-module--"])),
+    .MuiButton-textPrimary
+  ) {
   color: var(--cotsu-tools-dark-accent-text);
 }
 body.cotsu-tools-dark-mode
-  :where(a:not([class*="--btn-"]):not([class*="Button-module--"])):hover {
-  color: var(--cotsu-tools-hover);
+  :is(
+    :where(a:not([class*="--btn-"]):not([class*="Button-module--"])):hover,
+    .MuiButton-textPrimary:hover
+  ) {
+  color: var(--cotsu-tools-dark-accent-text-hover);
+  background: transparent;
 }
 body.cotsu-tools-dark-mode .cotsu-tools-spoiler.cotsu-tools-spoiler-shown {
   background-color: var(--cotsu-tools-dark-surface);
