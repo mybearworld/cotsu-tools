@@ -563,11 +563,25 @@ body.cotsu-tools-dark-mode [class*="Button-module--button-ghost--"]:disabled {
 }
 body.cotsu-tools-dark-mode
   :is(
-    [class*="MaturityTallies-module--tally_"],
-    [class*="MaturityTallies-module--tally-icon_"]
+    [class*="MaturityTallies-module--tally_1--"],
+    [class*="MaturityTallies-module--tally-icon_1--"],
+    [class*="MaturityTallies-module--tally_2--"],
+    [class*="MaturityTallies-module--tally-icon_2--"],
+    [class*="MaturityTallies-module--tally_3--"],
+    [class*="MaturityTallies-module--tally-icon_3--"],
+    [class*="MaturityTallies-module--tally_4--"],
+    [class*="MaturityTallies-module--tally-icon_4--"]
   ) {
-  --cotsu-tools-dark-tally-filter: invert(0.9) hue-rotate(180deg) saturate(0.15)
-    brightness(1) contrast(170%);
+  --cotsu-tools-dark-tally-filter: invert(0.9) hue-rotate(180deg) saturate(0.25)
+    brightness(1.2) contrast(180%);
+}
+body.cotsu-tools-dark-mode
+  :is(
+    [class*="MaturityTallies-module--tally_5--"],
+    [class*="MaturityTallies-module--tally-icon_5--"]
+  ) {
+  --cotsu-tools-dark-tally-filter: invert(0.9) hue-rotate(180deg) saturate(0.25)
+    brightness(1.2) contrast(190%);
 }
 body.cotsu-tools-dark-mode
   :is(
@@ -576,18 +590,6 @@ body.cotsu-tools-dark-mode
   ) {
   --cotsu-tools-dark-tally-filter: invert(0.9) hue-rotate(180deg)
     brightness(0.85);
-}
-body.cotsu-tools-dark-mode
-  :is(
-    [class*="MaturityTallies-module--tally_1--"],
-    [class*="MaturityTallies-module--tally-icon_1--"],
-    [class*="MaturityTallies-module--tally_2--"],
-    [class*="MaturityTallies-module--tally-icon_2--"],
-    [class*="MaturityTallies-module--tally_3--"],
-    [class*="MaturityTallies-module--tally-icon_3--"]
-  ) {
-  --cotsu-tools-dark-tally-filter: invert(0.9) hue-rotate(180deg) saturate(0.15)
-    brightness(1) contrast(160%);
 }
 body.cotsu-tools-dark-mode [class*="index-module--action-card-highlight--"] {
   background: var(--cotsu-tools-dark-highlight-background);
