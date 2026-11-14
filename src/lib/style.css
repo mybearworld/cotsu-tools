@@ -681,3 +681,6 @@ body.cotsu-tools-dark-mode .MuiSlider-root {
 body.cotsu-tools-dark-mode .MuiSlider-valueLabel > span > span {
   font-weight: bold;
 }
+body.cotsu-tools-dark-mode .cotsu-tools-definition-image > img {
+  filter: invert(1);
+}
