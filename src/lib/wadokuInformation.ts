@@ -170,7 +170,9 @@ export const getWadokuInformation = async (
             currentNode.textContent === "männl. Name" ||
             currentNode.textContent === "Familienn." ||
             currentNode.textContent === "Bengō" ||
-            currentNode.textContent === "Verlagsn."
+            currentNode.textContent === "Verlagsn." ||
+            currentNode.textContent === "japan. Gesch." ||
+            currentNode.textContent === "Einzel-Kanji"
           ) {
             isUndesirableDefinition = true;
           }
