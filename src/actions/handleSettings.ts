@@ -2,6 +2,7 @@ import { isSceneChange } from "../lib/isSceneChange";
 import { element } from "../lib/element";
 import {
   definitionElement,
+  meaningElement,
   pitchAccentElement,
 } from "../lib/wadokuInformation";
 import {
@@ -93,6 +94,7 @@ const createDialog = () => {
     const kanji = debuggingWadokuKanjiInput.value;
     const reading = debuggingWadokuReadingInput.value;
     debuggingWadoku.append(pitchAccentElement(kanji, reading));
+    debuggingWadoku.append(meaningElement(kanji, reading));
     debuggingWadoku.append(definitionElement(kanji, reading));
   });
   debuggingDetails.append(
