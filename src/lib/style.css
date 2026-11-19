@@ -331,7 +331,7 @@ body.cotsu-tools-katakana-mode {
 body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   --cotsu-tools-kana-font: Yuji Syuku All Katakana, var(--cotsu-tools-font);
 }
-[class^="ReadingQuestionCard-module--input-field--"],
+.reading-controls input,
 .cotsu-tools-pitch-accent,
 .cotsu-tools-pitch-accent span,
 .commonReading,
