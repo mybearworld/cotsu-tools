@@ -65,6 +65,7 @@ export const settingName = (id: SettingID) => SETTINGS[id].name;
 export const setSetting = (id: SettingID, value: boolean) => {
   settings[id] = value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  addSettingsToDOM();
 };
 
 export const doAcknowledgeableSettingsExist = () =>
