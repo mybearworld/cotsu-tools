@@ -27,6 +27,7 @@ window.addEventListener("error", (e) => {
   }
 });
 
+import { addStyles } from "./actions/addStyles";
 import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { showMoreStats } from "./actions/showMoreStats";
@@ -34,12 +35,11 @@ import { showExercisesLeftInKanjiLearningTab } from "./actions/showExercisesLeft
 import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
 import { handleKanjiTab } from "./actions/handleKanjiTab";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
-import { insertCSS } from "./lib/style";
 import "./lib/settings";
 
-insertCSS();
 startInterceptingFetch();
 new MutationObserver(async (records) => {
+  addStyles(records);
   handleSettings(records);
   handleExerciseWords(records);
   showMoreStats(records);
