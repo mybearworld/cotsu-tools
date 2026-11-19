@@ -5,9 +5,11 @@ import {
   DUMMY_QUESTION_ID,
   DUMMY_QUESTION_INCORRECT_READING,
   DUMMY_QUESTION_READING,
+  DUMMY_QUESTION_WRITING,
 } from "../lib/interceptedFetch";
 import { kanjiSearch, KanjiSearchWord } from "../lib/kanjiSearch";
 import { katakanaToHiragana } from "../lib/katakanaToHiragana";
+import { getSetting } from "../lib/settings";
 import {
   getWadokuInformation,
   pitchAccentElement,
@@ -210,147 +212,91 @@ const handleWrongAnswer = (records: MutationRecord[]) => {
 };
 
 const handleSummary = (records: MutationRecord[]) => {
-  // console.log(records);
-  // const firstAddedNode = record.addedNodes[0];
-  // if (
-  //   !(firstAddedNode instanceof HTMLElement) ||
-  //   !firstAddedNode.className.startsWith("SummaryCard-module--summary-card--")
-  // )
-  //   return;
-  // if (readingExercise && readingExercise.questions.length === 0) return;
-  // const summaryCorrectText = element(
-  //   document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
-  // );
-  // if (summaryCorrectText.textContent === "") return; // Writing question
-  // element(
-  //   document.querySelector(
-  //     "[class^=QuestionContainer-module--question-container--]",
-  //   ),
-  // ).classList.remove("cotsu-tools-dummy-question");
-  // if (
-  //   summaryCorrectText.textContent ===
-  //   "In dieser Stufe gibt es nichts mehr zu Lernen."
-  // ) {
-  //   return;
-  // }
-  // console.log(summaryCorrectText.textContent);
-  // const summaryCorrectTextMatch = summaryCorrectText.textContent.match(
-  //   /^(\d+) von (\d+) richtig$/,
-  // );
-  // if (!summaryCorrectTextMatch) throw new Error("No X von Y richtig");
-  // const [, correctExercises, totalExercises] = summaryCorrectTextMatch;
-  // summaryCorrectText.textContent = `${Number(correctExercises) - 1} von ${Number(totalExercises) - 1} richtig`;
-  // const wordSummary = document.createElement("div");
-  // const incorrectKanjiHeading = document.createElement("h4");
-  // incorrectKanjiHeading.textContent = "Falsch waren:";
-  // const incorrectKanjiUnshuffled = document.createElement("div");
-  // incorrectKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
-  // const incorrectKanjiShuffled = document.createElement("div");
-  // incorrectKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
-  // const correctKanjiHeading = document.createElement("h4");
-  // correctKanjiHeading.textContent = "Richtig waren:";
-  // const correctKanjiUnshuffled = document.createElement("div");
-  // correctKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
-  // const correctKanjiShuffled = document.createElement("div");
-  // correctKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
-  // wordSummary.append(
-  //   incorrectKanjiHeading,
-  //   incorrectKanjiUnshuffled,
-  //   incorrectKanjiShuffled,
-  //   correctKanjiHeading,
-  //   correctKanjiUnshuffled,
-  //   correctKanjiShuffled,
-  // );
-  // wordSummary.classList.add("word-summary");
-  // const wrongKanji = new Set();
-  // const originalSummaryElement =
-  //   firstAddedNode.querySelector("div:not([class])");
-  // originalSummaryElement?.childNodes?.forEach((word) => {
-  //   const match = word.textContent?.match(/([^ ]+) → ([^ ]+)/);
-  //   if (!match) throw new Error("No XYZ → ABC in summary element");
-  //   const [, kanji, reading] = match;
-  //   wrongKanji.add(`${kanji}/${reading}`);
-  // });
-  // readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
-  //   // if (qid === DUMMY_QUESTION_ID) return;
-  //   const spoilerWrap = (toWrap: Node | string) => {
-  //     const spoilerElement = document.createElement("button");
-  //     spoilerElement.classList.add("cotsu-tools-spoiler");
-  //     spoilerElement.ariaLabel = "Lösung anzeigen";
-  //     const accessibilityWrapper = document.createElement("span");
-  //     accessibilityWrapper.ariaHidden = "true";
-  //     accessibilityWrapper.append(toWrap);
-  //     spoilerElement.append(accessibilityWrapper);
-  //     spoilerElement.addEventListener("click", () => {
-  //       spoilerElement.classList.add("cotsu-tools-spoiler-shown");
-  //       spoilerElement.ariaLabel = null;
-  //       spoilerElement.role = "none";
-  //       spoilerElement.disabled = true;
-  //       accessibilityWrapper.ariaHidden = "false";
-  //     });
-  //     return spoilerElement;
-  //   };
-  //   const isIncorrect =
-  //     wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
-  //   const makeRow = () => {
-  //     const row = document.createElement("div");
-  //     const word = document.createElement("span");
-  //     word.lang = "ja";
-  //     word.textContent = kanji;
-  //     const solution = document.createElement("span");
-  //     solution.append(
-  //       pitchAccentElement(kanji, reading),
-  //       " ",
-  //       readingExercise.questions.find(
-  //         (question) =>
-  //           question.writing === kanji && question.reading === reading,
-  //       )?.german ?? meaningElement(kanji, reading),
-  //     );
-  //     row.append(word, " → ", isIncorrect ? spoilerWrap(solution) : solution);
-  //     return row;
-  //   };
-  //   if (isIncorrect) {
-  //     incorrectKanjiUnshuffled.append(makeRow());
-  //     incorrectKanjiShuffled.append(makeRow());
-  //   } else {
-  //     correctKanjiUnshuffled.append(makeRow());
-  //     correctKanjiShuffled.append(makeRow());
-  //   }
-  // });
-  // const shuffle = (container: HTMLElement) => {
-  //   const children = [...container.children];
-  //   let remaining = children.length;
-  //   while (remaining) {
-  //     const i = Math.floor(Math.random() * remaining);
-  //     remaining--;
-  //     [children[remaining], children[i]] = [children[i], children[remaining]];
-  //   }
-  //   container.innerHTML = "";
-  //   children.forEach((child) => {
-  //     container.append(child);
-  //   });
-  // };
-  // shuffle(correctKanjiShuffled);
-  // shuffle(incorrectKanjiShuffled);
-  // if (originalSummaryElement) {
-  //   element(document.querySelector("h3")).textContent =
-  //     "Hier nochmal alle Wörter";
-  //   originalSummaryElement.replaceWith(wordSummary);
-  // } else {
-  //   const actions = element(
-  //     document.querySelector("[class^=SummaryCard-module--summary-actions--]"),
-  //   );
-  //   const h3 = document.createElement("h3");
-  //   h3.textContent = "Hier nochmal alle Wörter";
-  //   actions.append(h3);
-  //   actions.append(wordSummary);
-  // }
-  // const summaryText = element(
-  //   document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
-  // );
-  // const summaryTextMatch = summaryText.textContent.match(/^(\d+)(.*)$/);
-  // if (!summaryTextMatch) throw new Error("No summaryTextMatch");
-  // summaryText.textContent =
-  //   (Number(summaryTextMatch[1]) - didntKnowQids.size).toString() +
-  //   summaryTextMatch[2];
+  if (
+    !records.some(
+      (record) =>
+        record.type === "childList" &&
+        record.addedNodes[0] instanceof HTMLElement &&
+        record.addedNodes[0].classList.contains("practice-frame") &&
+        record.addedNodes[0].querySelector(".practice-round-complete"),
+    )
+  )
+    return;
+  const summaryTextElement = element(
+    document.querySelector("[class^=_summary-text_] p"),
+  );
+  if (
+    summaryTextElement.textContent ===
+    "In dieser Stufe gibt es nichts mehr zu Lernen."
+  ) {
+    return;
+  }
+  const questionAmount = readingExercise.questionCount - 1; // dummy question
+  summaryTextElement.textContent =
+    summaryTextElement.textContent.split(" ")[0] +
+    ` von ${questionAmount} richtig`;
+  const practiceRoundComplete = element(
+    document.querySelector(".practice-round-complete > span"),
+  );
+  const practiceRoundCompleteText = practiceRoundComplete.childNodes.item(1);
+  if (practiceRoundCompleteText) {
+    practiceRoundCompleteText.textContent = questionAmount.toString();
+  }
+  const readingRecapElement = element(document.querySelector(".reading-recap"));
+  const incorrectAnswersElement = document.createElement("ol");
+  const correctAnswersElement = document.createElement("ol");
+  readingRecapElement.querySelectorAll("li").forEach((li) => {
+    const writing = element(li.querySelector("strong")).textContent;
+    if (writing === DUMMY_QUESTION_WRITING) {
+      return;
+    }
+    const readingRecapAnswerElement = element(
+      li.querySelector(".reading-recap-answer"),
+    );
+    const readingElement = element(
+      readingRecapAnswerElement.querySelector("[lang=ja]"),
+    );
+    const reading = readingElement.textContent;
+    readingElement.replaceChildren(pitchAccentElement(writing, reading));
+    const maybeMeaningElement = element(
+      readingRecapAnswerElement.lastElementChild,
+    );
+    if (maybeMeaningElement === readingElement) {
+      const realMeaningElement = document.createElement("span");
+      realMeaningElement.append(meaningElement(writing, reading));
+      readingRecapAnswerElement.append(realMeaningElement);
+    }
+    (li.dataset.outcome === "0" ?
+      incorrectAnswersElement
+    : correctAnswersElement
+    ).append(li);
+  });
+  const incorrectHeading = document.createElement("h3");
+  incorrectHeading.textContent = "Falsch waren:";
+  const correctHeading = document.createElement("h3");
+  correctHeading.textContent = "Richtig waren:";
+  readingRecapElement.replaceChildren();
+  if (incorrectAnswersElement.childElementCount > 0) {
+    readingRecapElement.append(incorrectHeading, incorrectAnswersElement);
+  }
+  if (correctAnswersElement.childElementCount > 0) {
+    readingRecapElement.append(correctHeading, correctAnswersElement);
+  }
+  if (getSetting("cotsu-tools-shuffle-summary")) {
+    const shuffle = (container: HTMLElement) => {
+      const children = [...container.children];
+      let remaining = children.length;
+      while (remaining) {
+        const i = Math.floor(Math.random() * remaining);
+        remaining--;
+        [children[remaining], children[i]] = [children[i], children[remaining]];
+      }
+      container.innerHTML = "";
+      children.forEach((child) => {
+        container.append(child);
+      });
+    };
+    shuffle(incorrectAnswersElement);
+    shuffle(correctAnswersElement);
+  }
 };

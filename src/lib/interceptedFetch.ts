@@ -22,6 +22,7 @@ export let readingExercise: {
 export let didntKnowQids = new Set<string>();
 
 export const DUMMY_QUESTION_ID = "cotsu-tools-dummy-question";
+export const DUMMY_QUESTION_WRITING = "漢字 foo bar"; //  // Kanji are required to get the reading question to show up; Latin characters to make sure the writing stays unique
 export const DUMMY_QUESTION_INCORRECT_READING = "えいじ";
 export const DUMMY_QUESTION_READING = "かんじ";
 
@@ -62,8 +63,9 @@ export const startInterceptingFetch = () => {
       ) {
         const parsedBody = JSON.parse(body);
         if (parsedBody.questions.length !== 0) {
+          parsedBody.questions.length = 3;
           parsedBody.questions.push({
-            writing: "漢字", // Kanji are required to get the reading question to show up.
+            writing: DUMMY_QUESTION_WRITING,
             reading: DUMMY_QUESTION_READING, // An empty reading makes it a writing question.
             german: "",
             sentence: "Das war's!",
