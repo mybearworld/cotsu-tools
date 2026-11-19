@@ -54,7 +54,8 @@ body:has(.cotsu-tools-dialog:open) {
   margin-left: 0.25rem;
 }
 .cotsu-tools-dialog {
-  border: 1px solid #f6f6f6;
+  border: 1px solid var(--cotsu-line);
+  background-color: var(--cotsu-surface);
   border-radius: 20px;
   width: min(calc(100% - 2rem), 30rem);
   max-width: none;
@@ -82,7 +83,6 @@ body:has(.cotsu-tools-dialog:open) {
 }
 .cotsu-tools-dialog h2 {
   margin: 0;
-  font-family: inherit;
 }
 .cotsu-tools-dialog h3 {
   font-size: 1rem;
@@ -114,6 +114,11 @@ body:has(.cotsu-tools-dialog:open) {
   margin: 0;
 }
 .cotsu-tools-dialog button {
+  background: var(--cotsu-primary);
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: inherit;
   align-self: end;
 }
 
