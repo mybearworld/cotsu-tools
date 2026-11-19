@@ -395,6 +395,7 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 
 /* Hide question maturity */
 .cotsu-tools-hide-question-maturity
-  [class^="ReadingQuestionCard-module--icons--"] {
+  [class^="_study-container_"]
+  > [class^="_icons_"] {
   display: none;
 }
