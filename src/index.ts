@@ -31,7 +31,6 @@ import { addStyles } from "./actions/addStyles";
 import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { showMoreStats } from "./actions/showMoreStats";
-import { showExercisesLeftInKanjiLearningTab } from "./actions/showExercisesLeftInKanjiLearningTab";
 import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
 import { handleKanjiTab } from "./actions/handleKanjiTab";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
@@ -43,7 +42,6 @@ new MutationObserver(async (records) => {
   handleSettings(records);
   handleExerciseWords(records);
   showMoreStats(records);
-  showExercisesLeftInKanjiLearningTab(records);
   fixFontInNewKanjiTab(records);
   handleKanjiTab(records);
 }).observe(document.documentElement, {
