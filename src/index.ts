@@ -33,7 +33,6 @@ import { addStyles } from "./actions/addStyles";
 import { handleSettings } from "./actions/handleSettings";
 import { handleExerciseWords } from "./actions/handleExerciseWords";
 import { showMoreStats } from "./actions/showMoreStats";
-import { fixFontInNewKanjiTab } from "./actions/fixFontInNewKanjiTab";
 import { handleKanjiTab } from "./actions/handleKanjiTab";
 import { startInterceptingFetch } from "./lib/interceptedFetch";
 import "./lib/settings";
@@ -44,7 +43,6 @@ new MutationObserver(async (records) => {
   handleSettings(records);
   handleExerciseWords(records);
   showMoreStats(records);
-  fixFontInNewKanjiTab(records);
   handleKanjiTab(records);
 }).observe(document.documentElement, {
   childList: true,
