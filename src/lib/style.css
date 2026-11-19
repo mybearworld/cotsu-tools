@@ -323,6 +323,9 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   grid-column: 2;
   text-align: left;
 }
+.cotsu-tools-other-with-kanji summary:hover {
+  cursor: pointer;
+}
 .cotsu-tools-other-with-kanji ul {
   margin-top: 0;
 }
