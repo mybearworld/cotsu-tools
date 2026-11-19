@@ -14,8 +14,8 @@ let previousReadingExercise: typeof readingExercise | null = null;
 export const handleExerciseWords = async (records: MutationRecord[]) => {
   handleUpdatedWord(records);
   handleUpdatedCardWord(records);
+  handleWrongAnswer(records);
   for (const record of records) {
-    handleWrongAnswer(record);
     handleSummary(record);
   }
 };
@@ -146,20 +146,25 @@ const handleUpdatedCardWord = (records: MutationRecord[]) => {
   });
 };
 
-const handleWrongAnswer = (record: MutationRecord) => {
-  const firstAddedNode = record.addedNodes[0];
+const handleWrongAnswer = (records: MutationRecord[]) => {
   if (
-    !(firstAddedNode instanceof HTMLElement) ||
-    !firstAddedNode.className?.startsWith(
-      "ReadingQuestionCard-module--wrong-answer--",
+    !records.some(
+      (record) =>
+        record.type === "childList" &&
+        record.addedNodes[0] instanceof HTMLElement &&
+        record.addedNodes[0].className.startsWith("_wrong-answer_"),
     )
   )
     return;
-  const currentQuestion = readingExercise.questions[currentQuestionId()];
-  firstAddedNode.innerHTML = "";
-  firstAddedNode.append(
-    "Die Antwort ist ",
-    pitchAccentElement(currentQuestion.writing, currentQuestion.reading),
+  const readingElement = element(
+    document.querySelector("[class^=_wrong-answer_] > [lang=ja]"),
+  );
+  const id = currentQuestionId();
+  readingElement.replaceWith(
+    pitchAccentElement(
+      readingExercise.questions[id].writing,
+      readingElement.textContent,
+    ),
   );
 };
 
