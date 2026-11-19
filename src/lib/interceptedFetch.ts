@@ -63,7 +63,6 @@ export const startInterceptingFetch = () => {
       ) {
         const parsedBody = JSON.parse(body);
         if (parsedBody.questions.length !== 0) {
-          parsedBody.questions.length = 3;
           parsedBody.questions.push({
             writing: DUMMY_QUESTION_WRITING,
             reading: DUMMY_QUESTION_READING, // An empty reading makes it a writing question.
