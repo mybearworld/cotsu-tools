@@ -13,6 +13,7 @@ import {
   setSetting,
   SETTING_IDS,
   settingName,
+  addSettingsToDOM,
 } from "../lib/settings";
 
 const createDialog = () => {
@@ -114,7 +115,7 @@ const createDialog = () => {
   return dialog;
 };
 
-export const handleSettings = async (records: MutationRecord[]) => {
+const addSettingsDialog = (records: MutationRecord[]) => {
   if (!isSceneChange(records) || document.querySelector(".cotsu-tools-button"))
     return;
   const headerActions = document.querySelector(".header-actions");
@@ -143,6 +144,18 @@ export const handleSettings = async (records: MutationRecord[]) => {
     newBadge?.remove();
   });
   element(headerActions).insertAdjacentElement("afterbegin", settingsButton);
+};
+
+const useAddSettingsToDOM = (records: MutationRecord[]) => {
+  if (!isSceneChange(records)) {
+    return;
+  }
+  addSettingsToDOM();
+};
+
+export const handleSettings = (records: MutationRecord[]) => {
+  addSettingsDialog(records);
+  useAddSettingsToDOM(records);
 };
 
 const WRENCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden><!-- ISC License
