@@ -1,5 +1,6 @@
 window.addEventListener("unhandledrejection", (e) => {
   e.preventDefault();
+  console.error(e.reason);
   if (e.reason instanceof Error) {
     alert(
       "[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" +
@@ -15,6 +16,7 @@ window.addEventListener("unhandledrejection", (e) => {
 });
 window.addEventListener("error", (e) => {
   e.preventDefault();
+  console.error(e.error);
   if (e.error instanceof Error) {
     alert(
       "[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" +
