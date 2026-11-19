@@ -56,7 +56,6 @@ const handleUpdatedWord = (records: MutationRecord[]) => {
 };
 
 const handleUpdatedCardWord = (records: MutationRecord[]) => {
-  console.log(records);
   if (
     !records.some(
       (record) =>
