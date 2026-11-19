@@ -21,6 +21,10 @@ export let readingExercise: {
 };
 export let didntKnowQids = new Set<string>();
 
+export const DUMMY_QUESTION_ID = "cotsu-tools-dummy-question";
+export const DUMMY_QUESTION_INCORRECT_READING = "えいじ";
+export const DUMMY_QUESTION_READING = "かんじ";
+
 export let authorization: string;
 
 const _fetch = unsafeWindow.fetch;
@@ -31,7 +35,23 @@ export const startInterceptingFetch = () => {
       authorization = options.headers.Authorization;
     }
     let requestBody = options?.body;
-    const response = await _fetch(url, { ...options });
+    if (
+      typeof requestBody === "string" &&
+      url === "https://api.cotsu.de/user.php?r=update-progress"
+    ) {
+      const parsedRequestBody = JSON.parse(requestBody);
+      parsedRequestBody.answers = parsedRequestBody.answers.flatMap(
+        (answer: { correct: number; qid: string }) =>
+          answer.qid === DUMMY_QUESTION_ID ?
+            []
+          : {
+              qid: answer.qid,
+              correct: didntKnowQids.has(answer.qid) ? 0 : answer.correct,
+            },
+      );
+      requestBody = JSON.stringify(parsedRequestBody);
+    }
+    const response = await _fetch(url, { ...options, body: requestBody });
     let body = await response.text();
     if (typeof url === "string") {
       if (url === "https://api.cotsu.de/user.php?r=stats") {
@@ -40,7 +60,24 @@ export const startInterceptingFetch = () => {
         url.startsWith("https://api.cotsu.de/user.php?r=review-reading") ||
         url.startsWith("https://api.cotsu.de/user.php?r=learn-reading")
       ) {
-        readingExercise = JSON.parse(body);
+        const parsedBody = JSON.parse(body);
+        if (parsedBody.questions.length !== 0) {
+          parsedBody.questions.push({
+            writing: "漢字", // Kanji are required to get the reading question to show up.
+            reading: DUMMY_QUESTION_READING, // An empty reading makes it a writing question.
+            german: "",
+            sentence: "Das war's!",
+            sentence_german: null,
+            qtype: "3",
+            qid: DUMMY_QUESTION_ID,
+            kanjis: [],
+          });
+          readingExercise = parsedBody;
+          didntKnowQids = new Set();
+        }
+        parsedBody.questionCount = parsedBody.questions.length;
+        body = JSON.stringify(parsedBody);
+        readingExercise = parsedBody;
       } else if (
         url === "https://api.cotsu.de/user.php?r=start-reading" &&
         typeof requestBody === "string"

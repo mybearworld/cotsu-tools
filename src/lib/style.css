@@ -239,6 +239,20 @@ div.card-word.cotsu-tools-card-word-clone {
   color: #666;
 }
 
+/* Dummy question */
+.cotsu-tools-dummy-question .reading-controls input {
+  display: none;
+}
+.practice-screen[data-compact]
+  .cotsu-tools-dummy-question
+  .practice-primary-action
+  button {
+  width: 100%;
+}
+.cotsu-tools-dummy-question .reading-feedback {
+  display: none;
+}
+
 /* Word summary */
 .word-summary div,
 .word-summary span {

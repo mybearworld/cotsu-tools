@@ -1,5 +1,11 @@
 import { element, text } from "../lib/element";
-import { readingExercise, didntKnowQids } from "../lib/interceptedFetch";
+import {
+  readingExercise,
+  didntKnowQids,
+  DUMMY_QUESTION_ID,
+  DUMMY_QUESTION_INCORRECT_READING,
+  DUMMY_QUESTION_READING,
+} from "../lib/interceptedFetch";
 import { kanjiSearch, KanjiSearchWord } from "../lib/kanjiSearch";
 import { katakanaToHiragana } from "../lib/katakanaToHiragana";
 import {
@@ -8,8 +14,6 @@ import {
   meaningElement,
   definitionElement,
 } from "../lib/wadokuInformation";
-
-let previousReadingExercise: typeof readingExercise | null = null;
 
 export const handleExerciseWords = async (records: MutationRecord[]) => {
   handleUpdatedWord(records);
@@ -50,11 +54,45 @@ const handleUpdatedWord = (records: MutationRecord[]) => {
     return;
   const id = currentQuestionId();
   if (id === null) return;
-  if (previousReadingExercise !== readingExercise) {
-    previousReadingExercise = readingExercise;
-  }
   const currentQuestion = readingExercise.questions[id];
-  void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
+  const isDummy = currentQuestion.qid === DUMMY_QUESTION_ID;
+  const total = readingExercise.questions.length - 1; // dummy question
+  const now = isDummy ? total : id + 1;
+  const fraction = isDummy ? 1 : (now - 1) / total;
+  const text = `Frage ${now} von ${total}`;
+  const studyProgressElement = element(
+    document.querySelector("[class^=_study-progress_]"),
+  );
+  const progressBarElement = element(
+    studyProgressElement.querySelector(".MuiLinearProgress-root"),
+  );
+  progressBarElement.ariaValueNow = now.toString();
+  progressBarElement.ariaValueMax = total.toString();
+  progressBarElement.ariaValueText = text;
+  const progressBarInside = element(progressBarElement.firstElementChild);
+  progressBarInside.style.transform = `translateX(${(fraction - 1) * 100}%)`;
+  const progressTextElement = element(studyProgressElement.querySelector("p"));
+  progressTextElement.textContent = text;
+  if (isDummy) {
+    element(document.querySelector("[class^=_study-container_]")).classList.add(
+      "cotsu-tools-dummy-question",
+    );
+    const button = element(
+      document.querySelector(".practice-primary-action button"),
+    );
+    button.textContent = "Zum Ende";
+    const input = element(
+      document.querySelector(".reading-controls [class^=_input-field_]"),
+    );
+    if (!(input instanceof HTMLInputElement)) return;
+    input.value = DUMMY_QUESTION_INCORRECT_READING;
+    requestAnimationFrame(() => {
+      button.click();
+      input.value = DUMMY_QUESTION_READING;
+    });
+  } else {
+    void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
+  }
 };
 
 const handleUpdatedCardWord = (records: MutationRecord[]) => {
@@ -172,7 +210,7 @@ const handleWrongAnswer = (records: MutationRecord[]) => {
 };
 
 const handleSummary = (records: MutationRecord[]) => {
-  console.log(records);
+  // console.log(records);
   // const firstAddedNode = record.addedNodes[0];
   // if (
   //   !(firstAddedNode instanceof HTMLElement) ||
