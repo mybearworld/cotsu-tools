@@ -15,15 +15,16 @@ export const handleExerciseWords = async (records: MutationRecord[]) => {
   handleUpdatedWord(records);
   handleUpdatedCardWord(records);
   handleWrongAnswer(records);
-  for (const record of records) {
-    handleSummary(record);
-  }
+  handleSummary(records);
 };
 
 const currentQuestionId = () => {
-  const studyProgressTextElement = element(
-    document.querySelector("[class^=_study-progress_] p"),
+  const studyProgressTextElement = document.querySelector(
+    "[class^=_study-progress_] p",
   );
+  if (!studyProgressTextElement) {
+    return null;
+  }
   // Frage X von Y
   return Number(studyProgressTextElement.textContent.split(" ")[1]) - 1;
 };
@@ -48,6 +49,7 @@ const handleUpdatedWord = (records: MutationRecord[]) => {
   )
     return;
   const id = currentQuestionId();
+  if (id === null) return;
   if (previousReadingExercise !== readingExercise) {
     previousReadingExercise = readingExercise;
   }
@@ -160,6 +162,7 @@ const handleWrongAnswer = (records: MutationRecord[]) => {
     document.querySelector("[class^=_wrong-answer_] > [lang=ja]"),
   );
   const id = currentQuestionId();
+  if (id === null) return;
   readingElement.replaceWith(
     pitchAccentElement(
       readingExercise.questions[id].writing,
@@ -168,147 +171,148 @@ const handleWrongAnswer = (records: MutationRecord[]) => {
   );
 };
 
-const handleSummary = (record: MutationRecord) => {
-  const firstAddedNode = record.addedNodes[0];
-  if (
-    !(firstAddedNode instanceof HTMLElement) ||
-    !firstAddedNode.className.startsWith("SummaryCard-module--summary-card--")
-  )
-    return;
-  if (readingExercise && readingExercise.questions.length === 0) return;
-  const summaryCorrectText = element(
-    document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
-  );
-  if (summaryCorrectText.textContent === "") return; // Writing question
-  element(
-    document.querySelector(
-      "[class^=QuestionContainer-module--question-container--]",
-    ),
-  ).classList.remove("cotsu-tools-dummy-question");
-  if (
-    summaryCorrectText.textContent ===
-    "In dieser Stufe gibt es nichts mehr zu Lernen."
-  ) {
-    return;
-  }
-  console.log(summaryCorrectText.textContent);
-  const summaryCorrectTextMatch = summaryCorrectText.textContent.match(
-    /^(\d+) von (\d+) richtig$/,
-  );
-  if (!summaryCorrectTextMatch) throw new Error("No X von Y richtig");
-  const [, correctExercises, totalExercises] = summaryCorrectTextMatch;
-  summaryCorrectText.textContent = `${Number(correctExercises) - 1} von ${Number(totalExercises) - 1} richtig`;
-  const wordSummary = document.createElement("div");
-  const incorrectKanjiHeading = document.createElement("h4");
-  incorrectKanjiHeading.textContent = "Falsch waren:";
-  const incorrectKanjiUnshuffled = document.createElement("div");
-  incorrectKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
-  const incorrectKanjiShuffled = document.createElement("div");
-  incorrectKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
-  const correctKanjiHeading = document.createElement("h4");
-  correctKanjiHeading.textContent = "Richtig waren:";
-  const correctKanjiUnshuffled = document.createElement("div");
-  correctKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
-  const correctKanjiShuffled = document.createElement("div");
-  correctKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
-  wordSummary.append(
-    incorrectKanjiHeading,
-    incorrectKanjiUnshuffled,
-    incorrectKanjiShuffled,
-    correctKanjiHeading,
-    correctKanjiUnshuffled,
-    correctKanjiShuffled,
-  );
-  wordSummary.classList.add("word-summary");
-  const wrongKanji = new Set();
-  const originalSummaryElement =
-    firstAddedNode.querySelector("div:not([class])");
-  originalSummaryElement?.childNodes?.forEach((word) => {
-    const match = word.textContent?.match(/([^ ]+) → ([^ ]+)/);
-    if (!match) throw new Error("No XYZ → ABC in summary element");
-    const [, kanji, reading] = match;
-    wrongKanji.add(`${kanji}/${reading}`);
-  });
-  readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
-    // if (qid === DUMMY_QUESTION_ID) return;
-    const spoilerWrap = (toWrap: Node | string) => {
-      const spoilerElement = document.createElement("button");
-      spoilerElement.classList.add("cotsu-tools-spoiler");
-      spoilerElement.ariaLabel = "Lösung anzeigen";
-      const accessibilityWrapper = document.createElement("span");
-      accessibilityWrapper.ariaHidden = "true";
-      accessibilityWrapper.append(toWrap);
-      spoilerElement.append(accessibilityWrapper);
-      spoilerElement.addEventListener("click", () => {
-        spoilerElement.classList.add("cotsu-tools-spoiler-shown");
-        spoilerElement.ariaLabel = null;
-        spoilerElement.role = "none";
-        spoilerElement.disabled = true;
-        accessibilityWrapper.ariaHidden = "false";
-      });
-      return spoilerElement;
-    };
-    const isIncorrect =
-      wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
-    const makeRow = () => {
-      const row = document.createElement("div");
-      const word = document.createElement("span");
-      word.lang = "ja";
-      word.textContent = kanji;
-      const solution = document.createElement("span");
-      solution.append(
-        pitchAccentElement(kanji, reading),
-        " ",
-        readingExercise.questions.find(
-          (question) =>
-            question.writing === kanji && question.reading === reading,
-        )?.german ?? meaningElement(kanji, reading),
-      );
-      row.append(word, " → ", isIncorrect ? spoilerWrap(solution) : solution);
-      return row;
-    };
-    if (isIncorrect) {
-      incorrectKanjiUnshuffled.append(makeRow());
-      incorrectKanjiShuffled.append(makeRow());
-    } else {
-      correctKanjiUnshuffled.append(makeRow());
-      correctKanjiShuffled.append(makeRow());
-    }
-  });
-  const shuffle = (container: HTMLElement) => {
-    const children = [...container.children];
-    let remaining = children.length;
-    while (remaining) {
-      const i = Math.floor(Math.random() * remaining);
-      remaining--;
-      [children[remaining], children[i]] = [children[i], children[remaining]];
-    }
-    container.innerHTML = "";
-    children.forEach((child) => {
-      container.append(child);
-    });
-  };
-  shuffle(correctKanjiShuffled);
-  shuffle(incorrectKanjiShuffled);
-  if (originalSummaryElement) {
-    element(document.querySelector("h3")).textContent =
-      "Hier nochmal alle Wörter";
-    originalSummaryElement.replaceWith(wordSummary);
-  } else {
-    const actions = element(
-      document.querySelector("[class^=SummaryCard-module--summary-actions--]"),
-    );
-    const h3 = document.createElement("h3");
-    h3.textContent = "Hier nochmal alle Wörter";
-    actions.append(h3);
-    actions.append(wordSummary);
-  }
-  const summaryText = element(
-    document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
-  );
-  const summaryTextMatch = summaryText.textContent.match(/^(\d+)(.*)$/);
-  if (!summaryTextMatch) throw new Error("No summaryTextMatch");
-  summaryText.textContent =
-    (Number(summaryTextMatch[1]) - didntKnowQids.size).toString() +
-    summaryTextMatch[2];
+const handleSummary = (records: MutationRecord[]) => {
+  console.log(records);
+  // const firstAddedNode = record.addedNodes[0];
+  // if (
+  //   !(firstAddedNode instanceof HTMLElement) ||
+  //   !firstAddedNode.className.startsWith("SummaryCard-module--summary-card--")
+  // )
+  //   return;
+  // if (readingExercise && readingExercise.questions.length === 0) return;
+  // const summaryCorrectText = element(
+  //   document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
+  // );
+  // if (summaryCorrectText.textContent === "") return; // Writing question
+  // element(
+  //   document.querySelector(
+  //     "[class^=QuestionContainer-module--question-container--]",
+  //   ),
+  // ).classList.remove("cotsu-tools-dummy-question");
+  // if (
+  //   summaryCorrectText.textContent ===
+  //   "In dieser Stufe gibt es nichts mehr zu Lernen."
+  // ) {
+  //   return;
+  // }
+  // console.log(summaryCorrectText.textContent);
+  // const summaryCorrectTextMatch = summaryCorrectText.textContent.match(
+  //   /^(\d+) von (\d+) richtig$/,
+  // );
+  // if (!summaryCorrectTextMatch) throw new Error("No X von Y richtig");
+  // const [, correctExercises, totalExercises] = summaryCorrectTextMatch;
+  // summaryCorrectText.textContent = `${Number(correctExercises) - 1} von ${Number(totalExercises) - 1} richtig`;
+  // const wordSummary = document.createElement("div");
+  // const incorrectKanjiHeading = document.createElement("h4");
+  // incorrectKanjiHeading.textContent = "Falsch waren:";
+  // const incorrectKanjiUnshuffled = document.createElement("div");
+  // incorrectKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
+  // const incorrectKanjiShuffled = document.createElement("div");
+  // incorrectKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
+  // const correctKanjiHeading = document.createElement("h4");
+  // correctKanjiHeading.textContent = "Richtig waren:";
+  // const correctKanjiUnshuffled = document.createElement("div");
+  // correctKanjiUnshuffled.classList.add("cotsu-tools-summary-unshuffled");
+  // const correctKanjiShuffled = document.createElement("div");
+  // correctKanjiShuffled.classList.add("cotsu-tools-summary-shuffled");
+  // wordSummary.append(
+  //   incorrectKanjiHeading,
+  //   incorrectKanjiUnshuffled,
+  //   incorrectKanjiShuffled,
+  //   correctKanjiHeading,
+  //   correctKanjiUnshuffled,
+  //   correctKanjiShuffled,
+  // );
+  // wordSummary.classList.add("word-summary");
+  // const wrongKanji = new Set();
+  // const originalSummaryElement =
+  //   firstAddedNode.querySelector("div:not([class])");
+  // originalSummaryElement?.childNodes?.forEach((word) => {
+  //   const match = word.textContent?.match(/([^ ]+) → ([^ ]+)/);
+  //   if (!match) throw new Error("No XYZ → ABC in summary element");
+  //   const [, kanji, reading] = match;
+  //   wrongKanji.add(`${kanji}/${reading}`);
+  // });
+  // readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
+  //   // if (qid === DUMMY_QUESTION_ID) return;
+  //   const spoilerWrap = (toWrap: Node | string) => {
+  //     const spoilerElement = document.createElement("button");
+  //     spoilerElement.classList.add("cotsu-tools-spoiler");
+  //     spoilerElement.ariaLabel = "Lösung anzeigen";
+  //     const accessibilityWrapper = document.createElement("span");
+  //     accessibilityWrapper.ariaHidden = "true";
+  //     accessibilityWrapper.append(toWrap);
+  //     spoilerElement.append(accessibilityWrapper);
+  //     spoilerElement.addEventListener("click", () => {
+  //       spoilerElement.classList.add("cotsu-tools-spoiler-shown");
+  //       spoilerElement.ariaLabel = null;
+  //       spoilerElement.role = "none";
+  //       spoilerElement.disabled = true;
+  //       accessibilityWrapper.ariaHidden = "false";
+  //     });
+  //     return spoilerElement;
+  //   };
+  //   const isIncorrect =
+  //     wrongKanji.has(`${kanji}/${reading}`) || didntKnowQids.has(qid);
+  //   const makeRow = () => {
+  //     const row = document.createElement("div");
+  //     const word = document.createElement("span");
+  //     word.lang = "ja";
+  //     word.textContent = kanji;
+  //     const solution = document.createElement("span");
+  //     solution.append(
+  //       pitchAccentElement(kanji, reading),
+  //       " ",
+  //       readingExercise.questions.find(
+  //         (question) =>
+  //           question.writing === kanji && question.reading === reading,
+  //       )?.german ?? meaningElement(kanji, reading),
+  //     );
+  //     row.append(word, " → ", isIncorrect ? spoilerWrap(solution) : solution);
+  //     return row;
+  //   };
+  //   if (isIncorrect) {
+  //     incorrectKanjiUnshuffled.append(makeRow());
+  //     incorrectKanjiShuffled.append(makeRow());
+  //   } else {
+  //     correctKanjiUnshuffled.append(makeRow());
+  //     correctKanjiShuffled.append(makeRow());
+  //   }
+  // });
+  // const shuffle = (container: HTMLElement) => {
+  //   const children = [...container.children];
+  //   let remaining = children.length;
+  //   while (remaining) {
+  //     const i = Math.floor(Math.random() * remaining);
+  //     remaining--;
+  //     [children[remaining], children[i]] = [children[i], children[remaining]];
+  //   }
+  //   container.innerHTML = "";
+  //   children.forEach((child) => {
+  //     container.append(child);
+  //   });
+  // };
+  // shuffle(correctKanjiShuffled);
+  // shuffle(incorrectKanjiShuffled);
+  // if (originalSummaryElement) {
+  //   element(document.querySelector("h3")).textContent =
+  //     "Hier nochmal alle Wörter";
+  //   originalSummaryElement.replaceWith(wordSummary);
+  // } else {
+  //   const actions = element(
+  //     document.querySelector("[class^=SummaryCard-module--summary-actions--]"),
+  //   );
+  //   const h3 = document.createElement("h3");
+  //   h3.textContent = "Hier nochmal alle Wörter";
+  //   actions.append(h3);
+  //   actions.append(wordSummary);
+  // }
+  // const summaryText = element(
+  //   document.querySelector("[class^=SummaryCard-module--summary-text--] p"),
+  // );
+  // const summaryTextMatch = summaryText.textContent.match(/^(\d+)(.*)$/);
+  // if (!summaryTextMatch) throw new Error("No summaryTextMatch");
+  // summaryText.textContent =
+  //   (Number(summaryTextMatch[1]) - didntKnowQids.size).toString() +
+  //   summaryTextMatch[2];
 };
