@@ -46,7 +46,7 @@ new MutationObserver(async (records) => {
   showExercisesLeftInKanjiLearningTab(records);
   fixFontInNewKanjiTab(records);
   handleKanjiTab(records);
-}).observe(document.body, {
+}).observe(document.documentElement, {
   childList: true,
   subtree: true,
   characterData: true,

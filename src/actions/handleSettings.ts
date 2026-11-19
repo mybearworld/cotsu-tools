@@ -117,16 +117,16 @@ const createDialog = () => {
 export const handleSettings = async (records: MutationRecord[]) => {
   if (!isSceneChange(records) || document.querySelector(".cotsu-tools-button"))
     return;
-  const header = document.querySelector(
-    "[class^=MainLayout-module--header--] .MuiGrid-root",
-  );
-  if (!header) return;
+  const headerActions = document.querySelector(".header-actions");
+  if (!headerActions) return;
   let dialog = document.querySelector(".cotsu-tools-dialog") || createDialog();
   if (!(dialog instanceof HTMLDialogElement))
     throw new Error("Settings aren't a dialog");
   const settingsButton = document.createElement("button");
-  settingsButton.classList.add("cotsu-tools-button");
-  settingsButton.textContent = "Cotsu-Tools";
+  settingsButton.classList.add("theme-toggle");
+  settingsButton.ariaLabel = "Cotsu-Tools";
+  settingsButton.title = "Cotsu-Tools";
+  settingsButton.innerHTML = WRENCH_ICON;
   let newBadge = null;
   if (doAcknowledgeableSettingsExist()) {
     newBadge = document.createElement("span");
@@ -142,5 +142,13 @@ export const handleSettings = async (records: MutationRecord[]) => {
     acknowledgeSettings();
     newBadge?.remove();
   });
-  element(header.lastChild).insertAdjacentElement("afterbegin", settingsButton);
+  element(headerActions).insertAdjacentElement("afterbegin", settingsButton);
 };
+
+const WRENCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden><!-- ISC License
+
+Copyright (c) 2026 Lucide Icons and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. --><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>`;

@@ -37,28 +37,6 @@ input {
 }
 
 /* Dialog */
-[class^="MainLayout-module--header--"] .MuiGrid-container .MuiGrid-item {
-  flex-basis: initial;
-  max-width: initial;
-}
-[class^="MainLayout-module--header--"]
-  .MuiGrid-container
-  .MuiGrid-item:last-child {
-  flex-grow: 1;
-}
-.cotsu-tools-button {
-  font: inherit;
-  border: none;
-  background: none;
-  color: #fff;
-  padding: 0;
-  margin-right: 20px;
-  height: 60px;
-}
-.cotsu-tools-button:hover {
-  cursor: pointer;
-  color: #ffdc79;
-}
 body:has(.cotsu-tools-dialog:open) {
   overflow: hidden;
 }
