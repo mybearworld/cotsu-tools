@@ -1,9 +1,5 @@
 import { element, text } from "../lib/element";
-import {
-  DUMMY_QUESTION_ID,
-  readingExercise,
-  didntKnowQids,
-} from "../lib/interceptedFetch";
+import { readingExercise, didntKnowQids } from "../lib/interceptedFetch";
 import { kanjiSearch, KanjiSearchWord } from "../lib/kanjiSearch";
 import { katakanaToHiragana } from "../lib/katakanaToHiragana";
 import {
@@ -16,9 +12,9 @@ import {
 let previousReadingExercise: typeof readingExercise | null = null;
 
 export const handleExerciseWords = async (records: MutationRecord[]) => {
+  handleUpdatedWord(records);
+  handleUpdatedCardWord(records);
   for (const record of records) {
-    handleUpdatedWord(record);
-    handleUpdatedCardWord(record);
     handleWrongAnswer(record);
     handleSummary(record);
   }
@@ -26,35 +22,29 @@ export const handleExerciseWords = async (records: MutationRecord[]) => {
 
 const currentQuestionId = () => {
   const studyProgressTextElement = element(
-    document.querySelector("[class^=StudyProgress-module--study-progress--] p"),
+    document.querySelector("[class^=_study-progress_] p"),
   );
-  return Number(studyProgressTextElement.childNodes.item(1)?.textContent) - 1;
+  // Frage X von Y
+  return Number(studyProgressTextElement.textContent.split(" ")[1]) - 1;
 };
 
-const handleUpdatedWord = (record: MutationRecord) => {
-  const firstAddedNode = record.addedNodes[0];
+const handleUpdatedWord = (records: MutationRecord[]) => {
   if (
-    (record.type !== "characterData" ||
-      record.target.parentElement?.tagName !== "P" ||
-      !record.target.parentElement?.parentElement?.className.startsWith(
-        "StudyProgress-module--study-progress--",
-      ) ||
-      !(
-        record.target.parentElement.parentElement.nextElementSibling
-          ?.firstChild instanceof Element
-      ) ||
-      record.target.parentElement.parentElement.nextElementSibling.firstChild.className.startsWith(
-        "WritingQuestionCard-",
-      )) &&
-    (record.type !== "childList" ||
-      !(firstAddedNode instanceof HTMLElement) ||
-      !firstAddedNode.className.startsWith(
-        "StudyProgress-module--study-progress--",
-      ) ||
-      !(firstAddedNode.nextElementSibling?.firstChild instanceof Element) ||
-      firstAddedNode.nextElementSibling.firstChild.className.startsWith(
-        "WritingQuestionCard-",
-      ))
+    !records.some(
+      (record) =>
+        (record.type === "characterData" &&
+          record.target.parentElement?.parentElement?.className.startsWith(
+            "_study-progress_",
+          )) ||
+        (record.type === "childList" &&
+          record.target instanceof HTMLElement &&
+          record.target.className.startsWith("_question-container_") &&
+          record.addedNodes[0] &&
+          record.addedNodes[0].firstChild instanceof Element &&
+          record.addedNodes[0].firstChild.classList.contains(
+            "practice-navigation",
+          )),
+    )
   )
     return;
   const id = currentQuestionId();
@@ -62,155 +52,99 @@ const handleUpdatedWord = (record: MutationRecord) => {
     previousReadingExercise = readingExercise;
   }
   const currentQuestion = readingExercise.questions[id];
-  element(
-    document.querySelector(
-      "[class^=StudyProgress-module--study-progress--] .MuiLinearProgress-bar",
-    ),
-  ).style.transform =
-    `translateX(${-100 * (1 - (id + 1) / readingExercise.questionCount)}%)`;
-  if (currentQuestion.qid === DUMMY_QUESTION_ID) {
-    const questionContainer = element(
-      document.querySelector(
-        "[class^=QuestionContainer-module--question-container--]",
-      ),
-    );
-    questionContainer.classList.add("cotsu-tools-dummy-question");
-    element(
-      document.querySelector(
-        "[class*=ReadingQuestionCard-module--action-check--]",
-      ),
-    ).textContent = "Zum Ende";
-  } else {
-    void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
-  }
+  void getWadokuInformation(currentQuestion.writing, currentQuestion.reading);
 };
 
-const handleUpdatedCardWord = (record: MutationRecord) => {
-  const firstAddedNode = record.addedNodes[0];
+const handleUpdatedCardWord = (records: MutationRecord[]) => {
+  console.log(records);
   if (
-    (record.type !== "childList" ||
-      !(firstAddedNode instanceof HTMLElement) ||
-      !firstAddedNode.className?.startsWith("StudyContainer")) &&
-    (record.type !== "characterData" ||
-      !record.target.parentElement?.classList?.contains("card-word") ||
-      record.target.nextSibling?.textContent !== " → ")
+    !records.some(
+      (record) =>
+        (record.type === "childList" &&
+          record.target instanceof HTMLElement &&
+          record.target.className.startsWith("_question-container_") &&
+          record.addedNodes[0] instanceof HTMLDetailsElement &&
+          record.addedNodes[0].classList.contains("practice-details")) ||
+        (record.addedNodes[0] instanceof HTMLElement &&
+          record.addedNodes[0].parentElement?.parentElement instanceof
+            HTMLDetailsElement &&
+          record.addedNodes[0].parentElement.parentElement.classList.contains(
+            "practice-details",
+          )),
+    )
   )
     return;
-  const cardWord =
-    record.type === "childList" ?
-      element(firstAddedNode).querySelector(".card-word")
-    : record.target.parentElement;
-  if (!cardWord) return;
-  cardWord.parentElement?.classList.remove(
-    "cotsu-tools-didnt-know-word-strike",
+  const cardReadingElement = element(document.querySelector(".card-reading"));
+  const previousSolutionElement = element(
+    document.querySelector(".previous-solution"),
   );
-  cardWord.nextSibling?.remove();
-  const cardWordClone = element(cardWord.cloneNode(true));
-  cardWordClone.classList.add("cotsu-tools-card-word-clone");
-  const hiraganaElement = text(
-    [...cardWordClone.childNodes].find(
-      (_node, i) => cardWordClone.childNodes[i - 1]?.textContent === " → ",
-    ),
+  const cardWriting = element(document.querySelector(".previous-answer-word"))
+    .childNodes[0].textContent;
+  if (!cardWriting) return;
+  cardReadingElement.replaceChildren(
+    pitchAccentElement(cardWriting, cardReadingElement.textContent),
   );
-  const exercise = readingExercise.questions[currentQuestionId() - 1];
-  hiraganaElement.textContent = "";
-  cardWordClone.append(definitionElement(exercise.writing, exercise.reading));
-  hiraganaElement.after(pitchAccentElement(exercise.writing, exercise.reading));
-  const wasAnsweredCorrectly = !cardWordClone.querySelector(
-    "[class*=MaturityTallies-module--tally-icon_0--]",
+  const newCardGerman = document.createElement("div");
+  newCardGerman.classList.add("card-german");
+  newCardGerman.append(
+    definitionElement(cardWriting, cardReadingElement.textContent),
   );
-  if (wasAnsweredCorrectly) {
-    const didntKnowWord = document.createElement("label");
-    didntKnowWord.classList.add("cotsu-tools-didnt-know-word");
-    didntKnowWord.append("Doch nicht gewusst?");
-    const didntKnowWordCheckBox = document.createElement("input");
-    didntKnowWordCheckBox.type = "checkbox";
-    didntKnowWordCheckBox.addEventListener("input", () => {
-      const qid = readingExercise.questions[currentQuestionId() - 1].qid;
-      if (didntKnowWordCheckBox.checked) {
-        didntKnowQids.add(qid);
-      } else {
-        didntKnowQids.delete(qid);
-      }
-      cardWordClone.parentElement?.classList.toggle(
-        "cotsu-tools-didnt-know-word-strike",
-        didntKnowWordCheckBox.checked,
-      );
-    });
-    didntKnowWord.append(didntKnowWordCheckBox);
-    cardWordClone.insertAdjacentElement("afterbegin", didntKnowWord);
-  }
-  cardWord.insertAdjacentElement("afterend", cardWordClone);
-  const studyCardContainer =
-    cardWord.parentElement?.parentElement?.parentElement;
-  if (!studyCardContainer) return;
-  studyCardContainer
-    .querySelectorAll("[class^=KanjiCard-module--row--]")
-    .forEach((row) => {
-      const previousOtherKanjiElement = row.querySelector(
-        ".cotsu-tools-other-kanji",
-      );
-      if (previousOtherKanjiElement) {
-        previousOtherKanjiElement.remove();
-      }
-      const kanji = element(
-        row.querySelector("[class^=KanjiCard-module--kanjiBig--]"),
-      ).textContent;
-      const otherKanjiElement = document.createElement("div");
-      otherKanjiElement.className = element(row.lastChild).className;
-      otherKanjiElement.classList.add("cotsu-tools-other-kanji");
-      const button = document.createElement("button");
-      button.classList.add("cotsu-tools-other-kanji-init-button");
-      button.textContent = "andere Wörter mit " + kanji;
-      button.addEventListener("click", async () => {
-        button.textContent = "lädt...";
-        const result = await kanjiSearch(kanji);
-        const relevantBulk: string[] = [];
-        const relevantWords: KanjiSearchWord[] = [];
-        result.forEach((word) => {
-          if (!word.maturity) return;
-          if (word.word === exercise.writing) return;
-          relevantBulk.push(word.word);
-          relevantWords.push(word);
-        });
-        button.remove();
-        otherKanjiElement.classList.add("cotsu-tools-other-kanji-loaded");
-        const heading = document.createElement("div");
-        otherKanjiElement.append(heading);
-        if (relevantWords.length === 0) {
-          heading.textContent =
-            "Du kennst das Kanji noch in keinen anderen Wörtern.";
-          return;
-        }
-        heading.textContent = "Du kennst das Kanji noch in diesen Wörtern:";
-        const ul = document.createElement("ul");
-        otherKanjiElement.append(ul);
-        relevantWords.forEach((word) => {
-          const li = document.createElement("li");
-          const reading = katakanaToHiragana(word.reading);
-          const kanji = document.createElement("span");
-          kanji.classList.add("cotsu-tools-other-kanji-kanji");
-          kanji.append(word.word);
-          li.append(kanji);
-          const moreButton = document.createElement("button");
-          moreButton.classList.add("cotsu-tools-other-kanji-more");
-          moreButton.textContent = "?";
-          moreButton.addEventListener("click", () => {
-            moreButton.remove();
-            li.append(
-              " (",
-              pitchAccentElement(word.word, reading),
-              ") ",
-              word.word_de ?? meaningElement(word.word, reading),
-            );
-          });
-          li.append(" ", moreButton);
-          ul.append(li);
-        });
+  previousSolutionElement.append(newCardGerman);
+  document.querySelectorAll("[class^=_kanjiRow_]").forEach((row) => {
+    const kanji = element(row.querySelector("[class^=_kanjiBig_")).textContent;
+    const otherKanjiElement = document.createElement("details");
+    otherKanjiElement.classList.add("cotsu-tools-other-with-kanji");
+    const otherKanjiSummaryElement = document.createElement("summary");
+    otherKanjiSummaryElement.textContent = `Andere Wörter mit ${kanji}`;
+    otherKanjiElement.append(otherKanjiSummaryElement);
+    let hasOpened = false;
+    otherKanjiElement.addEventListener("toggle", async () => {
+      if (hasOpened) return;
+      hasOpened = true;
+      const textElement = document.createTextNode("lädt...");
+      otherKanjiElement.append(textElement);
+      const result = await kanjiSearch(kanji);
+      const relevantBulk: string[] = [];
+      const relevantWords: KanjiSearchWord[] = [];
+      result.forEach((word) => {
+        if (!word.maturity) return;
+        if (word.word === cardWriting) return;
+        relevantBulk.push(word.word);
+        relevantWords.push(word);
       });
-      otherKanjiElement.append(button);
-      row.append(otherKanjiElement);
+      if (relevantWords.length === 0) {
+        textElement.textContent =
+          "Du kennst das Kanji noch in keinen anderen Wörtern.";
+        return;
+      }
+      textElement.remove();
+      const ul = document.createElement("ul");
+      otherKanjiElement.append(ul);
+      relevantWords.forEach((word) => {
+        const li = document.createElement("li");
+        const reading = katakanaToHiragana(word.reading);
+        const kanji = document.createElement("span");
+        kanji.classList.add("cotsu-tools-other-with-kanji-kanji");
+        kanji.append(word.word);
+        li.append(kanji);
+        const moreButton = document.createElement("button");
+        moreButton.classList.add("cotsu-tools-other-with-kanji-more");
+        moreButton.textContent = "?";
+        moreButton.addEventListener("click", () => {
+          moreButton.remove();
+          li.append(
+            " (",
+            pitchAccentElement(word.word, reading),
+            ") ",
+            word.word_de ?? meaningElement(word.word, reading),
+          );
+        });
+        li.append(moreButton);
+        ul.append(li);
+      });
     });
+    row.append(otherKanjiElement);
+  });
 };
 
 const handleWrongAnswer = (record: MutationRecord) => {
@@ -292,7 +226,7 @@ const handleSummary = (record: MutationRecord) => {
     wrongKanji.add(`${kanji}/${reading}`);
   });
   readingExercise.questions.forEach(({ writing: kanji, reading, qid }) => {
-    if (qid === DUMMY_QUESTION_ID) return;
+    // if (qid === DUMMY_QUESTION_ID) return;
     const spoilerWrap = (toWrap: Node | string) => {
       const spoilerElement = document.createElement("button");
       spoilerElement.classList.add("cotsu-tools-spoiler");

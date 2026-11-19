@@ -21,8 +21,6 @@ export let readingExercise: {
 };
 export let didntKnowQids = new Set<string>();
 
-export const DUMMY_QUESTION_ID = "cotsu-tools-dummy-question";
-
 export let authorization: string;
 
 const _fetch = unsafeWindow.fetch;
@@ -33,23 +31,7 @@ export const startInterceptingFetch = () => {
       authorization = options.headers.Authorization;
     }
     let requestBody = options?.body;
-    if (
-      typeof requestBody === "string" &&
-      url === "https://api.cotsu.de/user.php?r=update-progress"
-    ) {
-      const parsedRequestBody = JSON.parse(requestBody);
-      parsedRequestBody.answers = parsedRequestBody.answers.flatMap(
-        (answer: { correct: number; qid: string }) =>
-          answer.qid === DUMMY_QUESTION_ID ?
-            []
-          : {
-              qid: answer.qid,
-              correct: didntKnowQids.has(answer.qid) ? 0 : answer.correct,
-            },
-      );
-      requestBody = JSON.stringify(parsedRequestBody);
-    }
-    const response = await _fetch(url, { ...options, body: requestBody });
+    const response = await _fetch(url, { ...options });
     let body = await response.text();
     if (typeof url === "string") {
       if (url === "https://api.cotsu.de/user.php?r=stats") {
@@ -58,23 +40,7 @@ export const startInterceptingFetch = () => {
         url.startsWith("https://api.cotsu.de/user.php?r=review-reading") ||
         url.startsWith("https://api.cotsu.de/user.php?r=learn-reading")
       ) {
-        const parsedBody = JSON.parse(body);
-        if (parsedBody.questions.length !== 0) {
-          parsedBody.questionCount = parsedBody.questions.length;
-          parsedBody.questions.push({
-            writing: "",
-            reading: "",
-            german: "",
-            sentence: "Das war's!",
-            sentence_german: "",
-            qtype: "3",
-            qid: DUMMY_QUESTION_ID,
-            kanjis: [],
-          });
-          readingExercise = parsedBody;
-          didntKnowQids = new Set();
-        }
-        body = JSON.stringify(parsedBody);
+        readingExercise = JSON.parse(body);
       } else if (
         url === "https://api.cotsu.de/user.php?r=start-reading" &&
         typeof requestBody === "string"

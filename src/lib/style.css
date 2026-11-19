@@ -193,14 +193,6 @@ div.card-word.cotsu-tools-card-word-clone {
   .cotsu-tools-meaning-definition {
   display: inline-block;
 }
-.cotsu-tools-definition-image {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: #666;
-}
 
 /* Definition */
 .cotsu-tools-definition {
@@ -227,29 +219,19 @@ div.card-word.cotsu-tools-card-word-clone {
   margin-left: 0.3rem;
 }
 .cotsu-tools-definition-paren {
-  color: #555;
+  color: color-mix(currentcolor 70%, var(--cotsu-cyan-surface));
 }
 .cotsu-tools-definition-context {
   font-variant-caps: all-small-caps;
   letter-spacing: 0.02rem;
 }
-
-/* Dummy question */
-.cotsu-tools-dummy-question
-  [class^="ReadingQuestionCard-module--section-action--"] {
-  height: auto;
-}
-.cotsu-tools-dummy-question
-  [class*="ReadingQuestionCard-module--action-check--"] {
-  margin: 0;
-  transition: margin 0s;
-}
-.cotsu-tools-dummy-question
-  [class^="ReadingQuestionCard-module--input-field--"],
-.cotsu-tools-dummy-question
-  [class^="ReadingQuestionCard-module--newWordHint--"],
-.cotsu-tools-dummy-question [class^="StudyProgress-module--study-progress--"] {
-  display: none;
+.cotsu-tools-definition-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
 }
 
 /* Word summary */
@@ -334,57 +316,32 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 }
 
 /* Other words with Kanji */
-.cotsu-tools-other-kanji-init-button {
-  white-space: nowrap;
+[class^="_kanjiRow_"] {
+  gap: 0 16px;
 }
-.cotsu-tools-other-kanji {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  padding: 0;
+.cotsu-tools-other-with-kanji {
+  grid-column: 2;
   text-align: left;
 }
-.cotsu-tools-other-kanji li {
+.cotsu-tools-other-with-kanji ul {
+  margin-top: 0;
+}
+.cotsu-tools-other-with-kanji li {
   margin-bottom: 0.25rem;
 }
-.cotsu-tools-other-kanji.cotsu-tools-other-kanji-loaded {
-  align-items: start;
-}
-.cotsu-tools-other-kanji-kanji {
-  font-weight: 400;
-}
-.cotsu-tools-other-kanji-more {
+.cotsu-tools-other-with-kanji-more {
   margin-left: 0.25rem;
 }
-
-/* Didn't know word */
-.cotsu-tools-didnt-know-word {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  user-select: none;
+.cotsu-tools-other-with-kanji-more {
+  background: var(--cotsu-primary);
+  border: 0;
+  font: 0.8em;
+  border-radius: 10px;
+  padding: 5px 10px;
 }
-.cotsu-tools-didnt-know-word-strike .card-level-up {
-  text-decoration: line-through;
-}
-.cotsu-tools-didnt-know-word-strike
-  [class^="MaturityTallies-module--tally-icon--"] {
-  filter: grayscale(1);
-  position: relative;
-}
-.cotsu-tools-didnt-know-word-strike
-  [class^="MaturityTallies-module--tally-icon--"]::before {
-  position: absolute;
-  top: 50%;
-  left: -2px;
-  rotate: -45deg;
-  width: 20px;
-  height: 1px;
-  display: inline-block;
-  background-color: black;
-  content: "";
+.cotsu-tools-other-with-kanji-more:hover {
+  background: var(--cotsu-primary-hover);
+  cursor: pointer;
 }
 
 /* Hide question maturity */
