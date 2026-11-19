@@ -1,7 +1,8 @@
 /* General */
 @font-face {
-  font-family: "Noto Sans JP All Katakana";
-  src: url("https://mybearworld.github.io/japanese-fonts/out/NotoSansJPAllKatakana.ttf");
+  font-family: "Klee One All Katakana";
+  src: url("https://mybearworld.github.io/japanese-fonts/out/KleeOneAllKatakana.ttf");
+  unicode-range: U+3041-3096;
 }
 @font-face {
   font-family: "Yuji Syuku";
@@ -17,11 +18,8 @@
   font-weight: 400;
   unicode-range: U+3041-3096;
 }
-input {
-  font-weight: 400 !important;
-}
 body {
-  --cotsu-tools-default-font: Noto Sans JP, Noto Sans Japanese, sans-serif;
+  --cotsu-tools-default-font: Raleway, Klee One, sans-serif;
   --cotsu-tools-font: var(--cotsu-tools-default-font);
 }
 body.cotsu-tools-cursive-font {
@@ -328,17 +326,10 @@ body {
   --cotsu-tools-kana-font: ;
 }
 body.cotsu-tools-katakana-mode {
-  --cotsu-tools-kana-font:
-    Noto Sans JP All Katakana, Noto Sans JP, Noto Sans Japanese, sans-serif;
+  --cotsu-tools-kana-font: Klee One All Katakana, var(--cotsu-tools-font);
 }
-body.cotsu-tools-cursive-font {
-  --cotsu-tools-kana-font:
-    Yuji Syuku, Noto Sans JP, Noto Sans Japanese, sans-serif;
-}
-body.cotsu-tools-cursive-font.cotsu-tools-katakana-mode {
-  --cotsu-tools-kana-font:
-    Yuji Syuku All Katakana, Yuji Syuku, Noto Sans JP, Noto Sans Japanese,
-    sans-serif;
+body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
+  --cotsu-tools-kana-font: Yuji Syuku All Katakana, var(--cotsu-tools-font);
 }
 [class^="ReadingQuestionCard-module--input-field--"],
 .cotsu-tools-pitch-accent,
