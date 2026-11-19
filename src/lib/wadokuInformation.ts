@@ -220,20 +220,24 @@ export const getWadokuInformation = async (
       };
       let sense = element(resultLine.querySelector(".sense:not(.master)"));
       // for .prior1, see 猫
-      // for .def, see 団地
-      sense =
-        sense.querySelector(".prior1") ?? sense.querySelector(".def") ?? sense;
-      for (const childNode of sense.childNodes) {
-        if (childNode instanceof HTMLElement) {
-          if (childNode.classList.contains("rel")) {
-            break;
-          } else if (childNode.classList.contains("token")) {
-            information.meaning += childNode.firstChild?.textContent;
+      // for handling of .def, see 団地 vs 委員
+      sense = sense.querySelector(".prior1") ?? sense;
+      const addToMeaning = (element: Element) => {
+        for (const childNode of element.childNodes) {
+          if (childNode instanceof HTMLElement) {
+            if (childNode.classList.contains("rel")) {
+              break;
+            } else if (childNode.classList.contains("token")) {
+              information.meaning += childNode.firstChild?.textContent;
+            } else if (childNode.classList.contains("def")) {
+              addToMeaning(childNode);
+            }
+          } else if (childNode.nodeType === Node.TEXT_NODE) {
+            information.meaning += childNode.textContent;
           }
-        } else if (childNode.nodeType === Node.TEXT_NODE) {
-          information.meaning += childNode.textContent;
         }
-      }
+      };
+      addToMeaning(sense);
       information.meaning = information.meaning.trim().replace(/\.$/, "");
       const figure = resultLine.querySelector(".figures");
       if (figure) {
