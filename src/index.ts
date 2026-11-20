@@ -3,14 +3,11 @@ window.addEventListener("unhandledrejection", (e) => {
   console.error(e.reason);
   if (e.reason instanceof Error) {
     alert(
-      "[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" +
-        e.reason.message +
-        "\n" +
-        e.reason.stack,
+      `[Cotsu-Tools] Etwas ist schiefgelaufen (unhandledrejection, ${GM.info.script.version}):\n\n${e.reason.message}\n${e.reason.stack}`,
     );
   } else {
     alert(
-      "[Cotsu-Tools] Etwas ist schiefgelaufen (kein Error):\n\n" + e.reason,
+      `[Cotsu-Tools] Etwas ist schiefgelaufen (unhandledrejection, ${GM.info.script.version}, kein Error):\n\n${e.reason}`,
     );
   }
 });
@@ -19,13 +16,12 @@ window.addEventListener("error", (e) => {
   console.error(e.error);
   if (e.error instanceof Error) {
     alert(
-      "[Cotsu-Tools] Etwas ist schiefgelaufen:\n\n" +
-        e.error.message +
-        "\n" +
-        e.error.stack,
+      `[Cotsu-Tools] Etwas ist schiefgelaufen (error, ${GM.info.script.version}):\n\n${e.error.message}\n${e.error.stack}`,
     );
   } else {
-    alert("[Cotsu-Tools] Etwas ist schiefgelaufen (kein Error):\n\n" + e.error);
+    alert(
+      `[Cotsu-Tools] Etwas ist schiefgelaufen (error, ${GM.info.script.version}, kein Error):\n\n${e.error}`,
+    );
   }
 });
 
