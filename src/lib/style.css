@@ -406,11 +406,16 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   color: var(--cotsu-muted);
   font-size: 14px;
 }
+
 @media screen and (width >= 780px) {
   main.practice-screen .practice-frame {
     display: grid;
     gap: 0 20px;
     grid-template-columns: 340px 1fr;
+  }
+  main.practice-screen
+    .practice-frame:has(> div > div > [class^="_summary-card_"]) {
+    grid-template-columns: 1fr;
   }
   main.practice-screen .practice-navigation {
     grid-column: 1 / -1;
