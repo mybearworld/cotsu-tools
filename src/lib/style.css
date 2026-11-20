@@ -249,7 +249,8 @@ div.card-word.cotsu-tools-card-word-clone {
   button {
   width: 100%;
 }
-.cotsu-tools-dummy-question .reading-feedback {
+.cotsu-tools-dummy-question .reading-feedback,
+.cotsu-tools-dummy-question .reading-feedback + button {
   display: none;
 }
 
