@@ -201,10 +201,10 @@ div.card-word.cotsu-tools-card-word-clone {
 
 /* Definition */
 .cotsu-tools-definition {
-  font-weight: 300;
+  text-align: center;
 }
 .cotsu-tools-definition-header {
-  font-weight: 700;
+  font-weight: bold;
   font-size: 12px;
   line-height: 1.2;
   margin-top: 0.5rem;
@@ -373,7 +373,7 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   display: none;
 }
 
-/* Compact styling */
+/* Reading exercise design */
 [class^="_newWordHint_"] {
   display: none;
 }
@@ -387,11 +387,24 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 .previous-answer-card {
   display: block;
 }
-.previous-question {
+.previous-question,
+.previous-solution::before,
+.previous-answer-label {
   display: none;
 }
-.previous-solution::before {
-  display: none;
+.cotsu-tools-card-definition {
+  margin-top: 0;
+  margin-bottom: 4px;
+  color: var(--cotsu-text);
+  font-size: 16px;
+}
+.previous-answer-word {
+  color: var(--cotsu-muted);
+  font-size: 16px;
+}
+.card-german {
+  color: var(--cotsu-muted);
+  font-size: 14px;
 }
 @media screen and (width >= 780px) {
   main.practice-screen .practice-frame {

@@ -125,12 +125,15 @@ const handleUpdatedCardWord = (records: MutationRecord[]) => {
   cardReadingElement.replaceChildren(
     pitchAccentElement(cardWriting, cardReadingElement.textContent),
   );
-  const newCardGerman = document.createElement("div");
-  newCardGerman.classList.add("card-german");
-  newCardGerman.append(
+  const cardDefinitionElement = document.createElement("div");
+  cardDefinitionElement.classList.add("cotsu-tools-card-definition");
+  cardDefinitionElement.append(
     definitionElement(cardWriting, cardReadingElement.textContent),
   );
-  previousSolutionElement.append(newCardGerman);
+  previousSolutionElement.insertAdjacentElement(
+    "afterbegin",
+    cardDefinitionElement,
+  );
   document.querySelectorAll("[class^=_kanjiRow_]").forEach((row) => {
     const kanji = element(row.querySelector("[class^=_kanjiBig_")).textContent;
     const otherKanjiElement = document.createElement("details");
