@@ -326,7 +326,6 @@ export const meaningElement = (
 };
 
 export type DefinitionElementOptions = {
-  collapsed?: boolean;
   bulk?: string[];
 };
 export const definitionElement = (
@@ -334,18 +333,9 @@ export const definitionElement = (
   reading: string,
   options?: DefinitionElementOptions,
 ) => {
-  const wrapperElement = document.createElement("div");
-  wrapperElement.classList.add("cotsu-tools-definition");
-  const headerElement = document.createElement("div");
-  headerElement.classList.add("cotsu-tools-definition-header");
-  headerElement.textContent = "Definition von Wadoku";
-  wrapperElement.append(headerElement);
   const definitionElement = document.createElement("div");
-  if (options?.collapsed) {
-    definitionElement.classList.add("cotsu-tools-definition-collapsed");
-  }
+  definitionElement.classList.add("cotsu-tools-definition");
   definitionElement.textContent = "lädt...";
-  wrapperElement.append(definitionElement);
   getWadokuInformation(kanji, reading, options?.bulk).then((information) => {
     definitionElement.replaceChildren(
       information?.definition ?? "keine Definition verfügbar",
@@ -360,34 +350,8 @@ export const definitionElement = (
       const span = document.createElement("span");
       span.textContent = information.image.caption;
       imageWrapper.append(span);
-      wrapperElement.append(imageWrapper);
-    }
-    if (options?.collapsed) {
-      let currentButton: HTMLButtonElement | null = null;
-      let hasClickedButton = false;
-      const resizeListener = () => {
-        if (definitionElement.scrollHeight === definitionElement.clientHeight) {
-          if (!currentButton) return;
-          currentButton.remove();
-          currentButton = null;
-        } else {
-          if (currentButton || hasClickedButton) return;
-          currentButton = document.createElement("button");
-          currentButton.textContent = "volle Definition anzeigen";
-          currentButton.addEventListener("click", () => {
-            definitionElement.classList.remove(
-              "cotsu-tools-definition-collapsed",
-            );
-            if (currentButton) currentButton.remove();
-            currentButton = null;
-            hasClickedButton = true;
-          });
-          headerElement.append(currentButton);
-        }
-      };
-      window.addEventListener("resize", resizeListener);
-      resizeListener();
+      definitionElement.append(imageWrapper);
     }
   });
-  return wrapperElement;
+  return definitionElement;
 };

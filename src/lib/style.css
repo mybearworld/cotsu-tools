@@ -207,24 +207,7 @@ div.card-word.cotsu-tools-card-word-clone {
 
 /* Definition */
 .cotsu-tools-definition {
-  text-align: center;
-}
-.cotsu-tools-definition-header {
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 1.2;
-  margin-top: 0.5rem;
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  justify-content: center;
-}
-.cotsu-tools-definition-collapsed {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  text-align: left;
 }
 .cotsu-tools-definition-index-number {
   margin-left: 0.3rem;

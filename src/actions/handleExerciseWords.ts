@@ -122,8 +122,10 @@ const handleUpdatedCardWord = (records: MutationRecord[]) => {
   const previousSolutionElement = element(
     document.querySelector(".previous-solution"),
   );
-  const cardWriting = element(document.querySelector(".previous-answer-word"))
-    .childNodes[0].textContent;
+  const previousAnswerWordElement = element(
+    document.querySelector(".previous-answer-word"),
+  );
+  const cardWriting = previousAnswerWordElement.childNodes[0].textContent;
   if (!cardWriting) return;
   cardReadingElement.replaceChildren(
     pitchAccentElement(cardWriting, cardReadingElement.textContent),
@@ -133,8 +135,8 @@ const handleUpdatedCardWord = (records: MutationRecord[]) => {
   cardDefinitionElement.append(
     definitionElement(cardWriting, cardReadingElement.textContent),
   );
-  previousSolutionElement.insertAdjacentElement(
-    "afterbegin",
+  previousAnswerWordElement.insertAdjacentElement(
+    "afterend",
     cardDefinitionElement,
   );
   document.querySelectorAll("[class^=_kanjiRow_]").forEach((row) => {
