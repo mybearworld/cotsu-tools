@@ -1,3 +1,4 @@
+import { element } from "../lib/element";
 import style from "../lib/style.css";
 
 export const addStyles = (records: MutationRecord[]) => {
@@ -21,4 +22,7 @@ export const addStyles = (records: MutationRecord[]) => {
   styleElement.id = "cotsu-tools-style";
   styleElement.innerHTML = style;
   document.head.append(styleElement);
+  const metaElement = element(document.querySelector("meta[name=viewport]"));
+  if (!(metaElement instanceof HTMLMetaElement)) return;
+  metaElement.content += ", interactive-widget=overlays-content";
 };
