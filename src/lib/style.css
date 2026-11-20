@@ -38,6 +38,12 @@ input {
 body:has(.cotsu-tools-dialog:open) {
   overflow: hidden;
 }
+.header-actions {
+  flex-wrap: nowrap;
+}
+.header-account {
+  text-wrap: nowrap;
+}
 .cotsu-tools-new-badge {
   background-color: #ff4e71;
   color: white;
