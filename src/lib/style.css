@@ -372,3 +372,48 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   > [class^="_icons_"] {
   display: none;
 }
+
+/* Compact styling */
+[class^="_newWordHint_"] {
+  display: none;
+}
+.reading-prompt[class^="_cardContent_"] {
+  padding: 10px 0;
+  min-height: 0;
+}
+[class^="_cardExampleSentence_"] {
+  font-size: 28px;
+}
+.previous-answer-card {
+  display: block;
+}
+.previous-question {
+  display: none;
+}
+.previous-solution::before {
+  display: none;
+}
+@media screen and (width >= 780px) {
+  main.practice-screen .practice-frame {
+    display: grid;
+    gap: 0 20px;
+    grid-template-columns: 340px 1fr;
+  }
+  main.practice-screen .practice-navigation {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  main.practice-screen
+    .practice-frame
+    > div
+    > div
+    > [class^="_study-container_"] {
+    margin-top: 0;
+  }
+  .practice-details {
+    border-top: 0;
+  }
+  main.practice-screen .reading-last-answer {
+    margin-top: 0;
+  }
+}
