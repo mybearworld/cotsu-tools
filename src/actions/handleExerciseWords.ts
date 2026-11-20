@@ -215,7 +215,6 @@ const handleWrongAnswer = (records: MutationRecord[]) => {
 };
 
 const handleSummary = (records: MutationRecord[]) => {
-  console.log(records);
   if (
     !records.some(
       (record) =>
