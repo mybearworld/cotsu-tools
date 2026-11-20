@@ -1,7 +1,8 @@
 import { gmfetch } from "./gmfetch";
 import { LowercaseLevel } from "./levels";
 
-export let stats: {
+let resolveStats: (newStats: Awaited<typeof stats>) => void;
+export const stats: Promise<{
   userid: string;
   progress: Record<
     LowercaseLevel,
@@ -9,7 +10,9 @@ export let stats: {
   >;
   readyForEarlyReview: string;
   totalLearned: number;
-};
+}> = new Promise((resolve) => {
+  resolveStats = resolve;
+});
 export let readingExercise: {
   questions: {
     writing: string;
@@ -56,7 +59,7 @@ export const startInterceptingFetch = () => {
     let body = await response.text();
     if (typeof url === "string") {
       if (url === "https://api.cotsu.de/user.php?r=stats") {
-        stats = JSON.parse(body);
+        resolveStats(JSON.parse(body));
       } else if (
         url.startsWith("https://api.cotsu.de/user.php?r=review-reading") ||
         url.startsWith("https://api.cotsu.de/user.php?r=learn-reading")

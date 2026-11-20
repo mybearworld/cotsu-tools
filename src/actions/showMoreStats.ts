@@ -21,8 +21,9 @@ export const showMoreStats = async (records: MutationRecord[]) => {
   if (!progressBars) return;
   for (const child of progressBars.children) {
     const levelNameElement = element(child.firstElementChild);
-    const levelStats =
-      stats.progress[LOWERCASE_LEVELS[levelNameElement.textContent as Level]];
+    const levelStats = (await stats).progress[
+      LOWERCASE_LEVELS[levelNameElement.textContent as Level]
+    ];
     const progressElement = element(child.lastElementChild?.firstElementChild);
     levelNameElement.textContent += ` (${levelStats.total})`;
     progressElement.textContent = `${percent(
