@@ -215,13 +215,16 @@ const handleWrongAnswer = (records: MutationRecord[]) => {
 };
 
 const handleSummary = (records: MutationRecord[]) => {
+  console.log(records);
   if (
     !records.some(
       (record) =>
         record.type === "childList" &&
         record.addedNodes[0] instanceof HTMLElement &&
-        record.addedNodes[0].classList.contains("practice-frame") &&
-        record.addedNodes[0].querySelector(".practice-round-complete"),
+        record.addedNodes[0].firstElementChild instanceof HTMLElement &&
+        record.addedNodes[0].firstElementChild.className.startsWith(
+          "_summary-card_",
+        ),
     )
   )
     return;
