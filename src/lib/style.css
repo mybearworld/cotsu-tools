@@ -477,5 +477,6 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
     position: static !important;
     border: 0 !important;
     height: auto !important;
+    z-index: 0 !important;
   }
 }
