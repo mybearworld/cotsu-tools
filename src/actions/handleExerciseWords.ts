@@ -21,6 +21,7 @@ export const handleExerciseWords = async (records: MutationRecord[]) => {
   handleUpdatedWord(records);
   handleUpdatedCardWord(records);
   handleWrongAnswer(records);
+  handleInitialSummary(records);
   handleSummary(records);
 };
 
@@ -219,6 +220,27 @@ const handleWrongAnswer = (records: MutationRecord[]) => {
   );
 };
 
+const handleInitialSummary = (records: MutationRecord[]) => {
+  if (
+    !records.some(
+      (record) =>
+        record.type === "childList" &&
+        record.addedNodes[0] instanceof HTMLDivElement &&
+        record.addedNodes[0].classList.contains("practice-frame"),
+    )
+  )
+    return;
+  const practiceRoundComplete = document.querySelector(
+    ".practice-round-complete > span",
+  );
+  if (!(practiceRoundComplete instanceof HTMLElement)) return;
+  const questionAmount = readingExercise.questionCount - 1; // dummy question
+  const practiceRoundCompleteText = practiceRoundComplete.childNodes.item(1);
+  if (practiceRoundCompleteText) {
+    practiceRoundCompleteText.textContent = questionAmount.toString();
+  }
+};
+
 const handleSummary = (records: MutationRecord[]) => {
   if (
     !records.some(
@@ -245,13 +267,6 @@ const handleSummary = (records: MutationRecord[]) => {
   summaryTextElement.textContent =
     summaryTextElement.textContent.split(" ")[0] +
     ` von ${questionAmount} richtig`;
-  const practiceRoundComplete = element(
-    document.querySelector(".practice-round-complete > span"),
-  );
-  const practiceRoundCompleteText = practiceRoundComplete.childNodes.item(1);
-  if (practiceRoundCompleteText) {
-    practiceRoundCompleteText.textContent = questionAmount.toString();
-  }
   const readingRecapElement = element(document.querySelector(".reading-recap"));
   const incorrectAnswersElement = document.createElement("ol");
   const correctAnswersElement = document.createElement("ol");
