@@ -6,10 +6,9 @@ export const addStyles = (records: MutationRecord[]) => {
     !records.some(
       (record) =>
         (record.type === "childList" &&
-          record.target instanceof HTMLElement &&
-          record.target.id === "app" &&
-          record.removedNodes[1] instanceof HTMLElement &&
-          record.removedNodes[1].tagName === "NOSCRIPT") ||
+          record.target instanceof HTMLHtmlElement &&
+          record.removedNodes[0] instanceof HTMLDivElement &&
+          record.removedNodes[0].childNodes.length === 0) ||
         (record.type === "childList" &&
           record.target instanceof HTMLHeadElement &&
           record.removedNodes[0]),
