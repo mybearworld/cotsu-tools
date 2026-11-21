@@ -1,6 +1,7 @@
 /* General */
 :root {
   /* Cotsu hardcodes light mode colors instead of using variables */
+  --cotsu-tools-page: var(--cotsu-page, #fffbef);
   --cotsu-tools-surface: var(--cotsu-surface, #ededed);
   --cotsu-tools-line: var(--cotsu-line, #a4cbd2);
   --cotsu-tools-primary: var(--cotsu-primary, #364756);
@@ -376,6 +377,10 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 }
 
 /* Reading exercise design */
+.practice-screen .practice-navigation {
+  outline: var(--cotsu-tools-page) 8px solid;
+  padding-bottom: 0;
+}
 [class^="_newWordHint_"] {
   display: none;
 }
