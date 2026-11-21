@@ -410,6 +410,9 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   align-items: center !important;
   gap: 10px !important;
 }
+.card-note {
+  z-index: 1;
+}
 .practice-details {
   /* override mobile styles */
   margin-top: 0 !important;
