@@ -429,7 +429,7 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   font-size: 16px;
 }
 .previous-answer-word {
-  color: var(--cotsu-tools-muted);
+  /* color: var(--cotsu-tools-muted); */
   font-size: 16px;
 }
 .card-german {
