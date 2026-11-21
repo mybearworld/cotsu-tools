@@ -377,9 +377,21 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 }
 
 /* Reading exercise design */
-.practice-screen .practice-navigation {
-  outline: var(--cotsu-tools-page) 8px solid;
-  padding-bottom: 0;
+.practice-screen .practice-navigation::before,
+.practice-screen .practice-navigation::after {
+  --cotsu-tools-practice-navigation-padding-width: 16px; /* arbitrary value to make sure it covers the input's focus */
+  content: "";
+  display: block;
+  width: var(--cotsu-tools-practice-navigation-padding-width);
+  height: 100%;
+  background-color: var(--cotsu-tools-page);
+  position: absolute;
+}
+.practice-screen .practice-navigation::before {
+  left: calc(var(--cotsu-tools-practice-navigation-padding-width) * -1);
+}
+.practice-screen .practice-navigation::after {
+  right: calc(var(--cotsu-tools-practice-navigation-padding-width) * -1);
 }
 [class^="_newWordHint_"] {
   display: none;
