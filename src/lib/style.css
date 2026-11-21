@@ -1,4 +1,14 @@
 /* General */
+:root {
+  /* Cotsu hardcodes light mode colors instead of using variables */
+  --cotsu-tools-surface: var(--cotsu-surface, #ededed);
+  --cotsu-tools-line: var(--cotsu-line, #a4cbd2);
+  --cotsu-tools-primary: var(--cotsu-primary, #364756);
+  --cotsu-tools-primary-hover: var(--cotsu-primary-hover, #253643);
+  --cotsu-tools-cyan-surface: var(--cotsu-cyan-surface, #def6fa);
+  --cotsu-tools-text: var(--cotsu-text, #24384a);
+  --cotsu-tools-muted: var(--cotsu-muted, #657582);
+}
 @font-face {
   font-family: "Klee One All Katakana";
   src: url("https://mybearworld.github.io/japanese-fonts/out/KleeOneAllKatakana.ttf");
@@ -60,8 +70,8 @@ body:has(.cotsu-tools-dialog:open) {
   margin-left: 0.25rem;
 }
 .cotsu-tools-dialog {
-  border: 1px solid var(--cotsu-line);
-  background-color: var(--cotsu-surface);
+  border: 1px solid var(--cotsu-tools-line);
+  background-color: var(--cotsu-tools-surface);
   border-radius: 20px;
   width: min(calc(100% - 2rem), 30rem);
   max-width: none;
@@ -120,7 +130,8 @@ body:has(.cotsu-tools-dialog:open) {
   margin: 0;
 }
 .cotsu-tools-dialog button {
-  background: var(--cotsu-primary);
+  background: var(--cotsu-tools-primary);
+  color: #fff;
   border: 0;
   border-radius: 10px;
   padding: 10px 20px;
@@ -213,7 +224,7 @@ div.card-word.cotsu-tools-card-word-clone {
   margin-left: 0.3rem;
 }
 .cotsu-tools-definition-paren {
-  color: color-mix(currentcolor 70%, var(--cotsu-cyan-surface));
+  color: color-mix(currentcolor 70%, var(--cotsu-tools-cyan-surface));
 }
 .cotsu-tools-definition-context {
   font-variant-caps: all-small-caps;
@@ -345,14 +356,15 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
   margin-left: 0.25rem;
 }
 .cotsu-tools-other-with-kanji-more {
-  background: var(--cotsu-primary);
+  background: var(--cotsu-tools-primary);
+  color: #fff;
   border: 0;
   font: 0.8em;
   border-radius: 10px;
   padding: 5px 10px;
 }
 .cotsu-tools-other-with-kanji-more:hover {
-  background: var(--cotsu-primary-hover);
+  background: var(--cotsu-tools-primary-hover);
   cursor: pointer;
 }
 
@@ -413,15 +425,15 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 .cotsu-tools-card-definition {
   margin-top: 0;
   margin-bottom: 4px;
-  color: var(--cotsu-text);
+  color: var(--cotsu-tools-text);
   font-size: 16px;
 }
 .previous-answer-word {
-  color: var(--cotsu-muted);
+  color: var(--cotsu-tools-muted);
   font-size: 16px;
 }
 .card-german {
-  color: var(--cotsu-muted);
+  color: var(--cotsu-tools-muted);
   font-size: 14px;
 }
 
