@@ -465,3 +465,17 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
     margin-top: 0;
   }
 }
+@media screen and (width < 780px) {
+  .reading-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .practice-primary-action {
+    /* override mobile styles */
+    padding: 0 !important;
+    position: static !important;
+    border: 0 !important;
+    height: auto !important;
+  }
+}
