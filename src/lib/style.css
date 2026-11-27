@@ -374,7 +374,8 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 /* Hide question maturity */
 .cotsu-tools-hide-question-maturity
   [class^="_study-container_"]
-  > [class^="_icons_"] {
+  > [class^="_icons_"],
+.cotsu-tools-hide-question-maturity [class^="_cardLevel_"] {
   display: none;
 }
 
