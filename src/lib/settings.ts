@@ -15,7 +15,7 @@ const SETTINGS = {
     className: "cotsu-tools-shuffle-summary",
   },
   "cotsu-tools-hide-question-maturity": {
-    name: "Indikator des Fortschritts einer Vokabel während einer Übung verstecken",
+    name: "Fortschritt einer Vokabel während Übungen verstecken",
     acknowledgeable: false,
     className: "cotsu-tools-hide-question-maturity",
   },
