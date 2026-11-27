@@ -298,16 +298,18 @@ div.card-word.cotsu-tools-card-word-clone {
 }
 
 /* Stats */
-[class^="_maturity-tallies_"] ~ [class^="_centered_"] {
+[class^="_maturity-tallies_"] + h4 + p + [class^="_centered_"] {
   display: table;
   border-spacing: 10px 0;
 }
-[class^="_maturity-tallies_"] ~ [class^="_centered_"] > .MuiBox-root {
+[class^="_maturity-tallies_"] + h4 + p + [class^="_centered_"] > .MuiBox-root {
   display: table-row;
   text-wrap: nowrap;
 }
 [class^="_maturity-tallies_"]
-  ~ [class^="_centered_"]
+  + h4
+  + p
+  + [class^="_centered_"]
   > .MuiBox-root
   > .MuiBox-root {
   display: table-cell;
