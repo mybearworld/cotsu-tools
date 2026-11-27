@@ -30,19 +30,15 @@ export const showMoreStats = async (records: MutationRecord[]) => {
       levelStats.learning,
       levelStats.total,
     )} (${levelStats.learning})`;
-    if (levelStats.mature !== 0) {
-      const progressContainer = element(progressElement.parentElement);
-      const matureProgressContainer = element(
-        progressContainer.cloneNode(true),
-      );
-      const matureProgress = element(matureProgressContainer.firstChild);
-      matureProgress.classList.add("cotsu-tools-detail-green");
-      matureProgress.style.color = "";
-      matureProgress.textContent = `${percent(
-        levelStats.mature,
-        levelStats.total,
-      )} (${levelStats.mature})`;
-      element(progressContainer.parentElement).append(matureProgressContainer);
-    }
+    const progressContainer = element(progressElement.parentElement);
+    const matureProgressContainer = element(progressContainer.cloneNode(true));
+    const matureProgress = element(matureProgressContainer.firstChild);
+    matureProgress.classList.add("cotsu-tools-detail-green");
+    matureProgress.style.color = "";
+    matureProgress.textContent = `${percent(
+      levelStats.mature,
+      levelStats.total,
+    )} (${levelStats.mature})`;
+    element(progressContainer.parentElement).append(matureProgressContainer);
   }
 };
