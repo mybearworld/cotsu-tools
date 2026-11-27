@@ -415,20 +415,10 @@ body.cotsu-tools-katakana-mode.cotsu-tools-cursive-font {
 [class^="_study-container_"] {
   margin-top: 0;
 }
-.card-feedback-toolbar {
-  position: static;
-}
-.practice-screen .reading-uncertain,
-.card-report {
+.practice-screen .reading-uncertain {
   min-height: 0px !important; /* mobile styles */
-  display: flex;
-}
-.card-feedback-toolbar {
-  justify-content: end;
-  /* override mobile styles */
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 10px !important;
+  top: 14px;
+  right: 20px;
 }
 .card-note {
   z-index: 1;

@@ -116,13 +116,7 @@ const handleUpdatedCardWord = (records: MutationRecord[]) => {
     )
   )
     return;
-  const detailsElement = element(document.querySelector(".practice-details"));
-  const feedbackRegion = element(detailsElement.parentElement);
-  feedbackRegion.insertAdjacentElement("beforeend", detailsElement);
   const cardReadingElement = element(document.querySelector(".card-reading"));
-  const previousSolutionElement = element(
-    document.querySelector(".previous-solution"),
-  );
   const previousAnswerWordElement = element(
     document.querySelector(".previous-answer-word"),
   );
